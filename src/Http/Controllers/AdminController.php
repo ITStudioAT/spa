@@ -15,7 +15,7 @@ class AdminController extends Controller
             'from_address' => env('MAIL_FROM_ADDRESS'),
             'from_name' => env('MAIL_FROM_NAME'),
             'subject' => 'Code für Login',
-            'markdown' => 'spa::mails.admin.login2FaCode',
+            'markdown' => 'mails.admin.login2FaCode',
             'token_2fa' => 'abcdef',
             'token-expire-time' => config('spa.token-expire-time'),
         ];

@@ -45,4 +45,15 @@ class SpaServiceProvider extends PackageServiceProvider
 
         // You can also add more publishes here (config, vite config, etc.)
     }
+
+    protected function loadRoutes()
+    {
+        if (file_exists(__DIR__ . '/../routes/web.php')) {
+            $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+        }
+        if (file_exists(__DIR__ . '/../routes/api.php')) {
+            Route::prefix('api')
+                ->group(__DIR__ . '/../routes/api.php');
+        }
+    }
 }
