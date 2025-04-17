@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Itstudioat\Spa\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\User;
