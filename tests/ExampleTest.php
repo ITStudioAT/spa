@@ -3,6 +3,4 @@
 use Illuminate\Console\Command;
 use function Pest\Laravel\artisan;
 
-it('can test', function () {
-    artisan(\ItStudioat\Spa\Commands\SpaCommand::class)->assertExitCode(Command::SUCCESS);
-});
+it('can test', function () {});

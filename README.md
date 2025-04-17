@@ -18,6 +18,12 @@ This package requires:
 
 - "laravel/sanctum for authorization"
 
+If you use Postmark for Mailing:
+```bash
+composer require symfony/postmark-mailer
+```
+
+
 
 You can publish and run the migrations with:
 
