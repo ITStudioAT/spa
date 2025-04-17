@@ -29,26 +29,7 @@ class SpaServiceProvider extends PackageServiceProvider
     public function bootingPackage()
     {
 
-        Route::macro('spa', function ($baseUrl = 'spa') {
-            Route::prefix($baseUrl)->group(function () {
-                /* Route::get('/', [AdminController::class, 'index']); */
-                Route::get('/', function () {
-                    return view('spa::homepage');
-                });
-
-                Route::get('/homepage/{any?}', function () {
-                    return view('spa:homepage');
-                })->where('any', '.*');
-
-                Route::get('/admin/{any?}', function () {
-                    return view('spa:admin');
-                })->where('any', '.*');
-
-                Route::get('/application/{any?}', function () {
-                    return view('spa:application');
-                })->where('any', '.*');
-            });
-        });
+        $this->loadRoutes();
 
         $this->publishes([
             __DIR__ . '/../resources/dist' => base_path('resources/'),
