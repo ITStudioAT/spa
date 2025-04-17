@@ -27,11 +27,7 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app)
     {
-        // config()->set('database.default', 'testing');
-        Schema::dropAllTables();
-
-        $migration = include __DIR__ . '/../database/migrations/create_my_models_table.php.stub';
-        $migration->up();
+        config()->set('database.default', 'testing');
 
         /*
          foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/database/migrations') as $migration) {
