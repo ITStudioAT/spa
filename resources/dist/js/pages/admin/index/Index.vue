@@ -9,12 +9,12 @@
                 Admin Login
             </v-card-title>
             <v-card-text v-if="step == 0">
-                <v-form ref="form" v-model="is_valid" @submit.prevent="loginStep1(data.email)"
-                    @keyup.enter="loginStep1(data.email)" class="mb-4">
+                <v-form ref="form" v-model="is_valid" @submit.prevent="loginStep1(data)" @keyup.enter="loginStep1(data)"
+                    class="mb-4">
                     <div class="text-caption text-text">Bitte die E-Mail-Adresse eingeben</div>
                     <v-text-field autofocus v-model="data.email" label="Email" :rules="[required(), mail()]" />
                 </v-form>
-                <v-btn block color="success" slim flat rounded="0" @click="loginStep1(data.email)">Weiter</v-btn>
+                <v-btn block color="success" slim flat rounded="0" @click="loginStep1(data)">Weiter</v-btn>
                 <div class="text-caption text-center font-weight-light">oder</div>
                 <v-btn block color="primary" slim flat rounded="0" variant="text">Kennwort
                     unbekannt</v-btn>
@@ -33,7 +33,7 @@
                 </v-form>
                 <v-btn block color="success" slim flat rounded="0" @click="loginStep2(data)">Anmelden</v-btn>
                 <div class="text-caption text-center font-weight-light">oder</div>
-                <v-btn block color="warning" slim flat rounded="0" variant="text" @click="step = 0">Zurück</v-btn>
+                <v-btn block color="warning" slim flat rounded="0" variant="text" @click="restartLogin">Zurück</v-btn>
             </v-card-text>
 
 
@@ -41,12 +41,11 @@
                 <v-form ref="form" v-model="is_valid" @submit.prevent="loginStep3(data)" @keyup.enter="loginStep3(data)"
                     class="mb-4">
                     <div class="text-caption text-text">Bitte den Code laut E-Mail eingeben</div>
-                    <v-otp-input autofocus v-model="data.token_2fa" />
-
+                    <v-otp-input autofocus v-model="data.token_2fa" :rules="[required(), minLength(6), maxLength(6)]" />
                 </v-form>
                 <v-btn block color="success" slim flat rounded="0" @click="loginStep3(data)">Anmelden</v-btn>
                 <div class="text-caption text-center font-weight-light">oder</div>
-                <v-btn block color="warning" slim flat rounded="0" variant="text" @click="step = 0">Zurück</v-btn>
+                <v-btn block color="warning" slim flat rounded="0" variant="text" @click="restartLogin">Zurück</v-btn>
             </v-card-text>
 
 
@@ -92,14 +91,23 @@ export default {
             window.location.href = "/";
         },
 
-        async loginStep1(email) {
+        restartLogin() {
+            this.data.step = 0;
+            this.data.password = null;
+            this.data.token_2fa = null;
+            this.step = 0;
+        },
+
+        async loginStep1(data) {
             await this.$refs.form.validate(); if (!this.is_valid) return;
-            let answer = await this.adminStore.loginStep1(email);
+            data.step = 1;
+            let answer = await this.adminStore.loginStep1(data);
             this.step = 1;
         },
 
         async loginStep2(data) {
             await this.$refs.form.validate(); if (!this.is_valid) return;
+            data.step = 2;
             let answer = await this.adminStore.loginStep2(data);
             if (answer.data.step == 0) console.log('fertig');
             this.step = 2;
@@ -108,6 +116,9 @@ export default {
 
         async loginStep3(data) {
             await this.$refs.form.validate(); if (!this.is_valid) return;
+            data.step = 3;
+            let answer = await this.adminStore.loginStep3(data);
+            console.log("2fa fertig");
         },
 
 

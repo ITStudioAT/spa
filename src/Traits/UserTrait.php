@@ -16,4 +16,14 @@ trait UserTrait
         $this->save();
         return $this->token_2fa;
     }
+
+    public function checkToken2Fa($token_2fa): string
+    {
+        // Check if the token matches and is still valid
+        if ($this->token_2fa == $token_2fa && now()->isBefore($this->token_2fa_expires_at)) {
+            return true; // Token is valid and not expired
+        }
+
+        return false; // Token is invalid or expired
+    }
 }

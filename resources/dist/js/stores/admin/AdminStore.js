@@ -35,10 +35,10 @@ export const useAdminStore = defineStore("AdminStore", {
             }
         },
 
-        async loginStep1(email) {
+        async loginStep1(data) {
             this.is_loading++;
             try {
-                return await axios.post("/api/admin/login_step_1", { email });
+                return await axios.post("/api/admin/login_step_1", { data });
 
             } catch (error) {
                 this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)

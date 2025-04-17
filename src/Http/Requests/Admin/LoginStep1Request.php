@@ -23,7 +23,8 @@ class LoginStep1Request extends FormRequest
     {
 
         return [
-            'email' => 'required|email|max:255',
+            'data.step' => 'required|in:1',
+            'data.email' => 'required|email|max:255',
         ];
     }
 }

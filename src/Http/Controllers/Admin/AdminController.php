@@ -2,6 +2,7 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
+use Illuminate\Http\Request;
 use Composer\InstalledVersions;
 use Illuminate\Routing\Controller;
 use Itstudioat\Spa\Services\AdminService;
@@ -15,7 +16,7 @@ class AdminController extends Controller
 
     public function index()
     {
-        return view('admin');
+        return "hey";
     }
 
     public function config()
@@ -34,12 +35,14 @@ class AdminController extends Controller
     }
 
 
-    public function loginStep1(LoginStep1Request $request)
+    public function loginStep1(Request $request)
     {
+        info($request->all());
+        return;
         $adminService = new AdminService();
         $validated = $request->validated();
 
-        $user = $adminService->checkUserLogin($validated['email']);
+        $user = $adminService->checkUserLogin($validated['data']);
         return response()->json(['step' => 1], 200);
     }
 
@@ -48,7 +51,7 @@ class AdminController extends Controller
         $adminService = new AdminService();
         $validated = $request->validated();
 
-        $user = $adminService->checkUserLogin($validated['data']['email'], $validated['data']['password']);
+        $user = $adminService->checkUserLogin($validated['data']);
 
         if ($user->is_fa2) {
             // Bei Benutzer ist 2-Faktoren-Authentifizierung aktiviert
@@ -61,10 +64,13 @@ class AdminController extends Controller
                 'auth' => true,
                 'user' => $user,
             ];
-
-            return response()->json($data, 200);
         }
+        return response()->json($data, 200);
     }
 
-    public function loginStep3(LoginStep3Request $request) {}
+    public function loginStep3(LoginStep3Request $request)
+    {
+        $adminService = new AdminService();
+        $validated = $request->validated();
+    }
 }

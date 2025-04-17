@@ -23,6 +23,7 @@ class LoginStep2Request extends FormRequest
     {
 
         return [
+            'data.step' => 'required|in:2',
             'data.email' => 'required|email|max:255',
             'data.password' => 'required|string|min:8|max:255',
         ];
