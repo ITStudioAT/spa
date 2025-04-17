@@ -2,9 +2,10 @@
 
 namespace Itstudioat\Spa\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Support\Facades\Schema;
 use Itstudioat\Spa\SpaServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TestCase extends Orchestra
 {
@@ -13,7 +14,7 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Itstudioat\\Spa\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn(string $modelName) => 'Itstudioat\\Spa\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
         );
     }
 
@@ -26,7 +27,11 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app)
     {
-        config()->set('database.default', 'testing');
+        // config()->set('database.default', 'testing');
+        Schema::dropAllTables();
+
+        $migration = include __DIR__ . '/../database/migrations/create_my_models_table.php.stub';
+        $migration->up();
 
         /*
          foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/database/migrations') as $migration) {
