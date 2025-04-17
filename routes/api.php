@@ -19,7 +19,7 @@ Route::middleware(['throttle:global'])->group(function () {
 
         /* ADMIN ROUTES */
 
-        Route::name('spa.admin.')->group(function () {
+        Route::middleware(['web'])->name('spa.admin.')->group(function () {
             Route::get('/admin/config',  [AdminController::class, 'config']);
             Route::post('/admin/login_step_1',  [AdminController::class, 'loginStep1']);
             Route::post('/admin/login_step_2',  [AdminController::class, 'loginStep2']);
