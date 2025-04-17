@@ -23,7 +23,21 @@ If you use Postmark for Mailing:
 composer require symfony/postmark-mailer
 ```
 
+To integrate all packages like vue:
+```bash
+php artisan aps:install
+npm install
+```
 
+At the first you can publish your vite.config.js like this:
+```bash
+php artisan vendor:publish --tag=spa-vite-config --force
+```
+But be careful. With the --force your are overwriting your own changes in this file.
+We will document here, what should be in the vite.config.js
+```bash
+
+```
 
 You can publish and run the migrations with:
 

@@ -2,9 +2,10 @@
 
 namespace Itstudioat\Spa;
 
+
+use Itstudioat\Spa\Commands\SpaInstall;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Itstudioat\Spa\Commands\SpaCommand;
 
 class SpaServiceProvider extends PackageServiceProvider
 {
@@ -19,6 +20,13 @@ class SpaServiceProvider extends PackageServiceProvider
             ->name('spa')
             ->hasConfigFile()
             ->hasMigration('create_my_models_table')
-            ->hasCommand(SpaCommand::class);
+            ->hasCommand(SpaInstall::class);
+    }
+
+    public function bootingPackage()
+    {
+        $this->publishes([
+            __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
+        ], 'spa-vite-config');
     }
 }
