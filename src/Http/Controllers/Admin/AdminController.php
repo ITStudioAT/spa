@@ -9,7 +9,7 @@ use Itstudioat\Spa\Notifications\StandardEmail;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function config()
     {
         $data = [
             'from_address' => env('MAIL_FROM_ADDRESS'),

@@ -15,16 +15,16 @@ Route::middleware(['throttle:global'])->group(function () {
 
         Route::get('/homepage/{any?}', function () {
             return view('spa::homepage');
-
-            /* ADMIN ROUTES */
-            Route::get('/admin/{any?}', function () {
-                return view('spa::admin');
-            })->where('any', '.*');
-
-            /* APPLICATION ROUTES */
-            Route::get('/application/{any?}', function () {
-                return view('spa::application');
-            })->where('any', '.*');
         });
+
+        /* ADMIN ROUTES */
+        Route::get('/admin/{any?}', function () {
+            return view('spa::admin');
+        })->where('any', '.*');
+
+        /* APPLICATION ROUTES */
+        Route::get('/application/{any?}', function () {
+            return view('spa::application');
+        })->where('any', '.*');
     });
 });

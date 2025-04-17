@@ -2,8 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Itstudioat\Spa\Http\Controllers\AdminController;
-use App\Http\Controllers\Homepage\HomepageController;
+use Itstudioat\Spa\Http\Controllers\Admin\AdminController;
+use Itstudioat\Spa\Http\Controllers\Homepage\HomepageController;
+
 
 // Globales Throttle
 Route::middleware(['throttle:global'])->group(function () {
