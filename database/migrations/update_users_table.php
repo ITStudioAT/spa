@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $columns = Schema::getColumnListing('users');
+
+            $droppables = [
+                'name',
+            ];
+
+            $existing = array_intersect($columns, $droppables);
+
+            if (!empty($existing)) {
+                $table->dropColumn($existing);
+            }
+
+            $table->string('last_name')->nullable();
+            $table->string('first_name')->nullable();
+            $table->timestamp('login_at')->nullable();
+            $table->string('login_ip')->nullable();
+            $table->boolean('is_fa2')->nullable()->default(0);
+            $table->string('token_2fa')->nullable();
+            $table->timestamp('token_2fa_expires_at')->nullable();
+            $table->boolean('is_active')->nullable()->default(1);
+        });
+    }
+};

@@ -3,8 +3,10 @@
 namespace Itstudioat\Spa;
 
 
+use Illuminate\Support\Facades\Route;
 use Itstudioat\Spa\Commands\SpaInstall;
 use Spatie\LaravelPackageTools\Package;
+use Itstudioat\Spa\Http\Controllers\AdminController;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class SpaServiceProvider extends PackageServiceProvider
@@ -19,12 +21,24 @@ class SpaServiceProvider extends PackageServiceProvider
         $package
             ->name('spa')
             ->hasConfigFile()
-            ->hasMigration('create_my_models_table')
+            ->hasMigration('update_users_table')
+            ->hasViews()
             ->hasCommand(SpaInstall::class);
     }
 
     public function bootingPackage()
     {
+
+        Route::macro('spa', function ($baseUrl = 'spa') {
+            Route::prefix($baseUrl)->group(function () {
+                Route::get('/', [AdminController::class, 'index']);
+            });
+        });
+
+        $this->publishes([
+            __DIR__ . '/../resources/dist' => base_path('resources/'),
+        ], 'spa-assets');
+
         $this->publishes([
             __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
         ], 'spa-vite-config');

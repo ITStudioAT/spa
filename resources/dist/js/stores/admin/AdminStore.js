@@ -1,0 +1,91 @@
+import { defineStore } from 'pinia'
+
+export const useAdminStore = defineStore("AdminStore", {
+
+    state: () => {
+        return {
+            router: null,
+            config: null,
+            is_loading: 0,
+            error: {
+                is_error: false,
+                status: null,
+                message: null,
+                timeout: 3000,
+                type: 'error'
+            }
+
+        }
+    },
+
+    actions: {
+        initialize(router) {
+            this.router = router;
+        },
+
+        async config() {
+            this.is_loading++;
+            try {
+                const response = await axios.get("/api/admin/config", {});
+                this.config = response.data;
+            } catch (error) {
+                this.redirect(error.response.status, error.response.data.message, 'error', this.config.timeout);
+            } finally {
+                this.is_loading--;
+            }
+        },
+
+        async loginStep1(email) {
+            this.is_loading++;
+            try {
+                return await axios.post("/api/admin/login_step_1", { email });
+
+            } catch (error) {
+                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                return false;
+            } finally {
+                this.is_loading--;
+            }
+        },
+
+        async loginStep2(data) {
+            this.is_loading++;
+            try {
+                return await axios.post("/api/admin/login_step_2", { data });
+            } catch (error) {
+                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                return false;
+            } finally {
+                this.is_loading--;
+            }
+        },
+
+
+        async loginStep3(data) {
+            this.is_loading++;
+            try {
+                return await axios.post("/api/admin/login_step_3", { data });
+            } catch (error) {
+                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                return false;
+            } finally {
+                this.is_loading--;
+            }
+        },
+
+        redirect(status, message, type, timeout) {
+            const redirectUrl = '/application/error?status=' + status + '&message=' + encodeURIComponent(message) + '&type=' + type + '&timeout=' + timeout;
+            window.location.href = redirectUrl; // This is a real redirect
+        },
+
+        errorMsg(status, message, type, timeout) {
+            this.error.status = status;
+            this.error.message = message;
+            this.error.type = type;
+            this.error.timeout = timeout;
+            this.error.is_error = true;
+        }
+
+    }
+})
+

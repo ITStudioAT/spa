@@ -21,6 +21,7 @@ This package requires:
 If you use Postmark for Mailing:
 ```bash
 composer require symfony/postmark-mailer
+composer require symfony/http-client
 ```
 
 To integrate all packages like vue:
