@@ -35,6 +35,18 @@ class SpaServiceProvider extends PackageServiceProvider
                 Route::get('/', function () {
                     return view('spa::homepage');
                 });
+
+                Route::get('/homepage/{any?}', function () {
+                    return view('homepage');
+                })->where('any', '.*');
+
+                Route::get('/admin/{any?}', function () {
+                    return view('admin');
+                })->where('any', '.*');
+
+                Route::get('/application/{any?}', function () {
+                    return view('application');
+                })->where('any', '.*');
             });
         });
 
