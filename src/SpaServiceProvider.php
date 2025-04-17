@@ -23,7 +23,9 @@ class SpaServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasMigration('update_users_table')
             ->hasViews()
-            ->hasCommand(SpaInstall::class);
+            ->hasCommand(SpaInstall::class)
+            ->hasCommand(CreateUser::class)
+        ;
     }
 
     public function bootingPackage()

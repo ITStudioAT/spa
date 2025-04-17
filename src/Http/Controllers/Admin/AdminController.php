@@ -25,7 +25,7 @@ class AdminController extends Controller
             'timeout' => config('spa.timeout', 3000),
             'title' => config('spa.title', 'Fresh Laravel'),
             'company' => config('spa.company', 'ItStudio.at'),
-            'version' => InstalledVersions::getPrettyVersion('Itstudioat/spa'),
+            'version' => InstalledVersions::getPrettyVersion('itstudioat/spa'),
         ];
 
         return response()->json($data, 200);
