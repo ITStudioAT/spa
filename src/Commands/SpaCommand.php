@@ -12,8 +12,9 @@ class SpaCommand extends Command
 
     public function handle(): int
     {
-        $this->comment('All done');
+        $text = config('spa.version');
+        $this->comment($text);
 
-        return self::SUCCESS;
+        return 0;
     }
 }

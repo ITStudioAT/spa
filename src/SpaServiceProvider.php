@@ -18,8 +18,7 @@ class SpaServiceProvider extends PackageServiceProvider
         $package
             ->name('spa')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_spa_table')
+            ->hasMigration('create_my_models_table')
             ->hasCommand(SpaCommand::class);
     }
 }
