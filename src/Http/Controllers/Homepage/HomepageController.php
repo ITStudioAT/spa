@@ -16,11 +16,10 @@ class HomepageController extends Controller
     public function config()
     {
 
-        info("da");
         $data = [
             'logo' => config('spa.logo', ''),
             'copyright' => config('spa.copyright', ''),
-            'timeout' => config('spa.copyright', 3000),
+            'timeout' => config('spa.timeout', 3000),
             'title' => config('spa.title', 'Fresh Laravel'),
             'company' => config('spa.company', 'ItStudio.at'),
         ];

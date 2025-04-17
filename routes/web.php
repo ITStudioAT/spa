@@ -10,6 +10,10 @@ Route::middleware(['throttle:global'])->group(function () {
     Route::middleware(['throttle:web'])->group(function () {
 
         /* HOMEPAGE ROUTES */
+        Route::get('/', function () {
+            return view('spa::homepage');
+        });
+
         Route::get('/homepage/{any?}', function () {
             return view('spa::homepage');
         });
