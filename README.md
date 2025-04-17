@@ -30,6 +30,11 @@ php artisan aps:install
 npm install
 ```
 
+Make storage:link
+```bash
+php artisan storage:link
+```
+
 At the first you can publish your vite.config.js like this:
 ```bash
 php artisan vendor:publish --tag=spa-vite-config --force
