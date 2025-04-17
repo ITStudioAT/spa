@@ -33,26 +33,7 @@ jobs:
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
-    services:
-        mysql:
-            image: mysql:8.0
-            env:
-                MYSQL_USER: root
-                MYSQL_PASSWORD: 
-                MYSQL_DATABASE: example
-                MYSQL_ROOT_PASSWORD:
-            ports:
-                - 3306
-            options: --health-cmd="mysqladmin ping" --health-interal=10s --health-timeout=5s --health-retries=3
-
-    
     steps:
-      - name: Verify MySQL Connection
-        run: |
-                mysql --version
-                sudo apt-get install -y mysql-client
-                mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }}  -uuser -psecret -e "SHOW DATABASES"
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -78,7 +59,4 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/pest --ci
-        env:
-            DB_USERNAME: root
-            DB_PASSWORD: 
-            DB_PORT: ${{ job.services.mysql.ports[3306]}}
+
