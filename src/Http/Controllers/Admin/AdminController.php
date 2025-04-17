@@ -2,6 +2,7 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
+use Composer\InstalledVersions;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Notification;
 use Itstudioat\Spa\Notifications\StandardEmail;
@@ -9,17 +10,59 @@ use Itstudioat\Spa\Notifications\StandardEmail;
 
 class AdminController extends Controller
 {
+
+    public function index()
+    {
+        return view('admin');
+    }
+
     public function config()
     {
+
         $data = [
-            'from_address' => env('MAIL_FROM_ADDRESS'),
-            'from_name' => env('MAIL_FROM_NAME'),
-            'subject' => 'Code für Login',
-            'markdown' => 'mails.admin.login2FaCode',
-            'token_2fa' => 'abcdef',
-            'token-expire-time' => config('spa.token-expire-time'),
+            'logo' => config('spa.logo', ''),
+            'copyright' => config('spa.copyright', ''),
+            'timeout' => config('spa.timeout', 3000),
+            'title' => config('spa.title', 'Fresh Laravel'),
+            'company' => config('spa.company', 'ItStudio.at'),
+            'version' => InstalledVersions::getPrettyVersion('Itstudioat/spa'),
         ];
 
-        Notification::route('mail', 'kron@naturwelt.at')->notify(new StandardEmail($data));
+        return response()->json($data, 200);
     }
+
+
+    public function loginStep1(LoginStep1Request $request)
+    {
+        $adminService = new AdminService();
+        $validated = $request->validated();
+
+        $user = $adminService->checkUserLogin($validated['email']);
+        return response()->json(['step' => 1], 200);
+    }
+
+    public function loginStep2(LoginStep2Request $request)
+    {
+        $adminService = new AdminService();
+        $validated = $request->validated();
+
+        $user = $adminService->checkUserLogin($validated['data']['email'], $validated['data']['password']);
+
+        if ($user->is_fa2) {
+            // Bei Benutzer ist 2-Faktoren-Authentifizierung aktiviert
+            $adminService->continueLoginFor2FaUser($user);
+            return response()->json(['step' => 2], 200);
+        } else {
+            // Keine 2-Faktoren-Authentifizierung ==> Login fertig
+            $data = [
+                'step' => 0,
+                'auth' => true,
+                'user' => $user,
+            ];
+
+            return response()->json($data, 200);
+        }
+    }
+
+    public function loginStep3(LoginStep3Request $request) {}
 }
