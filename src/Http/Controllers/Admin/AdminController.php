@@ -1,6 +1,6 @@
 <?php
 
-namespace Itstudioat\Spa\Http\Controllers;
+namespace Itstudioat\Spa\Http\Controllers\Admin;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Notification;

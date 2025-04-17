@@ -31,7 +31,7 @@ class SpaServiceProvider extends PackageServiceProvider
 
         $this->loadRoutes();
 
-        // web-route
+        // web-routes
         $this->publishes([
             __DIR__ . '/../routes/web.php' => base_path('routes/'),
         ], 'spa-routes');
