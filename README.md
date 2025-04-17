@@ -26,7 +26,7 @@ composer require symfony/http-client
 
 To integrate all packages like vue:
 ```bash
-php artisan aps:install
+php artisan spa:install
 npm install
 ```
 
@@ -50,7 +50,10 @@ Publishing the resources, make this after composer install and composer update
 php artisan vendor:publish --tag=spa-assets
 ```
 
-
+To inividualize the Mail-Logo, pusblish de Markdown files to resources/views/vendor/mail
+```bash
+php artisan vendor:publish --tag=laravel-mail
+```
 
 Add UserTrait to User-Model:
 ```bash

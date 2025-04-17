@@ -101,7 +101,7 @@ export default {
         async loginStep2(data) {
             await this.$refs.form.validate(); if (!this.is_valid) return;
             let answer = await this.adminStore.loginStep2(data);
-            if (answer.data.step == 0) redirect;
+            if (answer.data.step == 0) console.log('fertig');
             this.step = 2;
 
         },

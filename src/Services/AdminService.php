@@ -3,9 +3,9 @@
 namespace Itstudioat\Spa\Services;
 
 use App\Models\User;
-use App\Notifications\StandardEmail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
+use Itstudioat\Spa\Notifications\StandardEmail;
 
 
 class AdminService
@@ -16,7 +16,6 @@ class AdminService
         if (!$user = User::where('email', $email)->first()) abort(401, "Login funktioniert mit dieser E-Mail-Adresse nicht");
         if (!$user->is_active) abort(423, "Benutzer ist gesperrt");
 
-        info(session()->all());
 
         if ($password) {
             if (!Hash::check($password, $user->password)) abort(401, "Login funktioniert mit diesem Kennwort nicht");
@@ -39,7 +38,7 @@ class AdminService
             'from_address' => env('MAIL_FROM_ADDRESS'),
             'from_name' => env('MAIL_FROM_NAME'),
             'subject' => 'Code für Login',
-            'markdown' => 'mails.admin.login2FaCode',
+            'markdown' => 'spa::mails.admin.login2FaCode',
             'token_2fa' => $token_2fa,
             'token-expire-time' => config('spa.token-expire-time'),
         ];
