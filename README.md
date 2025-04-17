@@ -54,7 +54,7 @@ php artisan vendor:publish --tag=spa-assets
 
 Add UserTrait to User-Model:
 ```bash
-use Itstudioat\Traits\UserTrait\UserTrait;
+use Itstudioat\Spa\Traits\UserTrait;
 
 class User extends Authenticatable
 {

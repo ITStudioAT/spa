@@ -1,6 +1,6 @@
 <?php
 
-namespace Itstudioat\Traits\UserTrait;
+namespace Itstudioat\Spa\Traits;
 
 
 /* =============================== 

@@ -6,6 +6,9 @@ use Composer\InstalledVersions;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Notification;
 use Itstudioat\Spa\Notifications\StandardEmail;
+use Itstudioat\Spa\Http\Requests\Admin\LoginStep1Request;
+use Itstudioat\Spa\Http\Requests\Admin\LoginStep2Request;
+use Itstudioat\Spa\Http\Requests\Admin\LoginStep3Request;
 
 
 class AdminController extends Controller
