@@ -4,9 +4,9 @@ namespace Itstudioat\Spa;
 
 
 use Illuminate\Support\Facades\Route;
+use Itstudioat\Spa\Commands\CreateUser;
 use Itstudioat\Spa\Commands\SpaInstall;
 use Spatie\LaravelPackageTools\Package;
-use Itstudioat\Spa\Http\Controllers\AdminController;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class SpaServiceProvider extends PackageServiceProvider
