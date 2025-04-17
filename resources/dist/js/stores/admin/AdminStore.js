@@ -49,7 +49,6 @@ export const useAdminStore = defineStore("AdminStore", {
         },
 
         async loginStep2(data) {
-            console.log("loginStep2");
             this.is_loading++;
             try {
                 return await axios.post("/api/admin/login_step_2", { data });
