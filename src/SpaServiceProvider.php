@@ -31,7 +31,10 @@ class SpaServiceProvider extends PackageServiceProvider
 
         Route::macro('spa', function ($baseUrl = 'spa') {
             Route::prefix($baseUrl)->group(function () {
-                Route::get('/', [AdminController::class, 'index']);
+                /* Route::get('/', [AdminController::class, 'index']); */
+                Route::get('/', function () {
+                    return view('spa::homepage');
+                });
             });
         });
 

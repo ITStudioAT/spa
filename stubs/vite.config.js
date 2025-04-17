@@ -16,11 +16,11 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                /*
+
                 'resources/js/apps/homepage.js',
                 'resources/js/apps/admin.js',
                 'resources/js/apps/application.js',
-                */
+
             ],
             refresh: true,
         }),

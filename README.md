@@ -40,6 +40,13 @@ We will document here, what should be in the vite.config.js
 
 ```
 
+Publishing the resources, make this after composer install and composer update
+```bash
+php artisan vendor:publish --tag=spa-assets
+```
+
+
+
 Add UserTrait to User-Model:
 ```bash
 use Itstudioat\Traits\UserTrait\UserTrait;

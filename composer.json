@@ -48,13 +48,7 @@
         "analyse": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
-        "format": "vendor/bin/pint",
-        "post-install-cmd": [
-            "@php artisan vendor:publish --tag=spa-assets"
-        ],
-        "post-update-cmd": [
-            "@php artisan vendor:publish --tag=spa-assets"
-        ]
+        "format": "vendor/bin/pint"
     },
     "config": {
         "sort-packages": true,
