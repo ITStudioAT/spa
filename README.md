@@ -39,6 +39,18 @@ We will document here, what should be in the vite.config.js
 
 ```
 
+Add UserTrait to User-Model:
+```bash
+use Itstudioat\Traits\UserTrait\UserTrait;
+
+class User extends Authenticatable
+{
+    use UserTrait;
+    ...
+```
+
+
+
 You can publish and run the migrations with:
 
 ```bash

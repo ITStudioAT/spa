@@ -28,5 +28,11 @@ class SpaServiceProvider extends PackageServiceProvider
         $this->publishes([
             __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
         ], 'spa-vite-config');
+
+        $this->publishes([
+            __DIR__ . '/../Traits' => app_path('Traits'),
+        ], 'spa-traits');
+
+        // You can also add more publishes here (config, vite config, etc.)
     }
 }
