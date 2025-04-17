@@ -31,14 +31,22 @@ class SpaServiceProvider extends PackageServiceProvider
 
         $this->loadRoutes();
 
+        // web-route
+        $this->publishes([
+            __DIR__ . '/../routes/web.php' => base_path('routes/'),
+        ], 'spa-routes');
+
+        // resources
         $this->publishes([
             __DIR__ . '/../resources/dist' => base_path('resources/'),
         ], 'spa-assets');
 
+        // vite.config.js
         $this->publishes([
             __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
         ], 'spa-vite-config');
 
+        // Traits
         $this->publishes([
             __DIR__ . '/../Traits' => app_path('Traits'),
         ], 'spa-traits');

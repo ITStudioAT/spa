@@ -10,20 +10,20 @@ Route::middleware(['throttle:global'])->group(function () {
 
         /* HOMEPAGE ROUTES */
         Route::get('/', function () {
-            return view('homepage');
+            return view('spa::homepage');
         });
 
         Route::get('/homepage/{any?}', function () {
-            return view('homepage');
+            return view('spa::homepage');
 
             /* ADMIN ROUTES */
             Route::get('/admin/{any?}', function () {
-                return view('admin');
+                return view('spa::admin');
             })->where('any', '.*');
 
             /* APPLICATION ROUTES */
             Route::get('/application/{any?}', function () {
-                return view('application');
+                return view('spa::application');
             })->where('any', '.*');
         });
     });
