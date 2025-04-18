@@ -6,8 +6,10 @@
                 {{ config.version }}
             </v-card-subtitle>
             <v-card-title class="bg-secondary mb-4">
-                Admin Login
+                <div v-if="step >= 0 && step <= 9">Admin Login</div>
+                <div v-if="step >= 10 && step <= 19">Kennwort unbekannt</div>
             </v-card-title>
+            <!-- Login STEP 0 = E-Mail -->
             <v-card-text v-if="step == 0">
                 <v-form ref="form" v-model="is_valid" @submit.prevent="loginStep1(data)" class="mb-4">
                     <div class="text-caption text-text">Bitte die E-Mail-Adresse eingeben</div>
@@ -15,10 +17,11 @@
                 </v-form>
                 <v-btn block color="success" slim flat rounded="0" @click="loginStep1(data)">Weiter</v-btn>
                 <div class="text-caption text-center font-weight-light">oder</div>
-                <v-btn block color="primary" slim flat rounded="0" variant="text">Kennwort
+                <v-btn block color="primary" slim flat rounded="0" variant="text" @click="passwordUnknown">Kennwort
                     unbekannt</v-btn>
             </v-card-text>
 
+            <!-- Login STEP 1 = Password -->
             <v-card-text v-if="step == 1">
                 <v-form ref="form" v-model="is_valid" @submit.prevent="loginStep2(data)" class="mb-4">
                     <div class="text-caption text-text">Bitte das Kennwort eingeben</div>
@@ -35,6 +38,7 @@
             </v-card-text>
 
 
+            <!-- Login STEP 2 = Token_2fa -->
             <v-card-text v-if="step == 2">
                 <v-form ref="form" v-model="is_valid" @submit.prevent="loginStep3(data)" class="mb-4">
                     <v-alert closable color="success" type="info" text="Bitte prüfen Sie Ihre E-Mails" />
@@ -45,7 +49,22 @@
                 <div class="text-caption text-center font-weight-light">oder</div>
                 <v-btn block color="warning" slim flat rounded="0" variant="text" @click="restartLogin">Zurück</v-btn>
             </v-card-text>
+
+
+            <!-- Password unknown STEP 10 = E-Mail -->
+            <v-card-text v-if="step == 10">
+                <v-form ref="form" v-model="is_valid" @submit.prevent="passwordUnknownStep1(data)" class="mb-4">
+                    <div class="text-caption text-text">Bitte die E-Mail-Adresse eingeben</div>
+                    <v-text-field autofocus v-model="data.email" label="Email" :rules="[required(), mail()]" />
+                </v-form>
+                <v-btn block color="success" slim flat rounded="0" @click="passwordUnknownStep1(data)">Weiter</v-btn>
+                <div class="text-caption text-center font-weight-light">oder</div>
+                <v-btn block color="primary" slim flat rounded="0" variant="text">Zurück zum Login</v-btn>
+            </v-card-text>
+
         </v-card>
+
+
 
     </v-container>
 </template>
@@ -95,6 +114,11 @@ export default {
             this.step = 0;
         },
 
+        passwordUnknown() {
+            this.step = 10;
+
+        },
+
         async loginStep1(data) {
             this.is_valid = false;
             await this.$refs.form.validate(); if (!this.is_valid) return;
@@ -116,6 +140,15 @@ export default {
             if (this.data.token_2fa.length != 6) return;
             data.step = 3;
             if (await this.adminStore.loginStep3(data)) this.$router.push('/admin/dashboard');
+        },
+
+        async passwordUnknownStep1(data) {
+            this.is_valid = false;
+            console.log("unknown");
+            return;
+            await this.$refs.form.validate(); if (!this.is_valid) return;
+            data.step = 1;
+            if (await this.adminStore.loginStep1(data)) this.step = 1;
         },
 
 

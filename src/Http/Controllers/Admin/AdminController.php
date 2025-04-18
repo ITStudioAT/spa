@@ -21,7 +21,6 @@ class AdminController extends Controller
 
     public function config()
     {
-
         $data = [
             'logo' => config('spa.logo', ''),
             'copyright' => config('spa.copyright', ''),

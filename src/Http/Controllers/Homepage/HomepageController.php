@@ -2,7 +2,7 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Homepage;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 
 class HomepageController extends Controller
@@ -20,7 +20,7 @@ class HomepageController extends Controller
             'logo' => config('spa.logo', ''),
             'copyright' => config('spa.copyright', ''),
             'timeout' => config('spa.timeout', 3000),
-            'title' => config('spa.title', 'Fresh Laravel'),
+            'title' => config('spa.title', 'Spa'),
             'company' => config('spa.company', 'ItStudio.at'),
         ];
 

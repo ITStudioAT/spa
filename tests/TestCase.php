@@ -2,9 +2,12 @@
 
 namespace Itstudioat\Spa\Tests;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Itstudioat\Spa\SpaServiceProvider;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -14,17 +17,20 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
-        // Führe Laravel-Migrationen aus (users, etc.)
-        $this->loadLaravelMigrations();
+        // Manuell den APP_KEY setzen
+        config(['app.key' => 'base64:' . base64_encode(random_bytes(32))]);
 
-        // Führe ggf. packageeigene Migrationen aus
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(config('spa.api_throttle', 60))->by($request->user()?->id ?: $request->ip());
+        });
 
-        Factory::guessFactoryNamesUsing(
-            fn(string $modelName) => 'Itstudioat\\Spa\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
-        );
+        RateLimiter::for('web', function (Request $request) {
+            return Limit::perMinute(config('spa.web_throttle', 60))->by($request->user()?->id ?: $request->ip());
+        });
 
-        Route::spa();
+        RateLimiter::for('global', function (Request $request) {
+            return Limit::perMinute(config('spa.global_throttle', 60));
+        });
     }
 
     protected function getPackageProviders($app)
