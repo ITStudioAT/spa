@@ -8,36 +8,33 @@ use Illuminate\Support\Facades\Hash;
 
 class CreateUser extends Command
 {
-    // The name and signature of the console command.
-    protected $signature = 'user:create {first_name} {last_name} {email} {password}';
+    // Kein Argument in der Signature definieren
+    protected $signature = 'user:create';
 
-    // The console command description.
-    protected $description = 'Create a new user with first_name, last_name, email, and password';
+    protected $description = 'Interaktiv einen neuen Benutzer erstellen';
 
-    // Execute the console command.
     public function handle()
     {
-        // Get the input data
-        $first_name = $this->argument('first_name');
-        $last_name = $this->argument('last_name');
-        $email = $this->argument('email');
-        $password = $this->argument('password');
+        // Schrittweise Eingabe
+        $first_name = $this->ask('Vorname');
+        $last_name = $this->ask('Nachname');
+        $email = $this->ask('E-Mail');
+        $password = $this->secret('Passwort (wird ausgeblendet)');
 
-        // Validate if email already exists
+        // Validierung
         if (User::where('email', $email)->exists()) {
-            $this->error('Email already exists!');
+            $this->error('Diese E-Mail-Adresse existiert bereits!');
             return;
         }
 
-        // Create the new user
+        // Benutzer erstellen
         $user = User::create([
             'first_name' => $first_name,
             'last_name' => $last_name,
             'email' => $email,
-            'password' => Hash::make($password), // Hash the password
+            'password' => Hash::make($password),
         ]);
 
-        // Output success message
-        $this->info("User {$user->first_name} {$user->last_name} created successfully.");
+        $this->info("Benutzer {$user->first_name} {$user->last_name} erfolgreich erstellt.");
     }
 }
