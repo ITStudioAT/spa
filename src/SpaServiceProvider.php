@@ -21,7 +21,7 @@ class SpaServiceProvider extends PackageServiceProvider
         $package
             ->name('spa')
             ->hasConfigFile()
-            ->hasMigration('0001_update_users_table')
+            ->hasMigration('00001_update_users_table')
             ->hasViews()
             ->hasCommand(SpaInstall::class)
             ->hasCommand(CreateUser::class)
