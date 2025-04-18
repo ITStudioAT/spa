@@ -4,8 +4,8 @@ import Application_Error from '@/pages/application/Error.vue'
 
 
 const routes = [
-    { path: '/spa', component: Index },
-    { path: '/spa/homepage/error', component: Application_Error },
+    { path: '/', component: Index },
+    { path: '/homepage/error', component: Application_Error },
 
 
 ];
@@ -18,6 +18,9 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
 
+    console.log('routing');
+    console.log(to);
+    console.log(next);
     next();
     return;
 

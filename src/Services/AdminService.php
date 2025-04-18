@@ -21,19 +21,17 @@ class AdminService
 
             if (!$user->is_fa2) {
                 // Login durchführen, sofern keine 2-Faktoren-Authentifizierung notwendig ist
-                auth()->login($user);
-                request()->session()->regenerate();
+                $user->login();
             }
         }
 
         if ($data['step'] == 3) {
             if (!Hash::check($data['password'], $user->password)) abort(401, "Login funktioniert mit diesem Kennwort nicht");
 
-            if (!$user->checkToken2Fa($token_2fa))  abort(401, "Login funktioniert nicht. Die Zeit ist abgelaufen.");
+            if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Login funktioniert nicht. Code falsch oder Zeit abgelaufen.");
 
             // Login durchführen
-            auth()->login($user);
-            request()->session()->regenerate();
+            $user->login();
         }
 
         return $user;
@@ -41,7 +39,8 @@ class AdminService
 
     public function continueLoginFor2FaUser($user)
     {
-        $token_2fa = $user->setToken2Fa(config('spa.token-expire-time'));
+
+        $token_2fa = $user->setToken2Fa(config('spa.token_expire_time'));
 
         $data = [
             'from_address' => env('MAIL_FROM_ADDRESS'),
@@ -49,7 +48,7 @@ class AdminService
             'subject' => 'Code für Login',
             'markdown' => 'spa::mails.admin.login2FaCode',
             'token_2fa' => $token_2fa,
-            'token-expire-time' => config('spa.token-expire-time'),
+            'token-expire-time' => config('spa.token_expire_time'),
         ];
 
         Notification::route('mail', $user->email)->notify(new StandardEmail($data));

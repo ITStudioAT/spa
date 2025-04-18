@@ -26,4 +26,18 @@ trait UserTrait
 
         return false; // Token is invalid or expired
     }
+
+    public function login()
+    {
+        auth()->login($this);
+        $this->rememberLogin();
+        request()->session()->regenerate();
+    }
+
+    private function rememberLogin()
+    {
+        $this->login_at = now();
+        $this->login_ip = request()->ip();
+        $this->save();
+    }
 }

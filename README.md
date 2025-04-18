@@ -65,7 +65,23 @@ class User extends Authenticatable
     ...
 ```
 
+Add the Throttle-functionality to app/Prividers/AppServiceProvider
+```bash
+public function boot(): void
+{
+    RateLimiter::for('api', function (Request $request) {
+        return Limit::perMinute(config('spa.api_throttle', 60))->by($request->user()?->id ?: $request->ip());
+    });
 
+    RateLimiter::for('web', function (Request $request) {
+        return Limit::perMinute(config('spa.web_throttle', 60))->by($request->user()?->id ?: $request->ip());
+    });
+
+    RateLimiter::for('global', function (Request $request) {
+        return Limit::perMinute(config('spa.global_throttle', 60));
+    });
+}
+```
 
 You can publish and run the migrations with:
 

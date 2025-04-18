@@ -4,7 +4,7 @@ namespace Itstudioat\Spa\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginStep2Request extends FormRequest
+class LoginStep3Request extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

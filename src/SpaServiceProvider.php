@@ -28,6 +28,8 @@ class SpaServiceProvider extends PackageServiceProvider
         ;
     }
 
+    public function packageRegistered() {}
+
     public function bootingPackage()
     {
 

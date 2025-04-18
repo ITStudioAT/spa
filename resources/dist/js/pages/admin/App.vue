@@ -11,10 +11,8 @@
                 <v-row justify="center" no-gutters>
                     <v-col cols="12" class="text-center">
                         <v-btn text variant="text">Impressum</v-btn>
-                        {{ is_loading }}
                     </v-col>
                 </v-row>
-
             </v-footer>
         </v-layout>
 

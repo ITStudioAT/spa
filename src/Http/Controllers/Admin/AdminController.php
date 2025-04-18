@@ -35,10 +35,8 @@ class AdminController extends Controller
     }
 
 
-    public function loginStep1(Request $request)
+    public function loginStep1(LoginStep1Request $request)
     {
-        info($request->all());
-        return;
         $adminService = new AdminService();
         $validated = $request->validated();
 
@@ -72,5 +70,13 @@ class AdminController extends Controller
     {
         $adminService = new AdminService();
         $validated = $request->validated();
+        $user = $adminService->checkUserLogin($validated['data']);
+        $data = [
+            'step' => 0,
+            'auth' => true,
+            'user' => $user,
+        ];
+
+        return response()->json($data, 200);
     }
 }

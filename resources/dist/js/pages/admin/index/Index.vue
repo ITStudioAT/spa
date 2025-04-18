@@ -9,8 +9,7 @@
                 Admin Login
             </v-card-title>
             <v-card-text v-if="step == 0">
-                <v-form ref="form" v-model="is_valid" @submit.prevent="loginStep1(data)" @keyup.enter="loginStep1(data)"
-                    class="mb-4">
+                <v-form ref="form" v-model="is_valid" @submit.prevent="loginStep1(data)" class="mb-4">
                     <div class="text-caption text-text">Bitte die E-Mail-Adresse eingeben</div>
                     <v-text-field autofocus v-model="data.email" label="Email" :rules="[required(), mail()]" />
                 </v-form>
@@ -21,8 +20,7 @@
             </v-card-text>
 
             <v-card-text v-if="step == 1">
-                <v-form ref="form" v-model="is_valid" @submit.prevent="loginStep2(data)" @keyup.enter="loginStep2(data)"
-                    class="mb-4">
+                <v-form ref="form" v-model="is_valid" @submit.prevent="loginStep2(data)" class="mb-4">
                     <div class="text-caption text-text">Bitte das Kennwort eingeben</div>
                     <v-text-field autofocus label="Kennwort"
                         :append-icon="is_password_visible ? 'mdi-eye' : 'mdi-eye-off'"
@@ -38,18 +36,17 @@
 
 
             <v-card-text v-if="step == 2">
-                <v-form ref="form" v-model="is_valid" @submit.prevent="loginStep3(data)" @keyup.enter="loginStep3(data)"
-                    class="mb-4">
+                <v-form ref="form" v-model="is_valid" @submit.prevent="loginStep3(data)" class="mb-4">
+                    <v-alert closable color="success" type="info" text="Bitte prüfen Sie Ihre E-Mails" />
                     <div class="text-caption text-text">Bitte den Code laut E-Mail eingeben</div>
-                    <v-otp-input autofocus v-model="data.token_2fa" :rules="[required(), minLength(6), maxLength(6)]" />
+                    <v-otp-input autofocus v-model="data.token_2fa" />
                 </v-form>
                 <v-btn block color="success" slim flat rounded="0" @click="loginStep3(data)">Anmelden</v-btn>
                 <div class="text-caption text-center font-weight-light">oder</div>
                 <v-btn block color="warning" slim flat rounded="0" variant="text" @click="restartLogin">Zurück</v-btn>
             </v-card-text>
-
-
         </v-card>
+
     </v-container>
 </template>
 
@@ -81,7 +78,7 @@ export default {
     },
 
     computed: {
-        ...mapWritableState(useAdminStore, ['config', 'is_loading', 'error']),
+        ...mapWritableState(useAdminStore, ['config', 'is_loading', 'error', 'api_response']),
 
     },
 
@@ -99,26 +96,26 @@ export default {
         },
 
         async loginStep1(data) {
+            this.is_valid = false;
             await this.$refs.form.validate(); if (!this.is_valid) return;
             data.step = 1;
-            let answer = await this.adminStore.loginStep1(data);
-            this.step = 1;
+            if (await this.adminStore.loginStep1(data)) this.step = 1;
         },
 
         async loginStep2(data) {
+            this.is_valid = false;
             await this.$refs.form.validate(); if (!this.is_valid) return;
             data.step = 2;
-            let answer = await this.adminStore.loginStep2(data);
-            if (answer.data.step == 0) console.log('fertig');
-            this.step = 2;
-
+            if (await this.adminStore.loginStep2(data)) {
+                if (this.api_response.data.step == 0) this.$router.push('/admin/dashboard');
+                this.step = 2;
+            }
         },
 
         async loginStep3(data) {
-            await this.$refs.form.validate(); if (!this.is_valid) return;
+            if (this.data.token_2fa.length != 6) return;
             data.step = 3;
-            let answer = await this.adminStore.loginStep3(data);
-            console.log("2fa fertig");
+            if (await this.adminStore.loginStep3(data)) this.$router.push('/admin/dashboard');
         },
 
 
