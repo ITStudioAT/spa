@@ -59,7 +59,8 @@
                 </v-form>
                 <v-btn block color="success" slim flat rounded="0" @click="passwordUnknownStep1(data)">Weiter</v-btn>
                 <div class="text-caption text-center font-weight-light">oder</div>
-                <v-btn block color="primary" slim flat rounded="0" variant="text">Zurück zum Login</v-btn>
+                <v-btn block color="primary" slim flat rounded="0" variant="text" @click="restartLogin">Zurück zum
+                    Login</v-btn>
             </v-card-text>
 
         </v-card>
