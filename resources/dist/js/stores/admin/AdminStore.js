@@ -38,6 +38,45 @@ export const useAdminStore = defineStore("AdminStore", {
             }
         },
 
+        async passwordUnknownStep1(data) {
+            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            try {
+                this.api_response = await axios.post("/api/admin/password_unknown_step_1", { data });
+                return true;
+            } catch (error) {
+                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                return false;
+            } finally {
+                this.is_loading--;
+            }
+        },
+
+        async passwordUnknownStep2(data) {
+            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            try {
+                this.api_response = await axios.post("/api/admin/password_unknown_step_2", { data });
+                return true;
+            } catch (error) {
+                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                return false;
+            } finally {
+                this.is_loading--;
+            }
+        },
+
+        async passwordUnknownStep3(data) {
+            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            try {
+                this.api_response = await axios.post("/api/admin/password_unknown_step_3", { data });
+                return true;
+            } catch (error) {
+                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                return false;
+            } finally {
+                this.is_loading--;
+            }
+        },
+
         async loginStep1(data) {
             this.is_loading++; this.api_response = null; this.error.is_error = false;
             try {

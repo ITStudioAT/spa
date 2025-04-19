@@ -18,9 +18,6 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
 
-    console.log('routing');
-    console.log(to);
-    console.log(next);
     next();
     return;
 

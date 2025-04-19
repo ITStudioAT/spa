@@ -1,7 +1,7 @@
 <x-mail::message>
 # {{ $data['subject'] }}
 
-Bitte diesen Code beim Login eingeben:
+Bitte diesen Code eingeben:
 
 <h1>{{ $data['token_2fa'] }}</h1>
 

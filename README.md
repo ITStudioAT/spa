@@ -55,7 +55,7 @@ To inividualize the Mail-Logo, pusblish de Markdown files to resources/views/ven
 php artisan vendor:publish --tag=laravel-mail
 ```
 
-Add UserTrait to User-Model:
+Add UserTrait, HasApiToken to User-Model:
 ```bash
 use Itstudioat\Spa\Traits\UserTrait;
 
@@ -63,6 +63,38 @@ class User extends Authenticatable
 {
     use UserTrait;
     ...
+```
+
+
+For sanctum installation:
+```bash
+    php artisan install:api
+```
+
+For sanctum security add HasApiToken to User-Model:
+```bash
+use Itstudioat\Spa\Traits\UserTrait;
+use Laravel\Sanctum\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiToken;
+    ...
+```
+
+Add the middleware to app/bootstrapp/app.php
+```bash
+    ->withMiddleware(function (Middleware $middleware) {
+        ...
+        $middleware->statefulApi();
+        ...
+    })
+```
+
+Be sure, in resources/js/bootstrap.js are following two lines:
+```bash
+    axios.defaults.withCredentials = true;
+    axios.defaults.withXSRFToken = true;
 ```
 
 Add the Throttle-functionality to app/Prividers/AppServiceProvider

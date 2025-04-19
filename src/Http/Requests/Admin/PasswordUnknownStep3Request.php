@@ -4,7 +4,7 @@ namespace Itstudioat\Spa\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginStep2Request extends FormRequest
+class PasswordUnknownStep3Request extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,10 @@ class LoginStep2Request extends FormRequest
     {
 
         return [
-            'data.step' => 'required|in:LOGIN_ENTER_PASSWORD',
+            'data.step' => 'required|in:PASSWORD_UNKNOWN_ENTER_TOKEN_2',
             'data.email' => 'required|email|max:255',
-            'data.password' => 'required|string|min:8|max:255',
+            'data.token_2fa' => 'required|string|size:6',
+            'data.token_2fa_2' => 'required|string|size:6',
         ];
     }
 }

@@ -9,6 +9,9 @@ use Itstudioat\Spa\Services\AdminService;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep1Request;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep2Request;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep3Request;
+use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep1Request;
+use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep2Request;
+use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep3Request;
 
 
 class AdminController extends Controller
@@ -33,6 +36,51 @@ class AdminController extends Controller
         return response()->json($data, 200);
     }
 
+    public function passwordUnknownStep1(PasswordUnknownStep1Request $request)
+    {
+        $adminService = new AdminService();
+        $validated = $request->validated();
+
+        $user = $adminService->checkPasswordUnknown($validated['data']);
+        // Token zusenden
+        $adminService->sendPasswordResetToken($user, $user->email);
+        $data = ['step' => 'PASSWORD_UNKNOWN_ENTER_TOKEN'];
+        return response()->json($data, 200);
+    }
+
+    public function passwordUnknownStep2(PasswordUnknownStep2Request $request)
+    {
+        $adminService = new AdminService();
+        $validated = $request->validated();
+
+        $user = $adminService->checkPasswordUnknown($validated['data']);
+        if (!$user->is_fa2) {
+            $data = ['step' => 'PASSWORD_UNKNOWN_SUCCESS'];
+            return response()->json($data, 200);
+        }
+
+        // User hat 2-Faktoren-Authentifizierung, es existiert jedoch keine 2. E-Mail
+        if (!$user->email_2fa) abort(401, "Kennwort zurücksetzen funktioniert nicht. Sie haben keine weitere E-Mail-Adresse.");
+
+        // Token 2 zusenden
+        $adminService->sendPasswordResetToken($user, $user->email_2fa);
+
+        $data = ['step' => 'PASSWORD_UNKNOWN_ENTER_TOKEN_2'];
+        return response()->json($data, 200);
+    }
+
+    public function passwordUnknownStep3(PasswordUnknownStep3Request $request)
+    {
+        $adminService = new AdminService();
+        $validated = $request->validated();
+
+        $user = $adminService->checkPasswordUnknown($validated['data']);
+        if (!$user->is_fa2) abort(401, "Kennwort zurücksetzen funktioniert nicht. 2-Faktoren-Authentifizierung ist nicht aktiviert.");
+
+        $data = ['step' => 'PASSWORD_UNKNOWN_ENTER_PASSWORD'];
+        return response()->json($data, 200);
+    }
+
 
     public function loginStep1(LoginStep1Request $request)
     {
@@ -40,7 +88,8 @@ class AdminController extends Controller
         $validated = $request->validated();
 
         $user = $adminService->checkUserLogin($validated['data']);
-        return response()->json(['step' => 1], 200);
+        $data = ['step' => 'LOGIN_ENTER_PASSWORD'];
+        return response()->json($data, 200);
     }
 
     public function loginStep2(LoginStep2Request $request)
@@ -51,18 +100,19 @@ class AdminController extends Controller
         $user = $adminService->checkUserLogin($validated['data']);
 
         if ($user->is_fa2) {
-            // Bei Benutzer ist 2-Faktoren-Authentifizierung aktiviert
+            // Bei Benutzer ist 2-Faktoren-Authentifizierung aktiviert => wir brauchen einen Code
             $adminService->continueLoginFor2FaUser($user);
-            return response()->json(['step' => 2], 200);
+            $data = ['step' => 'LOGIN_ENTER_TOKEN'];
+            return response()->json($data, 200);
         } else {
             // Keine 2-Faktoren-Authentifizierung ==> Login fertig
             $data = [
-                'step' => 0,
+                'step' => 'LOGIN_SUCCESS',
                 'auth' => true,
                 'user' => $user,
             ];
+            return response()->json($data, 200);
         }
-        return response()->json($data, 200);
     }
 
     public function loginStep3(LoginStep3Request $request)
@@ -71,7 +121,7 @@ class AdminController extends Controller
         $validated = $request->validated();
         $user = $adminService->checkUserLogin($validated['data']);
         $data = [
-            'step' => 0,
+            'step' => 'LOGIN_SUCCESS',
             'auth' => true,
             'user' => $user,
         ];
