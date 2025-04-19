@@ -71,18 +71,25 @@ class AdminService
     }
 
 
-    public function sendPasswordResetToken($user, $email)
+    public function sendPasswordResetToken($select = 1, $user, $email)
     {
-        $token_2fa = $user->setToken2Fa(config('spa.token_expire_time'));
+        $token_2fa = $user->setToken2Fa($select, config('spa.token_expire_time'));
 
         $data = [
             'from_address' => env('MAIL_FROM_ADDRESS'),
             'from_name' => env('MAIL_FROM_NAME'),
             'subject' => 'Code zum Zurücksetzen des Kennwortes',
             'markdown' => 'spa::mails.admin.sendCode',
-            'token_2fa' => $token_2fa,
             'token-expire-time' => config('spa.token_expire_time'),
         ];
+
+        if ($select == 1) {
+            $data['token_2fa'] = $token_2fa;
+        }
+
+        if ($select == 2) {
+            $data['token_2fa_2'] = $token_2fa;
+        }
 
         Notification::route('mail', $email)->notify(new StandardEmail($data));
     }

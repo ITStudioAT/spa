@@ -43,7 +43,7 @@ class AdminController extends Controller
 
         $user = $adminService->checkPasswordUnknown($validated['data']);
         // Token zusenden
-        $adminService->sendPasswordResetToken($user, $user->email);
+        $adminService->sendPasswordResetToken(1, $user, $user->email);
         $data = ['step' => 'PASSWORD_UNKNOWN_ENTER_TOKEN'];
         return response()->json($data, 200);
     }
@@ -63,7 +63,7 @@ class AdminController extends Controller
         if (!$user->email_2fa) abort(401, "Kennwort zurücksetzen funktioniert nicht. Sie haben keine weitere E-Mail-Adresse.");
 
         // Token 2 zusenden
-        $adminService->sendPasswordResetToken($user, $user->email_2fa);
+        $adminService->sendPasswordResetToken(2, $user, $user->email_2fa);
 
         $data = ['step' => 'PASSWORD_UNKNOWN_ENTER_TOKEN_2'];
         return response()->json($data, 200);
