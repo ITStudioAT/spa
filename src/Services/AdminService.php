@@ -21,7 +21,15 @@ class AdminService
         }
 
         if ($data['step'] == 'PASSWORD_UNKNOWN_ENTER_TOKEN_2') {
-            if (!$user->checkToken2Fa($data['token_2fa_2']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+            if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+            if (!$user->checkToken2Fa_2($data['token_2fa_2']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+        }
+
+        if ($data['step'] == 'PASSWORD_UNKNOWN_ENTER_PASSWORD') {
+            if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+            if (!$user->is_fa2 && !$user->checkToken2Fa_2($data['token_2fa_2']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+
+            if ($data['password'] != $data['password_repeat']) abort(401, "Kennwort und Widerholung Kennwort sind nicht identisch");
         }
 
         return $user;
@@ -34,20 +42,11 @@ class AdminService
 
         if ($data['step'] == 'LOGIN_ENTER_PASSWORD') {
             if (!Hash::check($data['password'], $user->password)) abort(401, "Login funktioniert mit diesem Kennwort nicht");
-
-            if (!$user->is_fa2) {
-                // Login durchführen, sofern keine 2-Faktoren-Authentifizierung notwendig ist
-                $user->login();
-            }
         }
 
         if ($data['step'] == 'LOGIN_ENTER_TOKEN') {
             if (!Hash::check($data['password'], $user->password)) abort(401, "Login funktioniert mit diesem Kennwort nicht");
-
             if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Login funktioniert nicht. Code falsch oder Zeit abgelaufen.");
-
-            // Login durchführen
-            $user->login();
         }
 
         return $user;
@@ -56,7 +55,7 @@ class AdminService
     public function continueLoginFor2FaUser($user)
     {
 
-        $token_2fa = $user->setToken2Fa(config('spa.token_expire_time'));
+        $token_2fa = $user->setToken2Fa(1, config('spa.token_expire_time'));
 
         $data = [
             'from_address' => env('MAIL_FROM_ADDRESS'),
@@ -80,16 +79,9 @@ class AdminService
             'from_name' => env('MAIL_FROM_NAME'),
             'subject' => 'Code zum Zurücksetzen des Kennwortes',
             'markdown' => 'spa::mails.admin.sendCode',
+            'token_2fa' => $token_2fa,
             'token-expire-time' => config('spa.token_expire_time'),
         ];
-
-        if ($select == 1) {
-            $data['token_2fa'] = $token_2fa;
-        }
-
-        if ($select == 2) {
-            $data['token_2fa_2'] = $token_2fa;
-        }
 
         Notification::route('mail', $email)->notify(new StandardEmail($data));
     }

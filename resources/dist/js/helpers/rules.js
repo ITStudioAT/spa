@@ -1,6 +1,6 @@
 
 export function useValidationRulesSetup() {
-    return { required, mail, mailOrNull, minLength, maxLength, exactLength, min, max, date, dateOrNull, shortDate, minOrNull, maxOrNull, time, timeOrNull, decimalOrNull };
+    return { required, mail, mailOrNull, minLength, maxLength, exactLength, min, max, date, dateOrNull, shortDate, minOrNull, maxOrNull, time, timeOrNull, decimalOrNull, passwordMatch };
 }
 
 
@@ -12,6 +12,11 @@ export function required() {
 export function mail() {
     return (v) => (/^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v)) || 'Es muss sich um eine gültige E-Mail handeln.';
 }
+
+export function passwordMatch(originalPassword) {
+    return (v) => v === originalPassword || "Kennwörter stimmen nicht überein.";
+}
+
 
 export function minLength(minLength) {
     return (v) => (v && v.length >= minLength) || "Die Eingabe ist zu kurz (min. " + minLength + " Zeichen)";

@@ -2,9 +2,11 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Composer\InstalledVersions;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Itstudioat\Spa\Services\AdminService;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep1Request;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep2Request;
@@ -12,6 +14,7 @@ use Itstudioat\Spa\Http\Requests\Admin\LoginStep3Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep1Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep2Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep3Request;
+use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep4Request;
 
 
 class AdminController extends Controller
@@ -81,6 +84,18 @@ class AdminController extends Controller
         return response()->json($data, 200);
     }
 
+    public function passwordUnknownStep4(PasswordUnknownStep4Request $request)
+    {
+        $adminService = new AdminService();
+        $validated = $request->validated();
+
+        $user = $adminService->checkPasswordUnknown($validated['data']);
+        $user->setPassword($validated['data']['password']);
+
+        $data = ['step' => 'PASSWORD_UNKNOWN_FINISHED'];
+        return response()->json($data, 200);
+    }
+
 
     public function loginStep1(LoginStep1Request $request)
     {
@@ -106,6 +121,11 @@ class AdminController extends Controller
             return response()->json($data, 200);
         } else {
             // Keine 2-Faktoren-Authentifizierung ==> Login fertig
+            //auth('web')->login($user);
+            $request->session()->regenerate();
+
+            info(print_r(session()->all(), true));
+
             $data = [
                 'step' => 'LOGIN_SUCCESS',
                 'auth' => true,
@@ -120,6 +140,9 @@ class AdminController extends Controller
         $adminService = new AdminService();
         $validated = $request->validated();
         $user = $adminService->checkUserLogin($validated['data']);
+        auth()->login($user);
+        request()->session()->regenerate();
+
         $data = [
             'step' => 'LOGIN_SUCCESS',
             'auth' => true,

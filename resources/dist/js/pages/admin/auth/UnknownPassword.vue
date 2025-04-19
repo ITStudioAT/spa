@@ -58,11 +58,26 @@
                         :type="is_password_visible ? 'text' : 'password'"
                         @click:append="() => (is_password_visible = !is_password_visible)"
                         :rules="[required(), minLength(8), maxLength(255)]" v-model="data.password" />
+                    <v-text-field label="Widerholung Kennwort"
+                        :append-icon="is_password_visible_repeat ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="is_password_visible_repeat ? 'text' : 'password'"
+                        @click:append="() => (is_password_visible_repeat = !is_password_visible_repeat)"
+                        :rules="[required(), minLength(8), maxLength(255), passwordMatch(data.password)]"
+                        v-model="data.password_repeat" />
                 </v-form>
-                <v-btn block color="success" slim flat rounded="0" @click="passwordUnknownStep1(data)">Weiter</v-btn>
+                <v-btn block color="success" slim flat rounded="0" @click="passwordUnknownStep4(data)">Speichern</v-btn>
                 <div class="text-caption text-center font-weight-light">oder</div>
                 <v-btn block color="primary" slim flat rounded="0" variant="text" @click="login">Zurück zum
                     Login</v-btn>
+            </v-card-text>
+
+            <!-- Password unknown STEP PASSWORD_UNKNOWN_FINISEH = Reset des Kennwortes erfolgreich abgeschlossen -->
+            <v-card-text v-if="step == 'PASSWORD_UNKNOWN_FINISHED'">
+
+                <v-alert closable color="success" type="info" text="Ihr Kennwort wurde erfolreich zurückgesetzt." />
+                <div class="text-caption text-text">Sie können sich jetzt mit dem neuen Kennwort einloggen</div>
+
+                <v-btn block color="success" slim flat rounded="0" @click="login">Zum Login</v-btn>
             </v-card-text>
 
         </v-card>
@@ -96,6 +111,7 @@ export default {
             is_valid: false,
             step: null,
             is_password_visible: false,
+            is_password_visible_repeat: false,
 
         };
     },
@@ -144,7 +160,15 @@ export default {
             if (this.data.token_2fa.length != 6) return;
             data.step = 'PASSWORD_UNKNOWN_ENTER_TOKEN_2';
             if (await this.adminStore.passwordUnknownStep3(data)) this.step = "PASSWORD_UNKNOWN_ENTER_PASSWORD";
-        }
+        },
+
+        async passwordUnknownStep4(data) {
+            this.is_valid = false;
+            await this.$refs.form.validate(); if (!this.is_valid) return;
+            data.step = 'PASSWORD_UNKNOWN_ENTER_PASSWORD';
+            if (await this.adminStore.passwordUnknownStep4(data)) this.step = "PASSWORD_UNKNOWN_FINISHED";
+
+        },
     },
 
 

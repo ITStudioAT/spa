@@ -18,9 +18,9 @@ Route::middleware(['throttle:global'])->group(function () {
         });
 
         /* ADMIN ROUTES */
-
-        Route::middleware(['web'])->name('spa.admin.')->group(function () {
+        Route::name('spa.admin.')->group(function () {
             Route::get('/admin/config',  [AdminController::class, 'config']);
+
             Route::post('/admin/login_step_1',  [AdminController::class, 'loginStep1']);
             Route::post('/admin/login_step_2',  [AdminController::class, 'loginStep2']);
             Route::post('/admin/login_step_3',  [AdminController::class, 'loginStep3']);
@@ -28,6 +28,7 @@ Route::middleware(['throttle:global'])->group(function () {
             Route::post('/admin/password_unknown_step_1',  [AdminController::class, 'passwordUnknownStep1']);
             Route::post('/admin/password_unknown_step_2',  [AdminController::class, 'passwordUnknownStep2']);
             Route::post('/admin/password_unknown_step_3',  [AdminController::class, 'passwordUnknownStep3']);
+            Route::post('/admin/password_unknown_step_4',  [AdminController::class, 'passwordUnknownStep4']);
         });
     });
 });

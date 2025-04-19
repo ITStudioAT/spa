@@ -64,6 +64,7 @@ export default {
     components: {},
 
     async beforeMount() {
+
         this.adminStore = useAdminStore();
         this.restartLogin();
 

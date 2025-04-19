@@ -2,6 +2,8 @@
 
 namespace Itstudioat\Spa\Traits;
 
+use Illuminate\Support\Facades\Hash;
+
 
 /* =============================== 
 ITStudioAT
@@ -34,17 +36,27 @@ trait UserTrait
         return false; // Token is invalid or expired
     }
 
-    public function login()
+    public function checkToken2Fa_2($token_2fa_2): string
     {
-        auth()->login($this);
-        $this->rememberLogin();
-        request()->session()->regenerate();
+        // Check if the token matches and is still valid
+        if ($this->token_2fa_2 == $token_2fa_2 && now()->isBefore($this->token_2fa_expires_at)) {
+            return true; // Token is valid and not expired
+        }
+
+        return false; // Token is invalid or expired
     }
 
     private function rememberLogin()
     {
         $this->login_at = now();
         $this->login_ip = request()->ip();
+        $this->save();
+    }
+
+
+    public function setPassword($password)
+    {
+        $this->password = Hash::make($password);
         $this->save();
     }
 }
