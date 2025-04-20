@@ -128,7 +128,7 @@ Add the middleware to app/bootstrapp/app.php
     ->withMiddleware(function (Middleware $middleware) {
         ...
       $middleware->statefulApi();
-        $middleware->append(StartSession::class);
+      $middleware->append(StartSession::class);
         ...
     })
 ```
@@ -159,18 +159,8 @@ Change the .env file
 SESSION_DOMAIN='.localhost'
 ```
 
-
-Be sure, in resources/js/bootstrap.js are following lines:
-```bash
-import axios from 'axios';
-window.axios = axios;
-window.axios.defaults.withCredentials = true;
-window.axios.defaults.headers.common['Accept'] = 'application/json';
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
-```
-
 Add the Throttle-functionality to app/Prividers/AppServiceProvider
+You can change the values
 ```bash
 public function boot(): void
 {
@@ -183,7 +173,7 @@ public function boot(): void
     });
 
     RateLimiter::for('global', function (Request $request) {
-        return Limit::perMinute(config('spa.global_throttle', 60));
+        return Limit::perMinute(config('spa.global_throttle', 1000));
     });
 }
 ```
@@ -198,8 +188,11 @@ Add a user with following command:
 
 
 ## Usage
-
-
+```bash
+   php artisan serve
+   npm run dev
+   php artisan queue:work
+```
 
 ## Testing
 
