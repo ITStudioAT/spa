@@ -10,9 +10,9 @@
 SPA is the initial Laravel installtion for a single page application.
 
 It contains:
-- vue with vue-router as Javascript-Framework
-- pinia as store for vue
-- vuetify as vue component framework
+- Vue with Vue-Router as Javascript-Framework
+- Pinia as store for vue
+- Vuetify as vue component framework
 - Sanctum as authentication system for SPAs 
 - Vite for asset bundling
 
@@ -35,15 +35,18 @@ You can install the package via composer:
 composer require itstudioat/spa
 ```
 
-This package requires:
-
-- "laravel/sanctum for authorization"
-
-If you use Postmark for Mailing:
+If you use Postmark for Mailing (i use it):
 ```bash
 composer require symfony/postmark-mailer
 composer require symfony/http-client
 ```
+
+To install the laravel sanctum and when you are asked, lets run the migrations:
+```bash
+php artisan install:api
+
+```
+
 
 To integrate all packages like vue:
 ```bash
@@ -60,11 +63,6 @@ At the first you can publish your vite.config.js like this:
 ```bash
 php artisan vendor:publish --tag=spa-vite-config --force
 ```
-But be careful. With the --force your are overwriting your own changes in this file.
-We will document here, what should be in the vite.config.js
-```bash
-
-```
 
 Publishing the resources, make this after composer install and composer update
 ```bash
@@ -76,7 +74,25 @@ To inividualize the Mail-Logo, pusblish de Markdown files to resources/views/ven
 php artisan vendor:publish --tag=laravel-mail
 ```
 
-Add UserTrait, HasApiToken to User-Model:
+You can publish and run the migrations with:
+```bash
+php artisan vendor:publish --tag="spa-migrations"
+php artisan migrate
+```
+
+You can publish the config file with:
+
+```bash
+php artisan vendor:publish --tag="spa-config"
+```
+
+Optionally, you can publish the views using
+
+```bash
+php artisan vendor:publish --tag="spa-views"
+```
+
+Add UserTrait, HasApiToken to User-Model (App/Models/User.php):
 ```bash
 use Itstudioat\Spa\Traits\UserTrait;
 
@@ -86,12 +102,6 @@ class User extends Authenticatable
     ...
 ```
 
-
-For sanctum installation:
-```bash
-    php artisan install:api
-```
-
 For sanctum security add HasApiToken to User-Model:
 ```bash
 use Itstudioat\Spa\Traits\UserTrait;
@@ -99,9 +109,14 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiToken;
+    use HasApiTokens;
     ...
 ```
+
+Change the User-Model from $fillable to $guarded
+```bash
+protected $guarded = [];
+```    
 
 Add the middleware to app/bootstrapp/app.php
 ```bash
@@ -112,10 +127,14 @@ Add the middleware to app/bootstrapp/app.php
     })
 ```
 
-Be sure, in resources/js/bootstrap.js are following two lines:
+Be sure, in resources/js/bootstrap.js are following lines:
 ```bash
-    axios.defaults.withCredentials = true;
-    axios.defaults.withXSRFToken = true;
+import axios from 'axios';
+window.axios = axios;
+window.axios.defaults.withCredentials = true;
+window.axios.defaults.headers.common['Accept'] = 'application/json';
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 ```
 
 Add the Throttle-functionality to app/Prividers/AppServiceProvider
@@ -136,31 +155,18 @@ public function boot(): void
 }
 ```
 
-You can publish and run the migrations with:
+Make your necessary changes in .env and config/app.php
 
+
+Add a user with following command:
 ```bash
-php artisan vendor:publish --tag="spa-migrations"
-php artisan migrate
+    php artisan user:create
 ```
 
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="spa-config"
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="spa-views"
-```
 
 ## Usage
 
-```php
-$spa = new Itstudioat\Spa();
-echo $spa->echoPhrase('Hello, Itstudioat!');
-```
+
 
 ## Testing
 
