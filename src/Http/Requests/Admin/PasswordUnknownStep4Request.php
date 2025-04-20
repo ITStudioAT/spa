@@ -26,7 +26,7 @@ class PasswordUnknownStep4Request extends FormRequest
             'data.step' => 'required|in:PASSWORD_UNKNOWN_ENTER_PASSWORD',
             'data.email' => 'required|email|max:255',
             'data.token_2fa' => 'required|string|size:6',
-            'data.token_2fa_2' => 'required|string|size:6',
+            'data.token_2fa_2' => 'nullable|string|size:6',
             'data.password' => 'required|string||min:8|max:255',
             'data.password_repeat' => 'required|string||min:8|max:255',
         ];

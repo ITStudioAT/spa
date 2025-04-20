@@ -18,6 +18,11 @@
                 <div class="text-caption text-center font-weight-light">oder</div>
                 <v-btn block color="primary" slim flat rounded="0" variant="text" @click="passwordUnknown">Kennwort
                     unbekannt</v-btn>
+                <div v-if="config.register_admin_allowed">
+                    <div class="text-caption text-center font-weight-light">oder</div>
+                    <v-btn block color="success" slim flat rounded="0" variant="text" @click="register">Neu
+                        registrieren</v-btn>
+                </div>
             </v-card-text>
 
             <!-- Login STEP LOGIN_ENTER_PASSWORD = Password -->
@@ -94,6 +99,10 @@ export default {
 
         passwordUnknown() {
             this.$router.push('/admin/unknown_password');
+        },
+
+        register() {
+            this.$router.push('/admin/register');
         },
 
         restartLogin() {

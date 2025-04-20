@@ -34,6 +34,7 @@ class AdminController extends Controller
             'title' => config('spa.title', 'Fresh Laravel'),
             'company' => config('spa.company', 'ItStudio.at'),
             'version' => InstalledVersions::getPrettyVersion('itstudioat/spa'),
+            'register_admin_allowed' => config('spa.register_admin_allowed', false),
         ];
 
         return response()->json($data, 200);

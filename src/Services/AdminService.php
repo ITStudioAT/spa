@@ -27,7 +27,7 @@ class AdminService
 
         if ($data['step'] == 'PASSWORD_UNKNOWN_ENTER_PASSWORD') {
             if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
-            if (!$user->is_fa2 && !$user->checkToken2Fa_2($data['token_2fa_2']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+            if ($user->is_fa2 && !$user->checkToken2Fa_2($data['token_2fa_2']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
 
             if ($data['password'] != $data['password_repeat']) abort(401, "Kennwort und Widerholung Kennwort sind nicht identisch");
         }

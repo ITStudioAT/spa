@@ -26,5 +26,9 @@ Route::middleware(['throttle:global', 'throttle:api', 'web'])->group(function ()
         Route::post('/admin/password_unknown_step_2',  [AdminController::class, 'passwordUnknownStep2']);
         Route::post('/admin/password_unknown_step_3',  [AdminController::class, 'passwordUnknownStep3']);
         Route::post('/admin/password_unknown_step_4',  [AdminController::class, 'passwordUnknownStep4']);
+
+        Route::post('/admin/register_step_1',  [AdminController::class, 'registerStep1']);
+        Route::post('/admin/register_step_2',  [AdminController::class, 'registerStep2']);
+        Route::post('/admin/register_step_3',  [AdminController::class, 'registerStep3']);
     });
 });
