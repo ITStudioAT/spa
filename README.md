@@ -29,6 +29,27 @@ First install a new Laravel app
 laravel new new-laravel-app
 ```
 
+To install the laravel sanctum and when you are asked, lets run the migrations:
+```bash
+php artisan install:api
+
+```
+
+Now add HasApiToken to User-Model:
+```bash
+use Laravel\Sanctum\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiTokens;
+    ...
+```
+
+Change the User-Model from $fillable to $guarded
+```bash
+protected $guarded = [];
+```    
+
 You can install the package via composer:
 
 ```bash
@@ -41,12 +62,6 @@ composer require symfony/postmark-mailer
 composer require symfony/http-client
 ```
 
-To install the laravel sanctum and when you are asked, lets run the migrations:
-```bash
-php artisan install:api
-
-```
-
 
 To integrate all packages like vue:
 ```bash
@@ -54,9 +69,15 @@ php artisan spa:install
 npm install
 ```
 
-Make storage:link
+Make storage:link and create  /storage/app/public/images folder
+put the favicon.ico and logo.png in this folder
 ```bash
 php artisan storage:link
+```
+
+Publishing the resources
+```bash
+php artisan vendor:publish --tag=spa-assets
 ```
 
 At the first you can publish your vite.config.js like this:
@@ -64,10 +85,7 @@ At the first you can publish your vite.config.js like this:
 php artisan vendor:publish --tag=spa-vite-config --force
 ```
 
-Publishing the resources, make this after composer install and composer update
-```bash
-php artisan vendor:publish --tag=spa-assets
-```
+
 
 To inividualize the Mail-Logo, pusblish de Markdown files to resources/views/vendor/mail
 ```bash
@@ -102,21 +120,6 @@ class User extends Authenticatable
     ...
 ```
 
-For sanctum security add HasApiToken to User-Model:
-```bash
-use Itstudioat\Spa\Traits\UserTrait;
-use Laravel\Sanctum\HasApiTokens;
-
-class User extends Authenticatable
-{
-    use HasApiTokens;
-    ...
-```
-
-Change the User-Model from $fillable to $guarded
-```bash
-protected $guarded = [];
-```    
 
 Add the middleware to app/bootstrapp/app.php
 ```bash
@@ -126,6 +129,33 @@ Add the middleware to app/bootstrapp/app.php
         ...
     })
 ```
+
+
+Publish the config/cors.php file
+```bash
+php artisan config:publish cors
+```
+
+Change the config file
+```bash
+ 'supports_credentials' => true,
+```
+
+Change this file resources/js/bootstrap.js
+```bash
+import axios from 'axios';
+window.axios = axios;
+window.axios.defaults.headers.common['Accept'] = 'application/json';
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.defaults.withCredentials = true;
+axios.defaults.withXSRFToken = true;
+```
+Change the .env file
+
+```bash
+SESSION_DOMAIN='.localhost'
+```
+
 
 Be sure, in resources/js/bootstrap.js are following lines:
 ```bash

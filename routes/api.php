@@ -7,7 +7,7 @@ use Itstudioat\Spa\Http\Controllers\Homepage\HomepageController;
 
 
 // Globales Throttle
-Route::middleware(['throttle:global', 'throttle:api', 'web'])->group(function () {
+Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
 
     /* HOMEPAGE ROUTES */
     Route::name('spa.homepage.')->group(function () {
