@@ -194,7 +194,7 @@ Add a user with following command:
    php artisan queue:work
 ```
 
-## Testing
+## Testingx
 
 ```bash
 composer test
