@@ -123,9 +123,12 @@ class User extends Authenticatable
 
 Add the middleware to app/bootstrapp/app.php
 ```bash
+    use Illuminate\Session\Middleware\StartSession;
+    ...
     ->withMiddleware(function (Middleware $middleware) {
         ...
-        $middleware->statefulApi();
+      $middleware->statefulApi();
+        $middleware->append(StartSession::class);
         ...
     })
 ```

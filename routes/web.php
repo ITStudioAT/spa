@@ -3,14 +3,18 @@
 use Illuminate\Support\Facades\Route;
 use Itstudioat\Spa\Http\Controllers\Admin\AdminController;
 
-Route::middleware(['throttle:global', 'throttle:web', 'web'])->group(function () {
 
 
 
+Route::middleware(['throttle:global', 'throttle:web'])->group(function () {
+
+
+    Route::get('/admin/login', function () {
+        return view('spa::admin');
+    })->name('login');
 
     // Alles wird gethrottlet
     Route::name('spa')->group(function () {
-
 
         /* HOMEPAGE ROUTES */
         Route::get('/', function () {
@@ -22,9 +26,7 @@ Route::middleware(['throttle:global', 'throttle:web', 'web'])->group(function ()
         });
 
         /* ADMIN ROUTES */
-        Route::get('/admin/login', function () {
-            return view('spa::admin');
-        })->name('login');
+
 
         Route::get('/admin/unknown_password', function () {
             return view('spa::admin');

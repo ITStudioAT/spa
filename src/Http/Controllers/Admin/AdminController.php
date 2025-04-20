@@ -137,7 +137,7 @@ class AdminController extends Controller
             return response()->json($data, 200);
         } else {
             // Keine 2-Faktoren-Authentifizierung ==> Login fertig
-            //auth('web')->login($user);
+            Auth::login($user);
             $request->session()->regenerate();
 
             info(print_r(session()->all(), true));
@@ -157,7 +157,7 @@ class AdminController extends Controller
         $validated = $request->validated();
         $user = $adminService->checkUserLogin($validated['data']);
         auth()->login($user);
-        request()->session()->regenerate();
+        $request->session()->regenerate();
 
         $data = [
             'step' => 'LOGIN_SUCCESS',
