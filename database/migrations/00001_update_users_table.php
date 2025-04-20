@@ -32,6 +32,7 @@ return new class extends Migration
             $table->timestamp('token_2fa_2_expires_at')->nullable();
             $table->string('email_2fa')->nullable();
             $table->boolean('is_active')->nullable()->default(1);
+            $table->timestamp('register_started_at')->nullable();
         });
     }
 };
