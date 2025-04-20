@@ -3,6 +3,7 @@
 namespace Itstudioat\Spa\Services;
 
 use App\Models\User;
+use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Itstudioat\Spa\Notifications\StandardEmail;
@@ -32,6 +33,27 @@ class AdminService
             if ($data['password'] != $data['password_repeat']) abort(401, "Kennwort und Widerholung Kennwort sind nicht identisch");
         }
 
+        return $user;
+    }
+
+
+    public function checkRegister($data): User
+    {
+        if ($user = User::where('email', $data['email'])->first()) abort(401, "Registrieren funktioniert mit dieser E-Mail-Adresse nicht");
+
+        return $user;
+    }
+
+    public function createRegisterUser($data): User
+    {
+        $user = User::create(
+            [
+                'email' => $data['email'],
+                'password' => Hash::make(now()),
+                'register_started_at' => now(),
+                'is_active' => false,
+            ]
+        );
         return $user;
     }
 
@@ -78,6 +100,22 @@ class AdminService
             'from_address' => env('MAIL_FROM_ADDRESS'),
             'from_name' => env('MAIL_FROM_NAME'),
             'subject' => 'Code zum Zurücksetzen des Kennwortes',
+            'markdown' => 'spa::mails.admin.sendCode',
+            'token_2fa' => $token_2fa,
+            'token-expire-time' => config('spa.token_expire_time'),
+        ];
+
+        Notification::route('mail', $email)->notify(new StandardEmail($data));
+    }
+
+    public function sendRegisterToken($select = 1, $user, $email)
+    {
+        $token_2fa = $user->setToken2Fa($select, config('spa.token_expire_time'));
+
+        $data = [
+            'from_address' => env('MAIL_FROM_ADDRESS'),
+            'from_name' => env('MAIL_FROM_NAME'),
+            'subject' => 'Code zum Registrieren',
             'markdown' => 'spa::mails.admin.sendCode',
             'token_2fa' => $token_2fa,
             'token-expire-time' => config('spa.token_expire_time'),

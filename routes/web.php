@@ -30,9 +30,12 @@ Route::middleware(['throttle:global', 'throttle:web', 'web'])->group(function ()
             return view('spa::admin');
         });
 
+
         Route::get('/admin/register', function () {
+            abort_unless(config('spa.register_admin_allowed'), 403);
             return view('spa::admin');
         });
+
 
 
         Route::get('/admin/{any?}', function () {
