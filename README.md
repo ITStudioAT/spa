@@ -6,7 +6,28 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/itstudioat/spa.svg?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
 
 
+# What is SPA
+SPA is the initial Laravel installtion for a single page application.
+
+It contains:
+- vue with vue-router as Javascript-Framework
+- pinia as store for vue
+- vuetify as vue component framework
+- Sanctum as authentication system for SPAs 
+- Vite for asset bundling
+
+It provides:
+- Login-page 
+- Password-forgotten-page
+
+The pages have all the necessary logistic behind 
+
 ## Installation
+
+First install a new Laravel app
+```bash
+laravel new new-laravel-app
+```
 
 You can install the package via composer:
 
