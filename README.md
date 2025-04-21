@@ -75,6 +75,18 @@ put the favicon.ico and logo.png in this folder
 php artisan storage:link
 ```
 
+Add the HasRoles-Trait to the App/Models/User.php
+```bash
+use HasRoles;
+```
+
+Publishing Spatie-Permission
+```bash
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+php artisan optimize:clear
+php artisan migrate
+```
+
 Publishing the resources
 ```bash
 php artisan vendor:publish --tag=spa-assets

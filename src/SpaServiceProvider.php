@@ -20,43 +20,35 @@ class SpaServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('spa')
-            ->hasConfigFile()
-            ->hasMigration('00001_update_users_table')
-            ->hasMigration('00002_update_users_table')
-            ->hasViews()
+            ->hasAssets()
             ->hasCommand(SpaInstall::class)
             ->hasCommand(CreateUser::class)
-        ;
+            ->hasConfigFile()
+            ->hasMigration('00001_update_users_table')
+            ->discoversMigrations()
+            ->runsMigrations()
+            ->hasRoutes(['web', 'admin'])
+            ->hasViews()
+            ->hasInstallCommand(function (InstallCommand $command) {
+                $command
+                    ->startWith(function (InstallCommand $command) {
+                        $command->info('Hello, and welcome to my great new package!');
+                    })
+                    ->publishConfigFile()
+                    ->publishAssets()
+                    ->publishMigrations()
+                    ->askToRunMigrations()
+                    ->endWith(function (InstallCommand $command) {
+                        $command->info('Have a great day!');
+                    });
+            });
     }
 
     public function packageRegistered() {}
 
     public function bootingPackage()
     {
-
         $this->loadRoutes();
-
-        // web-routes
-        $this->publishes([
-            __DIR__ . '/../routes/' => base_path('routes/'),
-        ], 'spa-routes');
-
-        // resources
-        $this->publishes([
-            __DIR__ . '/../resources/dist' => base_path('resources/'),
-        ], 'spa-assets');
-
-        // vite.config.js
-        $this->publishes([
-            __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
-        ], 'spa-vite-config');
-
-        // Traits
-        $this->publishes([
-            __DIR__ . '/../Traits' => app_path('Traits'),
-        ], 'spa-traits');
-
-        // You can also add more publishes here (config, vite config, etc.)
     }
 
     protected function loadRoutes()

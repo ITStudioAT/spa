@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('email_2fa')->nullable();
             $table->boolean('is_active')->nullable()->default(1);
             $table->timestamp('register_started_at')->nullable();
+            $table->timestamp('confirmed_at')->nullable();
         });
     }
 };
