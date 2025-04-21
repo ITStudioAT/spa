@@ -26,6 +26,7 @@ class SpaServiceProvider extends PackageServiceProvider
             ->hasCommand(CreateUser::class)
             ->hasConfigFile()
             ->hasMigration('00001_update_users_table')
+            ->publishesServiceProvider('SpaServiceProvider')
             ->runsMigrations()
             ->hasRoutes(['web', 'api'])
             ->hasViews()
@@ -38,6 +39,7 @@ class SpaServiceProvider extends PackageServiceProvider
                     ->publishAssets()
                     ->publishMigrations()
                     ->askToRunMigrations()
+                    ->copyAndRegisterServiceProviderInApp()
                     ->endWith(function (InstallCommand $command) {
                         $command->info('Have a great day!');
                     });
