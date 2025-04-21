@@ -9,12 +9,12 @@ use Itstudioat\Spa\Http\Controllers\Homepage\HomepageController;
 // Globales Throttle
 Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
 
-    /* HOMEPAGE ROUTES */
+    /***** HOMEPAGE ROUTES *****/
     Route::name('spa.homepage.')->group(function () {
         Route::get('/homepage/config',  [HomepageController::class, 'config']);
     });
 
-    /* ADMIN ROUTES */
+    /***** ADMIN ROUTES *****/
     Route::name('spa.admin.')->group(function () {
         Route::get('/admin/config',  [AdminController::class, 'config']);
 
@@ -30,5 +30,11 @@ Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
         Route::post('/admin/register_step_1',  [AdminController::class, 'registerStep1']);
         Route::post('/admin/register_step_2',  [AdminController::class, 'registerStep2']);
         Route::post('/admin/register_step_3',  [AdminController::class, 'registerStep3']);
+
+
+        /* SANCTUM */
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::post('/admin/logout',  [AdminController::class, 'logout']);
+        });
     });
 });

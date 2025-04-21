@@ -6,7 +6,7 @@
                 {{ config.version }}
             </v-card-subtitle>
             <v-card-title class="mb-4  bg-secondary">
-                Login {{ register_admin_allowed }}
+                Login
             </v-card-title>
             <!-- Login STEP LOGIN_ENTER_EMAIL = E-Mail -->
             <v-card-text v-if="step == 'LOGIN_ENTER_EMAIL'">
@@ -69,9 +69,11 @@ export default {
     components: {},
 
     async beforeMount() {
+
         await axios.get('/sanctum/csrf-cookie');
         this.adminStore = useAdminStore();
         this.restartLogin();
+
 
     },
 
@@ -87,7 +89,7 @@ export default {
     },
 
     computed: {
-        ...mapWritableState(useAdminStore, ['config', 'is_loading', 'error', 'api_response']),
+        ...mapWritableState(useAdminStore, ['config', 'is_loading', 'error', 'api_response', 'load_config']),
 
     },
 
@@ -123,14 +125,21 @@ export default {
             await this.$refs.form.validate(); if (!this.is_valid) return;
             data.step = 'LOGIN_ENTER_PASSWORD';
             if (await this.adminStore.loginStep2(data)) {
-                if (this.api_response.data.step == 'LOGIN_SUCCESS') { this.$router.push('/admin/dashboard'); } else { this.step = 'LOGIN_ENTER_TOKEN'; }
+                if (this.api_response.data.step == 'LOGIN_SUCCESS') {
+                    await this.adminStore.loadConfig();
+                    this.$router.push('/admin/');
+                } else {
+                    this.step = 'LOGIN_ENTER_TOKEN';
+                }
             }
         },
 
         async loginStep3(data) {
             if (this.data.token_2fa.length != 6) return;
             data.step = 'LOGIN_ENTER_TOKEN';
-            if (await this.adminStore.loginStep3(data)) this.$router.push('/admin/dashboard');
+            await this.adminStore.loginStep3(data);
+            await this.adminStore.loadConfig();
+            this.$router.push('/admin/');
         },
 
     },

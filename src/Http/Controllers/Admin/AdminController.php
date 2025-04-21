@@ -24,11 +24,6 @@ use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep4Request;
 class AdminController extends Controller
 {
 
-    public function index()
-    {
-        return "hey";
-    }
-
     public function config()
     {
         $data = [
@@ -39,6 +34,7 @@ class AdminController extends Controller
             'company' => config('spa.company', 'ItStudio.at'),
             'version' => InstalledVersions::getPrettyVersion('itstudioat/spa'),
             'register_admin_allowed' => config('spa.register_admin_allowed', false),
+            'is_auth' => auth()->check(),
         ];
 
         return response()->json($data, 200);
@@ -169,9 +165,6 @@ class AdminController extends Controller
             // Keine 2-Faktoren-Authentifizierung ==> Login fertig
             Auth::login($user);
             $request->session()->regenerate();
-
-            info(print_r(session()->all(), true));
-
             $data = [
                 'step' => 'LOGIN_SUCCESS',
                 'auth' => true,
@@ -196,5 +189,15 @@ class AdminController extends Controller
         ];
 
         return response()->json($data, 200);
+    }
+
+    public function logout(Request $request)
+    {
+        if (!auth()->check()) abort(400, "Sie sind gar nicht eingeloggt.");
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->noContent();
     }
 }

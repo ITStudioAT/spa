@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useAdminStore = defineStore("AdminStore", {
 
+
     state: () => {
         return {
             router: null,
@@ -15,7 +16,7 @@ export const useAdminStore = defineStore("AdminStore", {
                 type: 'error'
             },
             api_response: null,
-
+            show_navigation_drawer: true,
         }
     },
 
@@ -24,7 +25,7 @@ export const useAdminStore = defineStore("AdminStore", {
             this.router = router;
         },
 
-        async config() {
+        async loadConfig() {
             this.is_loading++; this.api_response = null; this.error.is_error = false;
             try {
                 this.api_response = await axios.get("/api/admin/config", {});
@@ -161,6 +162,20 @@ export const useAdminStore = defineStore("AdminStore", {
             this.is_loading++; this.api_response = null; this.error.is_error = false;
             try {
                 this.api_response = await axios.post("/api/admin/login_step_3", { data });
+                return true;
+            } catch (error) {
+                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                return false;
+            } finally {
+                this.is_loading--;
+            }
+        },
+
+
+        async logout() {
+            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            try {
+                this.api_response = await axios.post("/api/admin/logout", {});
                 return true;
             } catch (error) {
                 this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)

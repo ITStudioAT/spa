@@ -52,6 +52,9 @@ class TestCase extends Orchestra
 
         $app['config']->set('auth.providers.users.model', \App\Models\User::class);
 
+        $migration = include __DIR__ . '/../database/migrations/0001_01_01_000000_create_users_table.php';
+        $migration->up();
+
         /*
         foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/../database/migrations') as $migration) {
             (include $migration->getRealPath())->up();
