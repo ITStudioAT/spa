@@ -20,33 +20,56 @@ class SpaServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('spa')
-            ->hasAssets()
-            ->hasCommand(InstallMe::class)
-            ->hasCommand(CreateUser::class)
-            ->hasConfigFile()
-            ->hasMigration('00001_update_users_table')
-            ->publishesServiceProvider('SpaServiceProvider')
-            ->runsMigrations()
-            ->hasRoutes(['web', 'api'])
-            ->hasViews()
-            ->hasInstallCommand(function (InstallCommand $command) {
-                $command
-                    ->startWith(function (InstallCommand $command) {
-                        $command->info('Hello, and welcome to my great new package!');
-                    })
-                    ->publishConfigFile()
-                    ->publishAssets()
-                    ->publishMigrations()
-                    ->askToRunMigrations()
-                    ->copyAndRegisterServiceProviderInApp()
-                    ->endWith(function (InstallCommand $command) {
-                        $command->info('Have a great day!');
-                    });
-            });
+            ->name('spa');
     }
 
-    public function packageRegistered() {}
+    public function packageRegistered()
+    {
+        $this->publishes([
+            __DIR__ . '/../config/spa.php' => config_path('spa.php'),
+        ], 'config');
+
+        $this->publishes([
+            __DIR__ . '/../resources' => resource_path(),
+        ], 'resources');
+
+        $this->publishes([
+            __DIR__ . '/../routes' => base_path('/routes'),
+        ], 'routes');
+
+        $this->publishes([
+            __DIR__ . '/../src/Commands' => app_path('/Commands'),
+            __DIR__ . '/../src/Http' => app_path('/Http'),
+            __DIR__ . '/../src/Models' => app_path('/Models'),
+            __DIR__ . '/../src/Notifications' => app_path('/Notifications'),
+            __DIR__ . '/../src/Services' => app_path('/Services'),
+            __DIR__ . '/../src/Traits' => app_path('/Traits'),
+        ], 'app');
+
+        $this->publishes([
+            __DIR__ . '/../stubs/vite.config.js' => base_path(),
+        ], 'stubs');
+
+
+
+        $this->publishesMigrations([
+            __DIR__ . '/../database/migrations' => database_path('migrations'),
+        ], 'migrations');
+
+        $this->publishes([
+            __DIR__ . '/../config/spa.php' => config_path('spa.php'),
+            __DIR__ . '/../resources' => resource_path(),
+            __DIR__ . '/../routes' => base_path('/routes'),
+            __DIR__ . '/../src/commands' => app_path('/commands'),
+            __DIR__ . '/../src/Commands' => app_path('/Commands'),
+            __DIR__ . '/../src/Http' => app_path('/Http'),
+            __DIR__ . '/../src/Models' => app_path('/Models'),
+            __DIR__ . '/../src/Notifications' => app_path('/Notifications'),
+            __DIR__ . '/../src/Services' => app_path('/Services'),
+            __DIR__ . '/../src/Traits' => app_path('/Traits'),
+            __DIR__ . '/../stubs/vite.config.js' => base_path(),
+        ], 'all');
+    }
 
     public function bootingPackage()
     {
