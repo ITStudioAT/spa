@@ -5,6 +5,7 @@ namespace Itstudioat\Spa;
 
 use Illuminate\Support\Facades\Route;
 use Itstudioat\Spa\Commands\CreateUser;
+use Itstudioat\Spa\Commands\InstallMe;
 use Itstudioat\Spa\Commands\SpaInstall;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -22,7 +23,7 @@ class SpaServiceProvider extends PackageServiceProvider
         $package
             ->name('spa')
             ->hasAssets()
-            ->hasCommand(SpaInstall::class)
+            ->hasCommand(InstallMe::class)
             ->hasCommand(CreateUser::class)
             ->hasConfigFile()
             ->hasMigration('00001_update_users_table')

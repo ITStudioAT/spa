@@ -5,9 +5,9 @@ namespace Itstudioat\Spa\Commands;
 
 use Illuminate\Console\Command;
 
-class SpaInstall extends Command
+class InstallMe extends Command
 {
-    protected $signature = 'spa:install';
+    protected $signature = 'install:me';
     protected $description = 'Installiere JS-Abhängigkeiten für spa';
 
     public function handle()
