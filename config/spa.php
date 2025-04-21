@@ -12,5 +12,6 @@ return [
     'api_throttle' => 60, // api-requests per user per minute
     'global_throttle' => 100, // all-requests per minute
     'token_expire_time' => 120, // minutes when token expires
-    'register_admin_allowed' => true
+    'register_admin_allowed' => true,
+    'registered_admin_must_be_confirmed' => true
 ];

@@ -12,8 +12,9 @@
     <link href="https://fonts.bunny.net/css?family=roboto:100,300,400,500,700,900" rel="stylesheet" />
 
     <title>App</title>
-
+    @if (!app()->runningUnitTests())
     @vite('resources/js/apps/application.js')
+    @endif
 </head>
 
 <body class="antialiased">

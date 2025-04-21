@@ -15,6 +15,7 @@ class AdminService
     public function checkPasswordUnknown($data): User
     {
         if (!$user = User::where('email', $data['email'])->first()) abort(401, "Kennwort zurücksetzen funktioniert mit dieser E-Mail-Adresse nicht");
+        if (!$user->confirmed_at) abort(423, "Benutzer ist noch nicht bestätigt");
         if (!$user->is_active) abort(423, "Benutzer ist gesperrt");
 
         if ($data['step'] == 'PASSWORD_UNKNOWN_ENTER_TOKEN') {
@@ -30,16 +31,30 @@ class AdminService
             if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
             if ($user->is_fa2 && !$user->checkToken2Fa_2($data['token_2fa_2']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
 
-            if ($data['password'] != $data['password_repeat']) abort(401, "Kennwort und Widerholung Kennwort sind nicht identisch");
+            if ($data['password'] != $data['password_repeat']) abort(401, "Kennwort zurücksetzen funktioniert nicht. Kennwort und Wiederholung Kennwort sind nicht identisch");
         }
 
         return $user;
     }
 
 
-    public function checkRegister($data): User
+    public function checkRegister($data): User | null
     {
-        if ($user = User::where('email', $data['email'])->first()) abort(401, "Registrieren funktioniert mit dieser E-Mail-Adresse nicht");
+        if ($user = User::where('email', $data['email'])->first()) {
+            if (!$user->register_started_at) abort(401, "Registrieren funktioniert mit dieser E-Mail-Adresse nicht");
+        }
+
+        if ($data['step'] == 'REGISTER_ENTER_TOKEN') {
+            if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Registrieren funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+        }
+
+        if ($data['step'] == 'REGISTER_ENTER_FIELDS') {
+            if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Registrieren funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+
+            if (!$data['last_name']) abort(401, "Kennwort zurücksetzen funktioniert nicht. Nachname darf nicht leer sein.");
+
+            if ($data['password'] != $data['password_repeat']) abort(401, "Kennwort zurücksetzen funktioniert nicht. Kennwort und Wiederholung Kennwort sind nicht identisch");
+        }
 
         return $user;
     }
@@ -57,9 +72,23 @@ class AdminService
         return $user;
     }
 
+    public function updateRegisterUser($user, $data): User
+    {
+        $user->update([
+            'last_name' => $data['last_name'],
+            'first_name' => $data['first_name'] ?? null,
+            'password' => Hash::make($data['password']),
+            'register_started_at' => null,
+            'confirmed_at' => config('spa.registered_admin_must_be_confirmed') ? null : now(),
+            'is_active' => config('spa.registered_admin_must_be_confirmed') ? 0 : 1,
+        ]);
+        return $user;
+    }
+
     public function checkUserLogin($data): User
     {
         if (!$user = User::where('email', $data['email'])->first()) abort(401, "Login funktioniert mit dieser E-Mail-Adresse nicht");
+        if (!$user->confirmed_at) abort(423, "Benutzer ist noch nicht bestätigt");
         if (!$user->is_active) abort(423, "Benutzer ist gesperrt");
 
         if ($data['step'] == 'LOGIN_ENTER_PASSWORD') {

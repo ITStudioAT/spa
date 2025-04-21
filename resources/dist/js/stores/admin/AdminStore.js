@@ -51,6 +51,32 @@ export const useAdminStore = defineStore("AdminStore", {
             }
         },
 
+        async registerStep2(data) {
+            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            try {
+                this.api_response = await axios.post("/api/admin/register_step_2", { data });
+                return true;
+            } catch (error) {
+                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                return false;
+            } finally {
+                this.is_loading--;
+            }
+        },
+
+        async registerStep3(data) {
+            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            try {
+                this.api_response = await axios.post("/api/admin/register_step_3", { data });
+                return true;
+            } catch (error) {
+                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                return false;
+            } finally {
+                this.is_loading--;
+            }
+        },
+
         async passwordUnknownStep1(data) {
             this.is_loading++; this.api_response = null; this.error.is_error = false;
             try {

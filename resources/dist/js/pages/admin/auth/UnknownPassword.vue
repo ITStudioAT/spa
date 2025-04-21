@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid class="h-100 w-100 d-flex align-center justify-center">
+    <v-container fluid class="h-100 w-100 d-flex align-center justify-center" v-if="config">
         <v-card class="mx-auto" width="300">
             <v-img height="80px" :src="'/storage/images/' + config.logo" @click="homepage" class="hover"></v-img>
             <v-card-subtitle class="text-caption text-text">

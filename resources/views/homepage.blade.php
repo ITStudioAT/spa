@@ -12,8 +12,9 @@
     <link href="https://fonts.bunny.net/css?family=roboto:100,300,400,500,700,900" rel="stylesheet" />
 
     <title>Spa</title>
-
+    @if (!app()->runningUnitTests())
     @vite('resources/js/apps/homepage.js')
+    @endif
 </head>
 
 <body class="antialiased">

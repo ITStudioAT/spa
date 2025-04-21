@@ -1,12 +1,12 @@
 <template>
-    <v-container fluid class="h-100 w-100 d-flex align-center justify-center">
+    <v-container fluid class="h-100 w-100 d-flex align-center justify-center" v-if="config">
         <v-card class="mx-auto" width="300">
             <v-img height="80px" :src="'/storage/images/' + config.logo" @click="homepage" class="hover"></v-img>
             <v-card-subtitle class="text-caption text-text">
                 {{ config.version }}
             </v-card-subtitle>
             <v-card-title class="mb-4  bg-secondary">
-                Login
+                Login {{ register_admin_allowed }}
             </v-card-title>
             <!-- Login STEP LOGIN_ENTER_EMAIL = E-Mail -->
             <v-card-text v-if="step == 'LOGIN_ENTER_EMAIL'">

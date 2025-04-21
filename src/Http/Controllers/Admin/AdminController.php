@@ -7,11 +7,14 @@ use Illuminate\Http\Request;
 use Composer\InstalledVersions;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Itstudioat\Spa\Services\AdminService;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep1Request;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep2Request;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep3Request;
 use Itstudioat\Spa\Http\Requests\Admin\RegisterStep1Request;
+use Itstudioat\Spa\Http\Requests\Admin\RegisterStep2Request;
+use Itstudioat\Spa\Http\Requests\Admin\RegisterStep3Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep1Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep2Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep3Request;
@@ -46,12 +49,39 @@ class AdminController extends Controller
         $adminService = new AdminService();
         $validated = $request->validated();
 
-        $adminService->checkRegister($validated['data']);
-        $user = $adminService->createRegisterUser($validated['data']);
+        $user = $adminService->checkRegister($validated['data']);
+        if (!$user)  $user = $adminService->createRegisterUser($validated['data']);
 
         // Token zusenden
         $adminService->sendRegisterToken(1, $user, $validated['data']['email']);
         $data = ['step' => 'REGISTER_ENTER_TOKEN'];
+        return response()->json($data, 200);
+    }
+
+    public function registerStep2(RegisterStep2Request $request)
+    {
+        $adminService = new AdminService();
+        $validated = $request->validated();
+
+        $user = $adminService->checkRegister($validated['data']);
+
+        // E-Mail ist somit verifiziert!
+        $user->email_verified_at = now();
+        $user->save();
+
+        $data = ['step' => 'REGISTER_ENTER_FIELDS'];
+        return response()->json($data, 200);
+    }
+
+    public function registerStep3(RegisterStep3Request $request)
+    {
+        $adminService = new AdminService();
+        $validated = $request->validated();
+
+        $user = $adminService->checkRegister($validated['data']);
+        $user = $adminService->updateRegisterUser($user, $validated['data']);
+
+        $data = ['step' => $user->confirmed_at ? 'REGISTER_FINISHED' : 'REGISTER_MUST_BE_CONFIRMED'];
         return response()->json($data, 200);
     }
 
