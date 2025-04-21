@@ -27,7 +27,7 @@ class SpaServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasMigration('00001_update_users_table')
             ->runsMigrations()
-            ->hasRoutes(['web', 'admin'])
+            ->hasRoutes(['web', 'api'])
             ->hasViews()
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command

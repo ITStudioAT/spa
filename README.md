@@ -17,10 +17,12 @@ It contains:
 - Vite for asset bundling
 
 It provides:
-- Login-page 
-- Password-forgotten-page
+- Login page 
+- Unknown password page
+- Register page
+- Small Dashboard with
+    - Logout
 
-The pages have all the necessary logistic behind 
 
 ## Installation
 
