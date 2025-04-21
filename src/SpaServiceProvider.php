@@ -6,7 +6,6 @@ namespace Itstudioat\Spa;
 use Illuminate\Support\Facades\Route;
 use Itstudioat\Spa\Commands\CreateUser;
 use Itstudioat\Spa\Commands\InstallMe;
-use Itstudioat\Spa\Commands\SpaInstall;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;

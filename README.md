@@ -58,6 +58,15 @@ You can install the package via composer:
 composer require itstudioat/spa
 ```
 
+## After installing
+
+Run this command to publish config, assets, and migrations:
+
+```bash
+php artisan spa:install
+```
+
+
 If you use Postmark for Mailing (i use it):
 ```bash
 composer require symfony/postmark-mailer
@@ -67,7 +76,7 @@ composer require symfony/http-client
 
 To integrate all packages like vue:
 ```bash
-php artisan spa:install
+php artisan install:me
 npm install
 ```
 
