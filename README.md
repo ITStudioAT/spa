@@ -91,7 +91,7 @@ npm install
 ```
 
 Make storage:link and create  /storage/app/public/images folder
-put the favicon.ico and logo.png in this folder
+and put the favicon.ico and logo.png in this folder
 ```bash
 php artisan storage:link
 ```
