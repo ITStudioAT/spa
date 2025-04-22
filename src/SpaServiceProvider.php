@@ -64,8 +64,8 @@ class SpaServiceProvider extends PackageServiceProvider
         $this->publishesMigrations([
             __DIR__ . '/../database/migrations' => database_path('migrations'),
         ], 'spa-migrations');
-        /*
-        // all
+
+
         $this->publishes([
             __DIR__ . '/../config/spa.php' => config_path('spa.php'),
             __DIR__ . '/../resources' => resource_path(),
@@ -78,7 +78,6 @@ class SpaServiceProvider extends PackageServiceProvider
             __DIR__ . '/../src/Traits' => app_path('/Traits'),
             __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
         ], 'spa-all');
-        */
     }
 
     public function bootingPackage()
