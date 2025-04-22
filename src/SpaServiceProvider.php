@@ -16,10 +16,14 @@ class SpaServiceProvider extends PackageServiceProvider
         $package
             ->name('spa')
             // Falls du spezielle Installationsbefehle ausführen möchtest, kannst du hier 'hasInstallCommand()' hinzufügen
+            ->hasConfigFile()
             ->hasCommands([
                 CreateUser::class,
                 InstallMe::class,  // Dein benutzerdefinierter Installationsbefehl
-            ]);
+            ])->hasInstallCommand(function (InstallCommand $command) {
+                $command
+                    ->publishConfigFile();
+            });
     }
 
     public function packageRegistered()
@@ -27,9 +31,11 @@ class SpaServiceProvider extends PackageServiceProvider
         // Hier werden die Ressourcen veröffentlicht
 
         // Konfigurationsdateien
+        /*
         $this->publishes([
             __DIR__ . '/../config/spa.php' => config_path('spa.php'),
         ], 'config');
+        */
 
         // Ressourcen (Bilder, Views, etc.)
         $this->publishes([
@@ -53,7 +59,7 @@ class SpaServiceProvider extends PackageServiceProvider
 
         // Stubs (z.B. Vite-Konfiguration)
         $this->publishes([
-            __DIR__ . '/../stubs/vite.config.js' => base_path(),
+            __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
         ], 'stubs');
 
         // Migrationen
