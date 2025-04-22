@@ -21,10 +21,7 @@ class SpaServiceProvider extends PackageServiceProvider
             ->hasCommands([
                 CreateUser::class,
                 InstallMe::class,  // Dein benutzerdefinierter Installationsbefehl
-            ])->hasInstallCommand(function (InstallCommand $command) {
-                $command
-                    ->publishConfigFile();
-            });
+            ]);
     }
 
     public function packageRegistered()
