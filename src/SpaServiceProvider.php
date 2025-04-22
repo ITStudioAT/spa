@@ -43,7 +43,8 @@ class SpaServiceProvider extends PackageServiceProvider
         // Routen
         $this->publishes([
             __DIR__ . '/../routes' => base_path('/routes'),
-        ], 'spa-routes');
+            __DIR__ . '/../bootstrap' => base_path('/bootstrap'),
+        ], 'spa-root');
 
         // App-Ressourcen (Commands, Http, Models, Notifications, Services, Traits)
         $this->publishes([
@@ -53,6 +54,7 @@ class SpaServiceProvider extends PackageServiceProvider
             __DIR__ . '/../src/Notifications' => app_path('/Notifications'),
             __DIR__ . '/../src/Services' => app_path('/Services'),
             __DIR__ . '/../src/Traits' => app_path('/Traits'),
+            __DIR__ . '/../src/Providers' => app_path('/Providers'),
         ], 'spa-app');
 
         // Stubs (z.B. Vite-Konfiguration)
@@ -70,6 +72,7 @@ class SpaServiceProvider extends PackageServiceProvider
             __DIR__ . '/../config/spa.php' => config_path('spa.php'),
             __DIR__ . '/../resources' => resource_path(),
             __DIR__ . '/../routes' => base_path('/routes'),
+            __DIR__ . '/../bootstrap' => base_path('/bootstrap'),
             __DIR__ . '/../src/Commands' => app_path('/Commands'),
             __DIR__ . '/../src/Http' => app_path('/Http'),
             __DIR__ . '/../src/Models' => app_path('/Models'),
