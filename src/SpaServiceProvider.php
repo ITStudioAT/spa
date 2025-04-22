@@ -18,6 +18,8 @@ class SpaServiceProvider extends PackageServiceProvider
             ->name('spa')
             // Falls du spezielle Installationsbefehle ausführen möchtest, kannst du hier 'hasInstallCommand()' hinzufügen
             ->hasConfigFile()
+            ->hasViews()
+            ->hasRoutes(['web', 'api'])
             ->hasCommands([
                 CreateUser::class,
                 InstallMe::class,  // Dein benutzerdefinierter Installationsbefehl
@@ -40,22 +42,26 @@ class SpaServiceProvider extends PackageServiceProvider
             __DIR__ . '/../resources' => resource_path(),
         ], 'spa-resources');
 
-        // Routen
+        // Routen und bootstrap/app.php
         $this->publishes([
-            __DIR__ . '/../routes' => base_path('/routes'),
-            __DIR__ . '/../bootstrap' => base_path('/bootstrap'),
+            __DIR__ . '/../bootstrap/app.php' => base_path('/bootstrap/app.php'),
         ], 'spa-root');
+
 
         // App-Ressourcen (Commands, Http, Models, Notifications, Services, Traits)
         $this->publishes([
+            __DIR__ . '/../src/Models' => app_path('/Models'),
+            __DIR__ . '/../src/Providers' => app_path('/Providers'),
+            /*
             __DIR__ . '/../src/Commands' => app_path('/Commands'),
             __DIR__ . '/../src/Http' => app_path('/Http'),
-            __DIR__ . '/../src/Models' => app_path('/Models'),
             __DIR__ . '/../src/Notifications' => app_path('/Notifications'),
             __DIR__ . '/../src/Services' => app_path('/Services'),
             __DIR__ . '/../src/Traits' => app_path('/Traits'),
-            __DIR__ . '/../src/Providers' => app_path('/Providers'),
+            */
+
         ], 'spa-app');
+
 
         // Stubs (z.B. Vite-Konfiguration)
         $this->publishes([
@@ -71,15 +77,10 @@ class SpaServiceProvider extends PackageServiceProvider
         $this->publishes([
             __DIR__ . '/../config/spa.php' => config_path('spa.php'),
             __DIR__ . '/../resources' => resource_path(),
-            __DIR__ . '/../routes' => base_path('/routes'),
-            __DIR__ . '/../bootstrap' => base_path('/bootstrap'),
-            __DIR__ . '/../src/Commands' => app_path('/Commands'),
-            __DIR__ . '/../src/Http' => app_path('/Http'),
-            __DIR__ . '/../src/Models' => app_path('/Models'),
-            __DIR__ . '/../src/Notifications' => app_path('/Notifications'),
-            __DIR__ . '/../src/Services' => app_path('/Services'),
-            __DIR__ . '/../src/Traits' => app_path('/Traits'),
+            __DIR__ . '/../bootstrap/app.php' => base_path('/bootstrap/app.php'),
             __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
+            __DIR__ . '/../src/Models' => app_path('/Models'),
+            __DIR__ . '/../src/Providers' => app_path('/Providers'),
         ], 'spa-all');
     }
 

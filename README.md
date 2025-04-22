@@ -36,33 +36,38 @@ laravel new new-laravel-app
     - APP_URL
     - DB-configuration
     - MAIL-configuration
-    - REDIS_CLIENT=phpredis to REDIS_CLIENT=predis
     - SESSION_DOMAIN='.localhost'
+    - (REDIS_CLIENT=phpredis to REDIS_CLIENT=predis)
     
 - config/app.php
     - timezone
     - locale-configuration
 
-
-**Delete following files:**
-- app/Models/User.php 
-- app/Providers/ServiceProvider
-- bootstrap/app.php
-- resources/js/bootstrap.js
-- vite.config.js
-
-*They fresh files are copied when publishing.*
-
+**Create a new empty database like in .env configured**
+Migrate your mogrations
+```bash
+php artisan migrate
+```
 
 You can install the package via composer:
 ```bash
 composer require itstudioat/spa
 ```
 
+But this in the composer.json
+```bash
+    "autoload": {
+        "psr-4": {
+            ...
+            "Itstudioat\\Spa\\": "src/"
+        }
+
+```
+
 Publish all ressources of Laravel-Spa
 ```bash
-php artisan vendor:publish --tag=spa-all
-php artisan vendor:publish --tag="spa-migrations"
+php artisan vendor:publish --tag=spa-all --force
+php artisan vendor:publish --tag=spa-migrations
 php artisan migrate
 ```
 
@@ -82,6 +87,28 @@ php artisan install:api
 To integrate all packages like vue:
 ```bash
 php artisan install:me
+npm install
+```
+
+Make storage:link and create  /storage/app/public/images folder
+put the favicon.ico and logo.png in this folder
+```bash
+php artisan storage:link
+```
+
+Publish the config/cors.php file
+```bash
+php artisan config:publish cors
+```
+
+Change the config/cors.php file
+```bash
+ 'supports_credentials' => true,
+```
+
+Add a user with following command:
+```bash
+    php artisan user:create
 ```
 
 If you use Postmark for Mailing (i use it):
@@ -95,27 +122,8 @@ To inividualize the Mail-Logo, pusblish de Markdown files to resources/views/ven
 php artisan vendor:publish --tag=laravel-mail
 ```
 
-Make storage:link and create  /storage/app/public/images folder
-put the favicon.ico and logo.png in this folder
-```bash
-php artisan storage:link
-```
 
 
-Publish the config/cors.php file
-```bash
-php artisan config:publish cors
-```
-
-Change the config file
-```bash
- 'supports_credentials' => true,
-```
-
-Add a user with following command:
-```bash
-    php artisan user:create
-```
 
 ## Usage
 ```bash

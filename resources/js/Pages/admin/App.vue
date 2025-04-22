@@ -52,7 +52,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useAdminStore } from "@/stores/admin/AdminStore";
-import ErrorMessage from "@/components/ErrorMessage.vue";
+import ErrorMessage from "@/pages/components/ErrorMessage.vue";
 
 export default {
 

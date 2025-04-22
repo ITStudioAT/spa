@@ -32,7 +32,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useHomepageStore } from "@/stores/homepage/HomepageStore";
-import ErrorMessage from "@/components/ErrorMessage.vue";
+import ErrorMessage from "@/pages/components/ErrorMessage.vue";
 
 export default {
 
