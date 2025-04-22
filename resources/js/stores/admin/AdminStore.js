@@ -30,7 +30,7 @@ export const useAdminStore = defineStore("AdminStore", {
             try {
                 this.api_response = await axios.get("/api/admin/config", {});
                 this.config = this.api_response.data;
-                return true;
+                return this.api_response.data;
             } catch (error) {
                 this.redirect(error.response.status, error.response.data.message, 'error', this.config.timeout);
                 return false;
@@ -172,10 +172,10 @@ export const useAdminStore = defineStore("AdminStore", {
         },
 
 
-        async logout() {
+        async executeLogout() {
             this.is_loading++; this.api_response = null; this.error.is_error = false;
             try {
-                this.api_response = await axios.post("/api/admin/logout", {});
+                this.api_response = await axios.post("/api/admin/execute_logout", {});
                 return true;
             } catch (error) {
                 this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)

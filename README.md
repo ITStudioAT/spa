@@ -83,6 +83,14 @@ To install the laravel sanctum and when you are asked, lets run the migrations:
 php artisan install:api
 ```
 
+bei config/auth.php unter 'guards' => [ ... folgenden Eintrag machen:
+```bash
+    'api' => [
+        'driver' => 'sanctum',
+        'provider' => 'users',
+    ],
+```
+
 
 To integrate all packages like vue:
 ```bash
@@ -122,7 +130,14 @@ To inividualize the Mail-Logo, pusblish de Markdown files to resources/views/ven
 php artisan vendor:publish --tag=laravel-mail
 ```
 
-
+**Comment the standard route out in routes/web.php**
+```bash
+/*
+Route::get('/', function () {
+    return view('welcome');
+});
+*/
+```
 
 
 ## Usage

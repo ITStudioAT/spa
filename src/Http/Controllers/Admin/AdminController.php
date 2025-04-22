@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Composer\InstalledVersions;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Itstudioat\Spa\Services\AdminService;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep1Request;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep2Request;
@@ -24,8 +23,9 @@ use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep4Request;
 class AdminController extends Controller
 {
 
-    public function config()
+    public function config(Request $request)
     {
+
         $data = [
             'logo' => config('spa.logo', ''),
             'copyright' => config('spa.copyright', ''),
@@ -191,13 +191,14 @@ class AdminController extends Controller
         return response()->json($data, 200);
     }
 
-    public function logout(Request $request)
+    public function executeLogout(Request $request)
     {
         if (!auth()->check()) abort(400, "Sie sind gar nicht eingeloggt.");
-        Auth::logout();
+        auth('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+        info("loggedout");
         return response()->noContent();
     }
 }

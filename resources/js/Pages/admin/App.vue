@@ -4,7 +4,7 @@
 
         <v-navigation-drawer v-model="show_navigation_drawer" color="primary" v-if="config && config.is_auth">
             <v-toolbar color="appbar">
-                <v-toolbar-title>Admin </v-toolbar-title>
+                <v-toolbar-title>Admin</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn icon="mdi-menu-close" @click="show_navigation_drawer = false" v-if="show_navigation_drawer" />
             </v-toolbar>
@@ -18,9 +18,6 @@
         <!-- Alle Dinge sind geladen -->
         <v-layout class="bg-background" v-if="config">
 
-
-
-
             <v-main>
                 <router-view></router-view>
             </v-main>
@@ -28,6 +25,7 @@
             <v-footer app>
                 <v-row justify="center" no-gutters>
                     <v-col cols="12" class="text-center">
+                        {{ config }}
                         <v-btn text variant="text">Impressum</v-btn>
                     </v-col>
                 </v-row>
@@ -80,8 +78,9 @@ export default {
     methods: {
 
         async logout() {
-            await this.adminStore.logout();
-            this.adminStore.loadConfig();
+            await this.adminStore.executeLogout();
+            await this.adminStore.loadConfig();
+            console.log(this.config);
             this.$router.replace('/admin/login');
         }
 

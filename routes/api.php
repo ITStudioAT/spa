@@ -34,7 +34,7 @@ Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
 
         /* SANCTUM */
         Route::middleware('auth:sanctum')->group(function () {
-            Route::post('/admin/logout',  [AdminController::class, 'logout']);
+            Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);
         });
     });
 });
