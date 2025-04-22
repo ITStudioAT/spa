@@ -16,11 +16,10 @@ class SpaServiceProvider extends PackageServiceProvider
         $package
             ->name('spa')
             // Falls du spezielle Installationsbefehle ausführen möchtest, kannst du hier 'hasInstallCommand()' hinzufügen
-            ->hasInstallCommand(function (InstallCommand $command) {
-                $command
-                    ->publishConfigFile() // Config veröffentlichen
-                    ->publishMigrations(); // Migrationen veröffentlichen
-            });
+            ->hasCommands([
+                CreateUser::class,
+                InstallMe::class,  // Dein benutzerdefinierter Installationsbefehl
+            ]);
     }
 
     public function packageRegistered()
