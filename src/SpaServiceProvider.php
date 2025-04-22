@@ -8,6 +8,7 @@ use Itstudioat\Spa\Commands\InstallMe;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Spatie\LaravelPackageTools\Commands\Concerns;
 
 class SpaServiceProvider extends PackageServiceProvider
 {
