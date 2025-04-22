@@ -33,8 +33,7 @@
     "autoload": {
         "psr-4": {
             "Tests\\": "tests/",
-            "Itstudioat\\Spa\\": "src/",
-            "Itstudioat\\Spa\\Database\\Factories\\": "database/factories/"
+            "Itstudioat\\Spa\\": "src/"
         }
     },
     "autoload-dev": {
@@ -62,10 +61,7 @@
         "laravel": {
             "providers": [
                 "Itstudioat\\Spa\\SpaServiceProvider"
-            ],
-            "aliases": {
-                "Spa": "Itstudioat\\Spa\\Facades\\Spa"
-            }
+            ]
         }
     },
     "minimum-stability": "dev",
