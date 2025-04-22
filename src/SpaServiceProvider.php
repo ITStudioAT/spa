@@ -21,8 +21,8 @@ class SpaServiceProvider extends PackageServiceProvider
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
                     ->publishConfigFile()
-                    ->publishViews()
                     ->publishMigrations()
+                    ->publishTagged('views')
                     ->publishTagged('resources')
                     ->publishTagged('routes')
                     ->publishTagged('app')
@@ -46,6 +46,10 @@ class SpaServiceProvider extends PackageServiceProvider
         $this->publishes([
             __DIR__ . '/../routes' => base_path('routes'),
         ], 'routes');
+
+        $this->publishes([
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/spa'),
+        ], 'views');
 
         $this->publishes([
             __DIR__ . '/../src/Commands' => app_path('Commands'),
@@ -72,6 +76,7 @@ class SpaServiceProvider extends PackageServiceProvider
             __DIR__ . '/../src/Services' => app_path('Services'),
             __DIR__ . '/../src/Traits' => app_path('Traits'),
             __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/spa'),
         ], 'all');
 
         $this->publishesMigrations([
