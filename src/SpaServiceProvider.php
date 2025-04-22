@@ -32,21 +32,21 @@ class SpaServiceProvider extends PackageServiceProvider
         // Hier werden die Ressourcen veröffentlicht
 
         // Konfigurationsdateien
-        /*
+
         $this->publishes([
             __DIR__ . '/../config/spa.php' => config_path('spa.php'),
-        ], 'config');
-        */
+        ], 'spa-config');
+
 
         // Ressourcen (Bilder, Views, etc.)
         $this->publishes([
             __DIR__ . '/../resources' => resource_path(),
-        ], 'resources');
+        ], 'spa-resources');
 
         // Routen
         $this->publishes([
             __DIR__ . '/../routes' => base_path('/routes'),
-        ], 'routes');
+        ], 'spa-routes');
 
         // App-Ressourcen (Commands, Http, Models, Notifications, Services, Traits)
         $this->publishes([
@@ -56,17 +56,31 @@ class SpaServiceProvider extends PackageServiceProvider
             __DIR__ . '/../src/Notifications' => app_path('/Notifications'),
             __DIR__ . '/../src/Services' => app_path('/Services'),
             __DIR__ . '/../src/Traits' => app_path('/Traits'),
-        ], 'app');
+        ], 'spa-app');
 
         // Stubs (z.B. Vite-Konfiguration)
         $this->publishes([
             __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
-        ], 'stubs');
+        ], 'spa-vite');
 
         // Migrationen
         $this->publishesMigrations([
             __DIR__ . '/../database/migrations' => database_path('migrations'),
-        ], 'migrations');
+        ], 'spa-migrations');
+
+        // all
+        $this->publishes([
+            __DIR__ . '/../config/spa.php' => config_path('spa.php'),
+            __DIR__ . '/../resources' => resource_path(),
+            __DIR__ . '/../routes' => base_path('/routes'),
+            __DIR__ . '/../src/Commands' => app_path('/Commands'),
+            __DIR__ . '/../src/Http' => app_path('/Http'),
+            __DIR__ . '/../src/Models' => app_path('/Models'),
+            __DIR__ . '/../src/Notifications' => app_path('/Notifications'),
+            __DIR__ . '/../src/Services' => app_path('/Services'),
+            __DIR__ . '/../src/Traits' => app_path('/Traits'),
+            __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
+        ], 'spa-all');
     }
 
     public function bootingPackage()
