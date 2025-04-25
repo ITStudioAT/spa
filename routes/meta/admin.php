@@ -11,5 +11,6 @@ return [
         '/admin/login' => [],
         '/admin/register' => [],
         '/admin/error' => [],
+        '/admin/unknown_password' => [],
     ]
 ];
