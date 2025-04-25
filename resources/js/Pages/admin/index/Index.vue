@@ -4,8 +4,63 @@
             <its-button subtitle="Home" icon="mdi-home" color="secondary" to="/admin" />
         </v-row>
         <v-row class="w-100" no-gutters>
-            <v-col cols="12" sm="6" md="4" xl="3" v-for="i in 4">
-                <its-grid-box color="primary" title="Überschrift" text="Das ist ein Text" />
+            <v-col cols="12" sm="6" md="4" xl="3">
+                <its-grid-box color="primary" title="Laravel-Spa">
+                    <div class="text-body-1">
+                        <div>
+                            Laravel-Spa dient als 'Getting in' für ein Laravel-Spa-Projekt.
+                        </div>
+                        <div class="mt-2">
+                            Es beinhaltet das notwendige Setup, um ein Spa-Projekt direkt beginnen zu können:
+                        </div>
+                        <div>
+                            <v-list density="compact">
+                                <v-list-item density="compact">
+                                    <template #prepend>
+                                        <v-icon icon="mdi-check-bold" color="success" />
+                                    </template>
+                                    Vue mit Vue-Router als Javascript-Framework
+                                </v-list-item>
+
+                                <v-list-item density="compact">
+                                    <template #prepend>
+                                        <v-icon icon="mdi-check-bold" color="success" />
+                                    </template>
+                                    Pinia als Vue-Store
+                                </v-list-item>
+
+                                <v-list-item density="compact">
+                                    <template #prepend>
+                                        <v-icon icon="mdi-check-bold" color="success" />
+                                    </template>
+                                    Vuetify als Komponenten-Framework (CSS)
+                                </v-list-item>
+
+                                <v-list-item density="compact">
+                                    <template #prepend>
+                                        <v-icon icon="mdi-check-bold" color="success" />
+                                    </template>
+                                    Sanctum als Authentifizierungs-System
+                                </v-list-item>
+
+                                <v-list-item density="compact">
+                                    <template #prepend>
+                                        <v-icon icon="mdi-check-bold" color="success" />
+                                    </template>
+                                    Spatie Permissions für Berechtigungs-System
+                                </v-list-item>
+
+                                <v-list-item density="compact">
+                                    <template #prepend>
+                                        <v-icon icon="mdi-check-bold" color="success" />
+                                    </template>
+                                    Vite als Asset-Bundling
+                                </v-list-item>
+
+                            </v-list>
+                        </div>
+                    </div>
+                </its-grid-box>
             </v-col>
         </v-row>
     </v-container>

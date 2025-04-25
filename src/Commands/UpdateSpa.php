@@ -20,7 +20,7 @@ class UpdateSpa extends Command
         $request = Request::create('', 'GET');
         $response = $controller->index($request);
 
-        $this->info("Das Update wurde erfolreich ausgeführt!");
+        $this->info("✅ Das Update wurde erfolreich ausgeführt!");
 
         return Command::SUCCESS;
     }

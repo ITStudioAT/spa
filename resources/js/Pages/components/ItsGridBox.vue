@@ -5,7 +5,9 @@
                 {{ title }}
             </v-card-title>
             <v-card-text :class="'bg-' + color + '-lighten-4'" class="pt-2">
-                {{ text }}
+                <slot>
+                    {{ text }}
+                </slot>
             </v-card-text>
         </v-card>
     </v-sheet>

@@ -41,6 +41,6 @@ class InstallMe extends Command
 
         file_put_contents($packageJsonPath, json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
-        $this->info('Vue dependencies added to package.json. Run npm install to install them.');
+        $this->info('✅ Vue dependencies added to package.json. Run npm install to install them.');
     }
 }
