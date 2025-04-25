@@ -58,7 +58,7 @@
                         :type="is_password_visible ? 'text' : 'password'"
                         @click:append="() => (is_password_visible = !is_password_visible)"
                         :rules="[required(), minLength(8), maxLength(255)]" v-model="data.password" />
-                    <v-text-field label="Widerholung Kennwort"
+                    <v-text-field label="Wiederholung Kennwort"
                         :append-icon="is_password_visible_repeat ? 'mdi-eye' : 'mdi-eye-off'"
                         :type="is_password_visible_repeat ? 'text' : 'password'"
                         @click:append="() => (is_password_visible_repeat = !is_password_visible_repeat)"

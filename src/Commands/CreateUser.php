@@ -33,6 +33,7 @@ class CreateUser extends Command
             'last_name' => $last_name,
             'email' => $email,
             'password' => Hash::make($password),
+            'confirmed_at' => now(),
         ]);
 
         $this->info("✅ Benutzer {$user->first_name} {$user->last_name} erfolgreich erstellt.");

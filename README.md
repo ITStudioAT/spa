@@ -25,7 +25,6 @@ It provides:
 
 
 ## Installation
-
 First install a new Laravel app
 ```bash
 laravel new new-laravel-app
@@ -44,7 +43,8 @@ laravel new new-laravel-app
     - locale-configuration
 
 **Create a new empty database like in .env configured**
-Migrate your mogrations
+
+Migrate your migrations
 ```bash
 php artisan migrate
 ```
@@ -52,23 +52,6 @@ php artisan migrate
 You can install the package via composer:
 ```bash
 composer require itstudioat/spa
-```
-
-But this in the composer.json
-```bash
-    "autoload": {
-        "psr-4": {
-            ...
-            "Itstudioat\\Spa\\": "src/"
-        }
-
-```
-
-Publish all ressources of Laravel-Spa
-```bash
-php artisan vendor:publish --tag=spa-all --force
-php artisan vendor:publish --tag=spa-migrations
-php artisan migrate
 ```
 
 Publishing Spatie-Permission
@@ -83,19 +66,17 @@ To install the laravel sanctum and when you are asked, lets run the migrations:
 php artisan install:api
 ```
 
-bei config/auth.php unter 'guards' => [ ... folgenden Eintrag machen:
-```bash
-    'api' => [
-        'driver' => 'sanctum',
-        'provider' => 'users',
-    ],
-```
-
-
 To integrate all packages like vue:
 ```bash
 php artisan install:me
 npm install
+```
+
+Publish all ressources of Laravel-Spa
+```bash
+php artisan vendor:publish --tag=spa-all --force
+php artisan vendor:publish --tag=spa-migrations
+php artisan migrate
 ```
 
 Make storage:link and create  /storage/app/public/images folder
@@ -130,6 +111,19 @@ To inividualize the Mail-Logo, pusblish de Markdown files to resources/views/ven
 php artisan vendor:publish --tag=laravel-mail
 ```
 
+After that change the file views/mail/html/header.blade.php
+```bash
+@props(['url'])
+<tr>
+<td class="header">
+<a href="{{ $url }}" style="display: inline-block;">
+<img src="{{ asset('storage/images/logo.png') }}" class="logo" alt="Your Logo">
+</a>
+</td>
+</tr>
+```
+
+
 **Comment the standard route out in routes/web.php**
 ```bash
 /*
@@ -140,12 +134,27 @@ Route::get('/', function () {
 ```
 
 
+**Run a little update**
+```bash
+php artisan spa:update
+```
+
 ## Usage
 ```bash
    php artisan serve
    npm run dev
    php artisan queue:work
 ```
+
+### Permissions for routes ###
+Under routes/meta there is for each route.js-file a php-file.
+Here you may define, which routes need which (spatie-)roles.
+if the array is empty, no permission is needed.
+
+### Sending E-Mails ###
+That everything works fine, sending E-Mails must be configured.
+I use Postmark for Mailing and everything is fine.
+You can find more infos under Laravel/Notifications
 
 ## Changelog
 

@@ -84,6 +84,7 @@ class SpaServiceProvider extends PackageServiceProvider
             __DIR__ . '/../config/spa.php' => config_path('spa.php'),
             __DIR__ . '/../resources' => resource_path(),
             __DIR__ . '/../bootstrap/app.php' => base_path('/bootstrap/app.php'),
+            __DIR__ . '/../routes/meta' => base_path('/routes/meta'),
             __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
             __DIR__ . '/../src/Models' => app_path('/Models'),
             __DIR__ . '/../src/Providers' => app_path('/Providers'),
