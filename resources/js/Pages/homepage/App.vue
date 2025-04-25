@@ -10,7 +10,7 @@
             <v-footer app>
                 <v-row justify="center" no-gutters>
                     <v-col cols="12" class="text-center">
-                        <v-btn text variant="text">Impressum {{ is_loading }}</v-btn>
+                        <v-btn text variant="text">Impressum homepage</v-btn>
                     </v-col>
                 </v-row>
 

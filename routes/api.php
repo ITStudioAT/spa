@@ -3,11 +3,15 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Itstudioat\Spa\Http\Controllers\Admin\AdminController;
+use Itstudioat\Spa\Http\Controllers\Spa\RouteController;
 use Itstudioat\Spa\Http\Controllers\Homepage\HomepageController;
 
 
 // Globales Throttle
 Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
+
+    /***** OTHER ROUTES *****/
+    Route::post('/routes/is_route_allowed',  [RouteController::class, 'isRouteAllowed']);
 
     /***** HOMEPAGE ROUTES *****/
     Route::name('spa.homepage.')->group(function () {
@@ -30,8 +34,6 @@ Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
         Route::post('/admin/register_step_1',  [AdminController::class, 'registerStep1']);
         Route::post('/admin/register_step_2',  [AdminController::class, 'registerStep2']);
         Route::post('/admin/register_step_3',  [AdminController::class, 'registerStep3']);
-
-
         /* SANCTUM */
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);

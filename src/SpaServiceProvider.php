@@ -2,13 +2,17 @@
 
 namespace Itstudioat\Spa;
 
+
+
 use Illuminate\Support\Facades\Route;
-use Itstudioat\Spa\Commands\CreateUser;
 use Itstudioat\Spa\Commands\InstallMe;
+use Itstudioat\Spa\Commands\UpdateSpa;
+use Itstudioat\Spa\Commands\CreateUser;
+use Itstudioat\Spa\Commands\SyncRoutes;
 use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\Commands\Concerns;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
-use Spatie\LaravelPackageTools\Commands\Concerns;
 
 class SpaServiceProvider extends PackageServiceProvider
 {
@@ -23,6 +27,8 @@ class SpaServiceProvider extends PackageServiceProvider
             ->hasCommands([
                 CreateUser::class,
                 InstallMe::class,  // Dein benutzerdefinierter Installationsbefehl
+                UpdateSpa::class,
+                SyncRoutes::class,
             ]);
     }
 
@@ -36,7 +42,6 @@ class SpaServiceProvider extends PackageServiceProvider
             __DIR__ . '/../config/spa.php' => config_path('spa.php'),
         ], 'spa-config');
 
-
         // Ressourcen (Bilder, Views, etc.)
         $this->publishes([
             __DIR__ . '/../resources' => resource_path(),
@@ -45,6 +50,7 @@ class SpaServiceProvider extends PackageServiceProvider
         // Routen und bootstrap/app.php
         $this->publishes([
             __DIR__ . '/../bootstrap/app.php' => base_path('/bootstrap/app.php'),
+            __DIR__ . '/../routes/meta' => base_path('/routes/meta'),
         ], 'spa-root');
 
 

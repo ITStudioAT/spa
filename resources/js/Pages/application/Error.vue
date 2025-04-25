@@ -1,6 +1,6 @@
 <template>
-    <v-empty-state headline="Whoops!" :title="message" :text="'Die Fehlernummer lautet:' + status"
-        image="/storage/images/logo.png"></v-empty-state>
+    <v-empty-state headline="Whoops!" :title="message ? message : 'Es ist ein Fehler aufgetreten'"
+        :text="status ? 'Die Fehlernummer lautet:' + status : ''" image="/storage/images/logo.png"></v-empty-state>
 </template>
 <script>
 export default {

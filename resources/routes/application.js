@@ -5,7 +5,7 @@ import Application_Error from '@/pages/application/Error.vue'
 
 
 const routes = [
-    { path: '/spa//application/error', component: Application_Error },
+    { path: '/application/error', component: Application_Error },
 
 
 ];

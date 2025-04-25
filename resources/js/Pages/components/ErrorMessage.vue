@@ -1,5 +1,4 @@
 <template>
-
     <v-snackbar v-model="is_snackbar" :timeout="timeout" color="error">
 
         <div class="d-flex flex-row align-center ga-2">
@@ -22,9 +21,7 @@ export default {
     props: ['status', 'message', 'timeout', 'type'],
 
     data() {
-        return {
-            is_snackbar: true,
-        };
+        return { is_snackbar: true, };
     },
 
     methods: {

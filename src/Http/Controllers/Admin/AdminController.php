@@ -18,13 +18,16 @@ use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep1Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep2Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep3Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep4Request;
-
+use Itstudioat\Spa\Http\Resources\Admin\UserResource;
+use Itstudioat\Spa\Services\NavigationService;
 
 class AdminController extends Controller
 {
 
     public function config(Request $request)
     {
+
+        $navigationService = new NavigationService();
 
         $data = [
             'logo' => config('spa.logo', ''),
@@ -35,6 +38,8 @@ class AdminController extends Controller
             'version' => InstalledVersions::getPrettyVersion('itstudioat/spa'),
             'register_admin_allowed' => config('spa.register_admin_allowed', false),
             'is_auth' => auth()->check(),
+            'user' => auth()->check() ? new UserResource(auth()->user()) : null,
+            'menu' => $navigationService->menu(),
         ];
 
         return response()->json($data, 200);

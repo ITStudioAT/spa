@@ -9,28 +9,34 @@
                 <v-btn icon="mdi-menu-close" @click="show_navigation_drawer = false" v-if="show_navigation_drawer" />
             </v-toolbar>
             <v-list>
-                <v-list-item link title="Home" prepend-icon="mdi-home" to="/admin" />
-                <v-list-item link title="Einstellungen" prepend-icon="mdi-cog" to="/admin2" />
-                <v-list-item link title="Abmelden" prepend-icon="mdi-power-cycle" @click="logout" />
+                <template v-for="(item, i) in config.menu" :key="i">
+                    <v-list-item :title="item.title" :prepend-icon="item.icon" v-if="item.to" :to="item.to" />
+                    <v-list-item v-if="item.click" :title="item.title" :prepend-icon="item.icon"
+                        @click="() => this[item.click]()" />
+                </template>
             </v-list>
         </v-navigation-drawer>
 
-        <!-- Alle Dinge sind geladen -->
-        <v-layout class="bg-background" v-if="config">
+        <v-app-bar flat color="primary">
+            <template v-slot:prepend>
+                <v-btn icon="mdi-menu-open" v-if="!show_navigation_drawer" @click="show_navigation_drawer = true" />
+                <v-img :src="'/storage/images/logo.png'" alt="Logo" width="32" class="pl-2"></v-img>
+            </template>
+        </v-app-bar>
 
-            <v-main>
-                <router-view></router-view>
-            </v-main>
 
-            <v-footer app>
-                <v-row justify="center" no-gutters>
-                    <v-col cols="12" class="text-center">
-                        {{ config }}
-                        <v-btn text variant="text">Impressum</v-btn>
-                    </v-col>
-                </v-row>
-            </v-footer>
-        </v-layout>
+
+        <v-main class="bg-background" v-if="config">
+            <router-view></router-view>
+        </v-main>
+
+        <v-footer app>
+            <v-row justify="center" no-gutters>
+                <v-col cols="12" class="text-center">
+                    Fußzeile
+                </v-col>
+            </v-row>
+        </v-footer>
 
         <!-- Es wird aktuell etwas geladen-->
         <div class="d-flex justify-center align-center"
@@ -80,7 +86,6 @@ export default {
         async logout() {
             await this.adminStore.executeLogout();
             await this.adminStore.loadConfig();
-            console.log(this.config);
             this.$router.replace('/admin/login');
         }
 
