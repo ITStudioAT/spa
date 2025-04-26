@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = $this->hasRole('admin');
+        $user = $this->hasRole(['admin']);
         if ($user->id != $id) abort(403, 'Sie wollen einen falschen Benutzer abfragen.');
 
         return response()->json(new UserResource($user), 200);
@@ -31,7 +31,7 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user = $this->hasRole('admin');
+        $user = $this->hasRole(['admin']);
         $validated = $request->validated();
 
 
@@ -53,7 +53,7 @@ class UserController extends Controller
 
     public function updateWithCode(UpdateUserWithCodeRequest $request)
     {
-        $user = $this->hasRole('admin');
+        $user = $this->hasRole(['admin']);
         $validated = $request->validated();
 
         info($validated);

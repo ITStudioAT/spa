@@ -18,6 +18,9 @@ trait HasRoleTrait
             $roles[] = 'super_admin';
         }
 
+        info($roles);
+        info($user->roles);
+
         if (!$user->hasAnyRole($roles)) $this->abort();
 
         return $user;
