@@ -1,8 +1,6 @@
 <template>
     <v-container fluid class="ma-0 w-100 pa-2">
-        <v-row class="d-flex flex-row ga-2 mb-2 mt-0 w-100" no-gutters>
-            <its-button subtitle="Home" icon="mdi-home" color="secondary" to="/admin" />
-        </v-row>
+
         <v-row class="w-100" no-gutters>
             <v-col cols="12" sm="6" md="4" xl="3">
                 <its-grid-box color="primary" title="Laravel-Spa">
