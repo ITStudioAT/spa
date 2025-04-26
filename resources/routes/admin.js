@@ -4,6 +4,7 @@ import Login from '@/pages/admin/auth/Login.vue'
 import UnknownPassword from '@/pages/admin/auth/UnknownPassword.vue'
 import Register from '@/pages/admin/auth/Register.vue'
 import Dashboard from '@/pages/admin/dashboard/Dashboard.vue'
+import Profile from '@/pages/admin/profile/Profile.vue'
 
 
 const routes = [
@@ -12,7 +13,7 @@ const routes = [
     { path: '/admin/unknown_password', component: UnknownPassword },
     { path: '/admin/register', component: Register },
     { path: '/admin/dashboard', component: Dashboard },
-    { path: '/admin/test_route/:id', component: Dashboard },
+    { path: '/admin/profile', component: Profile },
 ];
 
 const router = createRouter({

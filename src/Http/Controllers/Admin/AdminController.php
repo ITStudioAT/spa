@@ -2,10 +2,10 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Composer\InstalledVersions;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Itstudioat\Spa\Services\AdminService;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep1Request;
@@ -175,6 +175,7 @@ class AdminController extends Controller
                 'auth' => true,
                 'user' => $user,
             ];
+            $user->rememberLogin();
             return response()->json($data, 200);
         }
     }
@@ -192,7 +193,7 @@ class AdminController extends Controller
             'auth' => true,
             'user' => $user,
         ];
-
+        $user->rememberLogin();
         return response()->json($data, 200);
     }
 

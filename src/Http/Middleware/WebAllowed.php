@@ -38,7 +38,8 @@ class WebAllowed
         // Extract 'admin' (first segment) to determine which meta file to load
         $routeGroup = explode('/', trim($fullPath, '/'))[0] ?? null;
 
-        $routeFile = base_path('routes/meta/' . $routeGroup . '.php');
+        $routeFile = base_path('routes/meta/web/' . $routeGroup . '.php');
+
 
         if (!file_exists($routeFile)) {
             $status = 404;
@@ -59,13 +60,11 @@ class WebAllowed
             ]));
         }
 
-        $route_roles = require base_path('routes/meta/' . $routeGroup . '.php');
+        $route_roles = require base_path('routes/meta/web/' . $routeGroup . '.php');
 
         $data['to'] = $fullPath;
-
         $user = auth()->user();
-
-        $result = $routeService->checkRoles($user, $data, $route_roles);
+        $result = $routeService->checkWebRoles($user, $data, $route_roles);
 
         switch ($result) {
             case RouteResult::ALLOWED:

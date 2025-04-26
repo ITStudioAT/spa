@@ -2,13 +2,14 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Itstudioat\Spa\Http\Controllers\Admin\AdminController;
 use Itstudioat\Spa\Http\Controllers\Spa\RouteController;
+use Itstudioat\Spa\Http\Controllers\Admin\UserController;
+use Itstudioat\Spa\Http\Controllers\Admin\AdminController;
 use Itstudioat\Spa\Http\Controllers\Homepage\HomepageController;
 
 
 // Globales Throttle
-Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
+Route::middleware(['throttle:global', 'throttle:api', 'api-allowed'])->group(function () {
 
     /***** OTHER ROUTES *****/
     Route::post('/routes/is_route_allowed',  [RouteController::class, 'isRouteAllowed']);
@@ -34,9 +35,12 @@ Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
         Route::post('/admin/register_step_1',  [AdminController::class, 'registerStep1']);
         Route::post('/admin/register_step_2',  [AdminController::class, 'registerStep2']);
         Route::post('/admin/register_step_3',  [AdminController::class, 'registerStep3']);
+
         /* SANCTUM */
-        Route::middleware('auth:sanctum')->group(function () {
+        Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);
+            Route::resource('/admin/users', UserController::class);
+            Route::post('/admin/users/update_with_code/',  [UserController::class, 'updateWithCode']);
         });
     });
 });

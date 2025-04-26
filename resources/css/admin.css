@@ -5,3 +5,7 @@
 .hover {
     cursor: pointer;
 }
+
+.v-field--disabled {
+    opacity: 0.8 !important;
+}

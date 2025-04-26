@@ -152,4 +152,21 @@ class AdminService
 
         Notification::route('mail', $email)->notify(new StandardEmail($data));
     }
+
+
+    public function sendEmailValidationToken($select = 1, $user, $email)
+    {
+        $token_2fa = $user->setToken2Fa($select, config('spa.token_expire_time'));
+
+        $data = [
+            'from_address' => env('MAIL_FROM_ADDRESS'),
+            'from_name' => env('MAIL_FROM_NAME'),
+            'subject' => 'Code zum Bestätigen der E-Mail-Adresse',
+            'markdown' => 'spa::mails.admin.sendCode',
+            'token_2fa' => $token_2fa,
+            'token-expire-time' => config('spa.token_expire_time'),
+        ];
+
+        Notification::route('mail', $email)->notify(new StandardEmail($data));
+    }
 }

@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
-
-export const useAdminStore = defineStore("AdminStore", {
+export const useAdminStore = defineStore("AdminAdminStore", {
 
 
     state: () => {
@@ -32,7 +31,7 @@ export const useAdminStore = defineStore("AdminStore", {
                 this.config = this.api_response.data;
                 return this.api_response.data;
             } catch (error) {
-                this.redirect(error.response.status, error.response.data.message, 'error', this.config.timeout);
+                this.redirect(error.response.status, error.response.data.message, 'error');
                 return false;
             } finally {
                 this.is_loading--;
@@ -185,8 +184,8 @@ export const useAdminStore = defineStore("AdminStore", {
             }
         },
 
-        redirect(status, message, type, timeout) {
-            const redirectUrl = '/application/error?status=' + status + '&message=' + encodeURIComponent(message) + '&type=' + type + '&timeout=' + timeout;
+        redirect(status, message, type) {
+            const redirectUrl = '/application/error?status=' + status + '&message=' + encodeURIComponent(message) + '&type=' + type;
             window.location.href = redirectUrl; // This is a real redirect
         },
 

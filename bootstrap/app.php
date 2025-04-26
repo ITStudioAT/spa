@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Foundation\Application;
-use Illuminate\Session\Middleware\StartSession;
+use Itstudioat\Spa\Http\Middleware\ApiAllowed;
 use Itstudioat\Spa\Http\Middleware\WebAllowed;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -16,7 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->statefulApi();
         $middleware->append(StartSession::class);
         $middleware->alias([
-            'web-allowed' => WebAllowed::class
+            'web-allowed' => WebAllowed::class,
+            'api-allowed' => ApiAllowed::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

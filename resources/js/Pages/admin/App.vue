@@ -4,7 +4,10 @@
 
         <v-navigation-drawer v-model="show_navigation_drawer" color="primary" v-if="config && config.is_auth">
             <v-toolbar color="appbar">
-                <v-toolbar-title>Admin</v-toolbar-title>
+                <v-toolbar-title>
+                    <div class="text-body-2">Admin</div>
+                    <div class="text-caption text-text">{{ config.version }}</div>
+                </v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn icon="mdi-menu-close" @click="show_navigation_drawer = false" v-if="show_navigation_drawer" />
             </v-toolbar>
@@ -17,7 +20,7 @@
             </v-list>
         </v-navigation-drawer>
 
-        <v-app-bar flat color="primary">
+        <v-app-bar flat color="primary" v-if="config && config.is_auth">
             <template v-slot:prepend>
                 <v-btn icon="mdi-menu-open" v-if="!show_navigation_drawer" @click="show_navigation_drawer = true" />
                 <v-img :src="'/storage/images/logo.png'" alt="Logo" width="32" class="pl-2"></v-img>

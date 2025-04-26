@@ -46,7 +46,7 @@ trait UserTrait
         return false; // Token is invalid or expired
     }
 
-    private function rememberLogin()
+    public function rememberLogin()
     {
         $this->login_at = now();
         $this->login_ip = request()->ip();

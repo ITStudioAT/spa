@@ -28,7 +28,7 @@ export const useHomepageStore = defineStore("HomepageStore", {
                 const response = await axios.get("/api/homepage/config", {});
                 this.config = response.data;
             } catch (error) {
-                this.redirect(error.response.status, error.response.data.message, 'error', this.config.timeout);
+                this.redirect(error.response.status, error.response.data.message, 'error');
             } finally {
                 this.is_loading--;
             }

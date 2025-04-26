@@ -54,6 +54,17 @@ You can install the package via composer:
 composer require itstudioat/spa
 ```
 
+Put this line in composer.json
+```bash
+    "autoload": {
+        "psr-4": {
+            ...
+            "Itstudioat\\Spa\\": "src/"
+        }
+    },
+```
+
+
 Publishing Spatie-Permission
 ```bash
 php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
@@ -100,6 +111,16 @@ Add a user with following command:
     php artisan user:create
 ```
 
+Add to your Http/Controllers/Controller the HasRoleTrait:
+```bash
+  namespace App\Http\Controllers;
+  use Itstudioat\Spa\Traits\HasRoleTrait;
+
+  abstract class Controller
+  {
+      use HasRoleTrait;
+```
+
 If you use Postmark for Mailing (i use it):
 ```bash
 composer require symfony/postmark-mailer
@@ -111,7 +132,7 @@ To inividualize the Mail-Logo, pusblish de Markdown files to resources/views/ven
 php artisan vendor:publish --tag=laravel-mail
 ```
 
-After that change the file views/mail/html/header.blade.php
+After that change the file resources/views/mail/html/header.blade.php
 ```bash
 @props(['url'])
 <tr>
@@ -146,10 +167,30 @@ php artisan spa:update
    php artisan queue:work
 ```
 
-### Permissions for routes ###
-Under routes/meta there is for each route.js-file a php-file.
+## Permissions for routes ##
+### Web-Routes ###
+Under routes/meta/web there is for each route.js-file a php-file.
 Here you may define, which routes need which (spatie-)roles.
 if the array is empty, no permission is needed.
+
+With a simple command you can synchronize these files.
+The php-file is made actual with the route-js-file as basis:
+```bash
+    php artisan routes:sync
+```
+
+### Api-Routes ###
+Under routes/meta/api there must exist a file for each api-route.
+If you have following api-routes: 
+/admin/config
+/routes/check
+You must have two files:
+admin.php
+routes.php
+
+There you may define routes, which are protected with roles.
+
+
 
 ### Sending E-Mails ###
 That everything works fine, sending E-Mails must be configured.

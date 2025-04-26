@@ -19,7 +19,7 @@ Route::middleware(['throttle:global', 'throttle:web', 'web-allowed'])->group(fun
 
         Route::get('/homepage/{any?}', function () {
             return view('spa::homepage');
-        });
+        })->where('any', '.*');
 
         /* ADMIN ROUTES */
         Route::get('/admin/unknown_password', function () {

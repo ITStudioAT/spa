@@ -23,9 +23,9 @@ class RouteController extends Controller
 
         $routeService = new RouteService();
 
-        $route_roles = require base_path('routes/meta/' . $data['route'] . '.php');
+        $route_roles = require base_path('routes/meta/web/' . $data['route'] . '.php');
 
-        $result = $routeService->checkRoles($user, $data, $route_roles);
+        $result = $routeService->checkWebRoles($user, $data, $route_roles);
 
         if ($result == RouteResult::ALLOWED) return response()->json(['message' => 'Success'], 200);
         if ($result == RouteResult::NOT_ALLOWED) abort(403, 'Sie können auf diese Seite nicht zugreifen');
