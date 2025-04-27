@@ -15,6 +15,9 @@
     @if (!app()->runningUnitTests())
     @vite('resources/js/apps/admin.js')
     @endif
+
+    
+
 </head>
 
 <body class="antialiased">
@@ -24,5 +27,6 @@
     </div>
 
 </body>
+
 
 </html>

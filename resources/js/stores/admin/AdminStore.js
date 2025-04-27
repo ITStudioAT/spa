@@ -7,12 +7,11 @@ export const useAdminStore = defineStore("AdminAdminStore", {
             router: null,
             config: null,
             is_loading: 0,
-            error: {
-                is_error: false,
+            snack_message: {
+                show: false,
                 status: null,
                 message: null,
-                timeout: 3000,
-                type: 'error'
+                type: 'error',
             },
             api_response: null,
             show_navigation_drawer: true,
@@ -25,7 +24,7 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async loadConfig() {
-            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            this.is_loading++; this.api_response = null;
             try {
                 this.api_response = await axios.get("/api/admin/config", {});
                 this.config = this.api_response.data;
@@ -39,12 +38,12 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async registerStep1(data) {
-            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            this.is_loading++; this.api_response = null;
             try {
                 this.api_response = await axios.post("/api/admin/register_step_1", { data });
                 return true;
             } catch (error) {
-                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                this.snackMsg(error.response.status, error.response.data.message, 'error')
                 return false;
             } finally {
                 this.is_loading--;
@@ -52,12 +51,12 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async registerStep2(data) {
-            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            this.is_loading++; this.api_response = null;
             try {
                 this.api_response = await axios.post("/api/admin/register_step_2", { data });
                 return true;
             } catch (error) {
-                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                this.snackMsg(error.response.status, error.response.data.message, 'error')
                 return false;
             } finally {
                 this.is_loading--;
@@ -65,12 +64,12 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async registerStep3(data) {
-            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            this.is_loading++; this.api_response = null;
             try {
                 this.api_response = await axios.post("/api/admin/register_step_3", { data });
                 return true;
             } catch (error) {
-                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                this.snackMsg(error.response.status, error.response.data.message, 'error')
                 return false;
             } finally {
                 this.is_loading--;
@@ -78,12 +77,12 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async passwordUnknownStep1(data) {
-            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            this.is_loading++; this.api_response = null;
             try {
                 this.api_response = await axios.post("/api/admin/password_unknown_step_1", { data });
                 return true;
             } catch (error) {
-                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                this.snackMsg(error.response.status, error.response.data.message, 'error')
                 return false;
             } finally {
                 this.is_loading--;
@@ -91,12 +90,12 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async passwordUnknownStep2(data) {
-            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            this.is_loading++; this.api_response = null;
             try {
                 this.api_response = await axios.post("/api/admin/password_unknown_step_2", { data });
                 return true;
             } catch (error) {
-                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                this.snackMsg(error.response.status, error.response.data.message, 'error')
                 return false;
             } finally {
                 this.is_loading--;
@@ -104,12 +103,12 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async passwordUnknownStep3(data) {
-            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            this.is_loading++; this.api_response = null;
             try {
                 this.api_response = await axios.post("/api/admin/password_unknown_step_3", { data });
                 return true;
             } catch (error) {
-                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                this.snackMsg(error.response.status, error.response.data.message, 'error')
                 return false;
             } finally {
                 this.is_loading--;
@@ -117,12 +116,12 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async passwordUnknownStep4(data) {
-            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            this.is_loading++; this.api_response = null;
             try {
                 this.api_response = await axios.post("/api/admin/password_unknown_step_4", { data });
                 return true;
             } catch (error) {
-                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                this.snackMsg(error.response.status, error.response.data.message, 'error')
                 return false;
             } finally {
                 this.is_loading--;
@@ -130,13 +129,13 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async loginStep1(data) {
-            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            this.is_loading++; this.api_response = null;
             try {
                 this.api_response = await axios.post("/api/admin/login_step_1", { data });
                 return true;
 
             } catch (error) {
-                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                this.snackMsg(error.response.status, error.response.data.message, 'error')
                 return false;
             } finally {
                 this.is_loading--;
@@ -144,12 +143,12 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async loginStep2(data) {
-            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            this.is_loading++; this.api_response = null;
             try {
                 this.api_response = await axios.post("/api/admin/login_step_2", { data });
                 return true;
             } catch (error) {
-                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                this.snackMsg(error.response.status, error.response.data.message, 'error')
                 return false;
             } finally {
                 this.is_loading--;
@@ -158,12 +157,12 @@ export const useAdminStore = defineStore("AdminAdminStore", {
 
 
         async loginStep3(data) {
-            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            this.is_loading++; this.api_response = null;
             try {
                 this.api_response = await axios.post("/api/admin/login_step_3", { data });
                 return true;
             } catch (error) {
-                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                this.snackMsg(error.response.status, error.response.data.message, 'error')
                 return false;
             } finally {
                 this.is_loading--;
@@ -172,12 +171,12 @@ export const useAdminStore = defineStore("AdminAdminStore", {
 
 
         async executeLogout() {
-            this.is_loading++; this.api_response = null; this.error.is_error = false;
+            this.is_loading++; this.api_response = null;
             try {
                 this.api_response = await axios.post("/api/admin/execute_logout", {});
                 return true;
             } catch (error) {
-                this.errorMsg(error.response.status, error.response.data.message, 'error', this.config.timeout ?? this.config.timeout)
+                this.snackMsg(error.response.status, error.response.data.message, 'error')
                 return false;
             } finally {
                 this.is_loading--;
@@ -189,12 +188,11 @@ export const useAdminStore = defineStore("AdminAdminStore", {
             window.location.href = redirectUrl; // This is a real redirect
         },
 
-        errorMsg(status, message, type, timeout) {
-            this.error.status = status;
-            this.error.message = message;
-            this.error.type = type;
-            this.error.timeout = timeout;
-            this.error.is_error = true;
+        snackMsg(status, message, type = 'error') {
+            this.snack_message.status = status;
+            this.snack_message.message = message;
+            this.snack_message.type = type;
+            this.snack_message.show = true;
         }
 
     }

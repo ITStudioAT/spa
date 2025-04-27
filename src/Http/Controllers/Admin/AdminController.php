@@ -21,6 +21,7 @@ use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep4Request;
 use Itstudioat\Spa\Http\Resources\Admin\UserResource;
 use Itstudioat\Spa\Services\NavigationService;
 
+
 class AdminController extends Controller
 {
 
@@ -32,7 +33,6 @@ class AdminController extends Controller
         $data = [
             'logo' => config('spa.logo', ''),
             'copyright' => config('spa.copyright', ''),
-            'timeout' => config('spa.timeout', 3000),
             'title' => config('spa.title', 'Fresh Laravel'),
             'company' => config('spa.company', 'ItStudio.at'),
             'version' => InstalledVersions::getPrettyVersion('itstudioat/spa'),

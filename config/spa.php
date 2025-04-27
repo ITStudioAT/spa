@@ -5,7 +5,6 @@ return [
     'version' => '0.0.5',
     'logo' => 'logo.png',
     'copyright' => '(c) 2025 ITStudio.at by Günther Kron',
-    'timeout' => 3000,
     'title' => 'Spa',
     'company' => 'ItStudio.at',
     'web_throttle' => 20, // web-requests per user per minute

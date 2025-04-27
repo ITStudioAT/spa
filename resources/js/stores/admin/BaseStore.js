@@ -10,6 +10,7 @@ export function createBaseStore(modelName, itemKey = 'item') {
                 status: null,
                 message: null,
                 is_error: false,
+                is_success: false,
             },
             router: null,
             api_answer: null,
@@ -44,7 +45,7 @@ export function createBaseStore(modelName, itemKey = 'item') {
                     const response = await axios.get(`/api/admin/${modelName}/${id}`);
                     this[itemKey] = response.data; // <-- dynamic assignment!
                 } catch (error) {
-                    this.errorMsg(error);
+                    this.snackMsg(error.response?.status, error.response?.data.message, 'error')
                 } finally {
                     adminStore.is_loading--;
                 }
@@ -62,21 +63,19 @@ export function createBaseStore(modelName, itemKey = 'item') {
                     } else {
                         this[itemKey] = response.data;
                     }
-
-
                 } catch (error) {
-                    this.errorMsg(error);
+                    this.snackMsg(error.response.status, error.response.data.message, 'error')
                 } finally {
                     adminStore.is_loading--;
                 }
             },
 
-            errorMsg(error) {
-                const adminStore = useAdminStore();
-                adminStore.error.status = error.response?.status;
-                adminStore.error.message = error.response?.data?.message || error.message;
-                adminStore.error.is_error = true;
-            },
+            snackMsg(status, message, type = 'error') {
+                this.snack_message.status = status;
+                this.snack_messagev.message = message;
+                this.snack_message.type = type;
+                this.snack_message.show = true;
+            }
         },
 
 

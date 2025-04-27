@@ -48,8 +48,9 @@
             <v-progress-circular indeterminate size="70" width="7" />
         </div>
 
-        <ErrorMessage :status="error.status" :message="error.message" :timeout="error.timeout" :type="error.type"
-            v-if="error.is_error"></ErrorMessage>
+        <SnackMessage :status="snack_message.status" :message="snack_message.message" :type="snack_message.type"
+            v-if="snack_message.show">
+        </SnackMessage>
     </v-app>
 
 
@@ -59,16 +60,18 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useAdminStore } from "@/stores/admin/AdminStore";
-import ErrorMessage from "@/pages/components/ErrorMessage.vue";
+import SnackMessage from "@/pages/components/SnackMessage.vue";
 
 export default {
 
-    components: { ErrorMessage },
+    components: { SnackMessage },
 
     async beforeMount() {
         this.adminStore = useAdminStore(); this.adminStore.initialize(this.$router);
         this.adminStore.loadConfig();
     },
+
+    
 
     unmounted() {
     },
@@ -81,7 +84,7 @@ export default {
 
 
     computed: {
-        ...mapWritableState(useAdminStore, ['config', 'is_loading', 'error', 'show_navigation_drawer', 'load_config']),
+        ...mapWritableState(useAdminStore, ['config', 'is_loading', 'snack_message', 'show_navigation_drawer', 'load_config']),
     },
 
     methods: {

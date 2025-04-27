@@ -6,10 +6,10 @@ namespace Itstudioat\Spa\Http\Controllers\Admin;
 use app\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Itstudioat\Spa\Services\AdminService;
 use Itstudioat\Spa\Http\Resources\Admin\UserResource;
 use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
 use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
-use Itstudioat\Spa\Services\AdminService;
 
 class UserController extends Controller
 {
@@ -43,6 +43,7 @@ class UserController extends Controller
         }
 
         $user->update($validated);
+
         return response()->json(new UserResource($user), 200);
     }
 
@@ -56,12 +57,13 @@ class UserController extends Controller
         $user = $this->hasRole(['admin']);
         $validated = $request->validated();
 
-        info($validated);
-        info("check: " . $user->checkToken2Fa($validated['token_2fa']));
-
         if (!$user->checkToken2Fa($validated['token_2fa'])) abort(401, "Der Code ist falsch oder abgelaufen");
 
+        $validated['email_verified_at'] = now();
         $user->update($validated);
+
+
+
         return response()->json(new UserResource($user), 200);
     }
 }

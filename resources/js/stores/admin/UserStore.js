@@ -20,7 +20,24 @@ export const useUserStore = defineStore("AdminUserStore", {
                 this.user = response.data;
                 return true;
             } catch (error) {
-                this.errorMsg(error);
+                this.snackMsg(error.response.status, error.response.data.message, 'error')
+                return false;
+            } finally {
+                adminStore.is_loading--;
+            }
+        },
+
+        async savePassword(data) {
+            this.api_answer = null;
+            const adminStore = useAdminStore();
+            adminStore.is_loading++;
+            try {
+                const response = await axios.post('/api/admin/users/save_password/', data);
+                if (response.data.answer) {
+                    return 'enter_password_code';
+                }
+            } catch (error) {
+                this.snackMsg(error.response.status, error.response.data.message, 'error')
                 return false;
             } finally {
                 adminStore.is_loading--;
