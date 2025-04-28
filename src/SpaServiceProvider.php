@@ -23,7 +23,6 @@ class SpaServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasMigration('00001_update_users_table')
-            ->publishMigrations()
             ->hasRoutes(['web', 'api'])
             ->hasCommands([
                 CreateUser::class,
