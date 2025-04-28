@@ -44,15 +44,17 @@ laravel new new-laravel-app
 
 **Create a new empty database like in .env configured**
 
-Migrate your migrations
-```bash
-php artisan migrate
-```
-
 You can install the package via composer:
 ```bash
 composer require itstudioat/spa
 ```
+
+Run the Install-Command & the Complete-Command:
+```bash
+php artisan spa:install
+php artisan spa:complete
+```
+
 
 Put this line in composer.json
 ```bash
@@ -64,52 +66,11 @@ Put this line in composer.json
     },
 ```
 
-
-Publishing Spatie-Permission
-```bash
-php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
-php artisan optimize:clear
-php artisan migrate
-```
-
-To install the laravel sanctum and when you are asked, lets run the migrations:
-```bash
-php artisan install:api
-```
-
-To integrate all packages like vue:
-```bash
-php artisan install:me
-npm install
-```
-
-Publish all ressources of Laravel-Spa
-```bash
-php artisan vendor:publish --tag=spa-all --force
-php artisan vendor:publish --tag=spa-migrations
-php artisan migrate
-```
-
-Make storage:link and create  /storage/app/public/images folder
-and put the favicon.ico and logo.png in this folder
-```bash
-php artisan storage:link
-```
-
-Publish the config/cors.php file
-```bash
-php artisan config:publish cors
-```
-
 Change the config/cors.php file
 ```bash
  'supports_credentials' => true,
 ```
 
-Add a user with following command:
-```bash
-    php artisan user:create
-```
 
 Add to your Http/Controllers/Controller the HasRoleTrait:
 ```bash
@@ -152,12 +113,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 */
-```
-
-
-**Run a little update**
-```bash
-php artisan spa:update
 ```
 
 ## Usage

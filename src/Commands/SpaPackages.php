@@ -5,14 +5,15 @@ namespace Itstudioat\Spa\Commands;
 
 use Illuminate\Console\Command;
 
-class InstallMe extends Command
+class SpaPackages extends Command
 {
-    protected $signature = 'install:me';
+    protected $signature = 'spa:packages';
     protected $description = 'Installiere JS-Abhängigkeiten für spa';
 
     public function handle()
     {
 
+        // DEPENDENCIES VON PACKAGE.JSON ÜBERNEHMEN UND INSTALLIEREN
         // package.json
         $packageJsonPath = base_path('package.json');
 

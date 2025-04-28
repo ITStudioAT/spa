@@ -2,7 +2,8 @@
 
 namespace Itstudioat\Spa\Commands;
 
-use app\Models\User;
+
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 

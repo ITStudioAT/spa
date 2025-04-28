@@ -13,5 +13,5 @@ return [
     'token_expire_time' => 120, // minutes when token expires
     'register_admin_allowed' => true,
     'registered_admin_must_be_confirmed' => true,
-    'super_admin' => '',
+    'super_admin' => 'super_admin',
 ];

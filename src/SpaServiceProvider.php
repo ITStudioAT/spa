@@ -5,12 +5,12 @@ namespace Itstudioat\Spa;
 
 
 use Illuminate\Support\Facades\Route;
-use Itstudioat\Spa\Commands\InstallMe;
-use Itstudioat\Spa\Commands\UpdateSpa;
 use Itstudioat\Spa\Commands\CreateUser;
+use Itstudioat\Spa\Commands\SpaComplete;
+use Itstudioat\Spa\Commands\SpaPackages;
+use Itstudioat\Spa\Commands\SpaUpdate;
 use Itstudioat\Spa\Commands\SyncRoutes;
 use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\Commands\Concerns;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 
@@ -20,75 +20,46 @@ class SpaServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('spa')
-            // Falls du spezielle Installationsbefehle ausführen möchtest, kannst du hier 'hasInstallCommand()' hinzufügen
             ->hasConfigFile()
             ->hasViews()
+            ->hasMigration('00001_update_users_table')
+            ->discoversMigrations()
             ->hasRoutes(['web', 'api'])
             ->hasCommands([
                 CreateUser::class,
-                InstallMe::class,  // Dein benutzerdefinierter Installationsbefehl
-                UpdateSpa::class,
+                SpaPackages::class,
+                SpaComplete::class,
+                SpaUpdate::class,
                 SyncRoutes::class,
-            ]);
+            ])
+            ->hasInstallCommand(function (InstallCommand $command) {
+                $command
+                    ->startWith(function (InstallCommand $command) {
+                        $command->info('Hello, and welcome to my great new package!');
+                    })
+                    ->publishConfigFile()
+                    ->publishMigrations()
+                    ->endWith(function (InstallCommand $command) {
+                        $command->info('Have a great day!');
+                    });
+            });
     }
 
     public function packageRegistered()
     {
-        // Hier werden die Ressourcen veröffentlicht
-
-        // Konfigurationsdateien
-
-        $this->publishes([
-            __DIR__ . '/../config/spa.php' => config_path('spa.php'),
-        ], 'spa-config');
-
-        // Ressourcen (Bilder, Views, etc.)
-        $this->publishes([
-            __DIR__ . '/../resources' => resource_path(),
-        ], 'spa-resources');
-
-        // Routen und bootstrap/app.php
-        $this->publishes([
-            __DIR__ . '/../bootstrap/app.php' => base_path('/bootstrap/app.php'),
-            __DIR__ . '/../routes/meta' => base_path('/routes/meta'),
-        ], 'spa-root');
-
-
-        // App-Ressourcen (Commands, Http, Models, Notifications, Services, Traits)
-        $this->publishes([
-            __DIR__ . '/../src/Models' => app_path('/Models'),
-            __DIR__ . '/../src/Providers' => app_path('/Providers'),
-            /*
-            __DIR__ . '/../src/Commands' => app_path('/Commands'),
-            __DIR__ . '/../src/Http' => app_path('/Http'),
-            __DIR__ . '/../src/Notifications' => app_path('/Notifications'),
-            __DIR__ . '/../src/Services' => app_path('/Services'),
-            __DIR__ . '/../src/Traits' => app_path('/Traits'),
-            */
-
-        ], 'spa-app');
-
-
-        // Stubs (z.B. Vite-Konfiguration)
+        // One Time Publishing
         $this->publishes([
             __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
-        ], 'spa-vite');
-
-        // Migrationen
-        $this->publishesMigrations([
-            __DIR__ . '/../database/migrations' => database_path('migrations'),
-        ], 'spa-migrations');
-
-
-        $this->publishes([
-            __DIR__ . '/../config/spa.php' => config_path('spa.php'),
-            __DIR__ . '/../resources' => resource_path(),
             __DIR__ . '/../bootstrap/app.php' => base_path('/bootstrap/app.php'),
             __DIR__ . '/../routes/meta' => base_path('/routes/meta'),
-            __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
             __DIR__ . '/../src/Models' => app_path('/Models'),
             __DIR__ . '/../src/Providers' => app_path('/Providers'),
-        ], 'spa-all');
+        ], 'spa-once');
+
+        // Multi Time Publishing with
+        $this->publishes([
+            __DIR__ . '/../resources' => resource_path(),
+        ], 'spa-multi');
     }
 
     public function bootingPackage()

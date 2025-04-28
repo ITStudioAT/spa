@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Console\Command;
 use Itstudioat\Spa\Http\Controllers\Spa\InstallUpdateController;
 
-class UpdateSpa extends Command
+class SpaUpdate extends Command
 {
     // Kein Argument in der Signature definieren
     protected $signature = 'spa:update';
