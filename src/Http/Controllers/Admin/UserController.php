@@ -6,10 +6,13 @@ namespace Itstudioat\Spa\Http\Controllers\Admin;
 use app\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Itstudioat\Spa\Services\AdminService;
 use Itstudioat\Spa\Http\Resources\Admin\UserResource;
 use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
 use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
 
 class UserController extends Controller
 {
@@ -39,7 +42,7 @@ class UserController extends Controller
             // Neue E-Mail-Adresse, die muss natürlich zunächst bestätigt werden
             $adminService = new AdminService();
             $adminService->sendEmailValidationToken(1, $user, $validated['email']);
-            return response()->json(['answer' => 'input_code', 'email' => $user->email, 'email_new' => $validated['email']]);
+            return response()->json(['answer' => 'INPUT_CODE', 'email' => $user->email, 'email_new' => $validated['email']]);
         }
 
         $user->update($validated);
@@ -62,8 +65,34 @@ class UserController extends Controller
         $validated['email_verified_at'] = now();
         $user->update($validated);
 
-
-
         return response()->json(new UserResource($user), 200);
+    }
+
+    public function savePassword(SavePasswordRequest $request)
+    {
+        $user = $this->hasRole(['admin']);
+        $validated = $request->validated();
+
+        $adminService = new AdminService();
+
+        $adminService->sendPasswordResetToken(1, $user, $user->email);
+
+        $data = ['step' => 'PASSWORD_ENTER_TOKEN'];
+        return response()->json($data, 200);
+    }
+
+
+    public function savePasswordWithCode(SavePasswordWithCodeRequest $request)
+    {
+        $user = $this->hasRole(['admin']);
+        $validated = $request->validated();
+
+        if (!$user->checkToken2Fa($validated['token_2fa'])) abort(401, "Kennwort setzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+
+        $user->update(
+            [
+                'password' => Hash::make($validated['password']),
+            ]
+        );
     }
 }

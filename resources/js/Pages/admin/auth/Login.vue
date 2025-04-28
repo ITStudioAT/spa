@@ -16,6 +16,7 @@
                 </v-form>
                 <v-btn block color="success" slim flat rounded="0" @click="loginStep1(data)">Weiter</v-btn>
                 <div class="text-caption text-center font-weight-light">oder</div>
+
                 <v-btn block color="primary" slim flat rounded="0" variant="text" @click="passwordUnknown">Kennwort
                     unbekannt</v-btn>
                 <div v-if="config.register_admin_allowed">

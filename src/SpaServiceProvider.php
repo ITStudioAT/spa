@@ -22,7 +22,7 @@ class SpaServiceProvider extends PackageServiceProvider
             ->name('spa')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('00001_update_users_table')
+            ->discoversMigrations()
             ->hasRoutes(['web', 'api'])
             ->hasCommands([
                 CreateUser::class,
@@ -36,6 +36,7 @@ class SpaServiceProvider extends PackageServiceProvider
                     ->startWith(function (InstallCommand $command) {
                         $command->info('Hello, and welcome to my great new package!');
                     })
+                    ->publishMigrations()
                     ->publishConfigFile()
                     ->endWith(function (InstallCommand $command) {
                         $command->info('Have a great day!');

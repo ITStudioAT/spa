@@ -22,7 +22,7 @@
             <v-progress-circular indeterminate size="70" width="7"></v-progress-circular>
         </v-container>
 
-        <ErrorMessage :status="error.status" :message="error.message" v-if="error.is_error"></ErrorMessage>
+        <SnackMessage :status="error.status" :message="error.message" v-if="error.is_error"></SnackMessage>
     </v-app>
 
 
@@ -32,11 +32,11 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useApplicationStore } from "@/stores/application/ApplicationStore";
-import ErrorMessage from "@/pages/components/ErrorMessage.vue";
+import SnackMessage from "@/pages/components/SnackMessage.vue";
 
 export default {
 
-    components: { ErrorMessage },
+    components: { SnackMessage },
 
     async beforeMount() {
         this.applicationStore = useApplicationStore(); this.applicationStore.initialize(this.$router);

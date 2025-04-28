@@ -30,7 +30,7 @@ class SpaPackages extends Command
         $json['dependencies']['vite-plugin-vuetify'] = '^2.0.3';
         $json['dependencies']['vue'] = '^3.4.21';
         $json['dependencies']['vue-router'] = '^4.3.0';
-        $json['dependencies']['vuetify'] = '^3.5.11';
+        $json['dependencies']['vuetify'] = '^3.8.2';
 
         $json['devDependencies']['axios'] = '^1.6.4';
         $json['devDependencies']['laravel-vite-plugin'] = '^1.0';

@@ -4,7 +4,7 @@ namespace Itstudioat\Spa\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterStep3Request extends FormRequest
+class SavePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +23,8 @@ class RegisterStep3Request extends FormRequest
     {
 
         return [
-            'data.step' => 'required|in:REGISTER_ENTER_FIELDS',
-            'data.email' => 'required|email|max:255',
-            'data.token_2fa' => 'required|string|size:6',
-            'data.last_name' => 'required|string|max:255',
-            'data.first_name' => 'nullable|string|max:255',
-            'data.password' => 'required|string|min:8|max:255',
-            'data.password_repeat' => 'required|string||min:8|max:255|same:data.password',
+            'password' => 'required|string|min:8|max:255',
+            'password_repeat' => 'required|string||min:8|max:255|same:password',
         ];
     }
 }

@@ -31,6 +31,7 @@
 
         <v-main class="bg-background" v-if="config">
             <router-view></router-view>
+            <GlobalSnackbar />
         </v-main>
 
         <v-footer app>
@@ -56,6 +57,11 @@
 
 
 </template>
+
+<script setup>
+import GlobalSnackbar from "@/pages/components/GlobalSnackbar.vue";
+</script>
+
 
 <script>
 import { mapWritableState } from "pinia";

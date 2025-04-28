@@ -26,18 +26,22 @@
                     <div v-if="!is_edit">
                         <v-btn block color="primary" slim flat rounded="0" @click="is_edit = true">Ändern</v-btn>
                     </div>
-                    <div v-if="is_edit">
-                        <v-btn block color="success" slim flat rounded="0" @click="save(data)"
-                            type="submit">Speichern</v-btn>
-                        <div class="text-caption text-center font-weight-light">oder</div>
-                        <v-btn block color="error" slim flat rounded="0" @click="abort">Abbruch</v-btn>
-                    </div>
+                    <v-row no-gutters v-if="is_edit">
+                        <v-col cols=12 sm=6>
+                            <v-btn block color="success" slim flat rounded="0" @click="save(data)"
+                                type="submit">Speichern</v-btn>
+                        </v-col>
+                        <v-col cols=12 sm=6>
+                            <v-btn block color="error" slim flat rounded="0" @click="abort">Abbruch</v-btn>
+                        </v-col>
+                    </v-row>
+
                 </its-grid-box>
 
                 <!-- CODE BESTÄTIGEN - BEI GEÄNDERTER E-MAIL -->
                 <its-grid-box color="primary" title="Benutzerprofil"
                     :subtitle="config.user.last_name + ' ' + config.user.first_name" icon="mdi-account"
-                    v-if="step == 'input_code'">
+                    v-if="step == 'INPUT_CODE'">
 
                     <div class="text-body-1">
                         <div class="mb-2">Sie beabsichtigen Ihre E-Mail-Adresse zu ändern.</div>
@@ -50,10 +54,15 @@
                         <div class="text-caption text-text">Bitte den Code laut E-Mail eingeben</div>
                         <v-otp-input autofocus v-model="data.token_2fa" />
 
-                        <v-btn block color="success" slim flat rounded="0" @click="updateWithCode(data)"
-                            type="submit">Bestätigen</v-btn>
-                        <div class="text-caption text-center font-weight-light">oder</div>
-                        <v-btn block color="error" slim flat rounded="0" @click="abort">Abbruch</v-btn>
+                        <v-row no-gutters v-if="step == 'INPUT_CODE'">
+                            <v-col cols=12 sm=6>
+                                <v-btn block color="success" slim flat rounded="0" @click="updateWithCode(data)"
+                                    type="submit">Bestätigen</v-btn>
+                            </v-col>
+                            <v-col cols=12 sm=6>
+                                <v-btn block color="error" slim flat rounded="0" @click="abort">Abbruch</v-btn>
+                            </v-col>
+                        </v-row>
                     </v-form>
                 </its-grid-box>
 
@@ -61,7 +70,7 @@
                 <!-- KENNWORT ÄNDERN-->
                 <its-grid-box color="primary" title="Kennwort ändern"
                     :subtitle="config.user.last_name + ' ' + config.user.first_name" icon="mdi-account"
-                    v-if="step == 'change_password'">
+                    v-if="step == 'CHANGE_PASSWORD'">
                     <v-form ref="form" @submit.prevent="savePassword(data)" v-model="is_valid">
                         <v-text-field autofocus label="Kennwort"
                             :append-icon="is_password_visible ? 'mdi-eye' : 'mdi-eye-off'"
@@ -75,16 +84,44 @@
                             :rules="[required(), minLength(8), maxLength(255), passwordMatch(data.password)]"
                             v-model="data.password_repeat" />
                     </v-form>
-                    <v-btn block color="success" slim flat rounded="0" @click="savePassword(data)"
-                        type="submit">Speichern</v-btn>
-                    <div class="text-caption text-center font-weight-light">oder</div>
-                    <v-btn block color="error" slim flat rounded="0" @click="abort">Abbruch</v-btn>
 
+                    <v-row no-gutters v-if="step == 'CHANGE_PASSWORD'">
+                        <v-col cols=12 sm=6>
+                            <v-btn block color="success" slim flat rounded="0" @click="savePassword(data)"
+                                type="submit">Weiter</v-btn>
+                        </v-col>
+                        <v-col cols=12 sm=6>
+                            <v-btn block color="error" slim flat rounded="0" @click="abort">Abbruch</v-btn>
+                        </v-col>
+                    </v-row>
                 </its-grid-box>
+
+                <!-- KENNWORT ÄNDERN CODE ERFASSEN-->
+                <its-grid-box color="primary" title="Kennwort ändern"
+                    :subtitle="config.user.last_name + ' ' + config.user.first_name" icon="mdi-account"
+                    v-if="step == 'PASSWORD_ENTER_TOKEN'">
+
+                    <v-form ref="form" v-model="is_valid" @submit.prevent="savePasswordWithCode(data)" class="mb-4">
+                        <v-alert closable color="success" type="info" text="Bitte prüfen Sie Ihre E-Mails" />
+                        <div class="text-caption text-text">Bitte den Code laut E-Mail eingeben</div>
+                        <v-otp-input autofocus v-model="data.token_2fa" />
+                    </v-form>
+
+                    <v-row no-gutters v-if="step == 'PASSWORD_ENTER_TOKEN'">
+                        <v-col cols=12 sm=6>
+                            <v-btn block color="success" slim flat rounded="0"
+                                @click="savePasswordWithCode(data)">Weiter</v-btn>
+                        </v-col>
+                        <v-col cols=12 sm=6>
+                            <v-btn block color="error" slim flat rounded="0" @click="abort">Abbruch</v-btn>
+                        </v-col>
+                    </v-row>
+                </its-grid-box>
+
+
             </v-col>
         </v-row>
 
-        {{ snack_message }}
     </v-container>
 
 
@@ -144,7 +181,8 @@ export default {
 
         wantToChangePassword() {
             this.abort();
-            this.step = 'change_password'
+            this.data = {};
+            this.step = 'CHANGE_PASSWORD'
         },
 
 
@@ -153,12 +191,11 @@ export default {
 
             if (data.id) await this.update(data);
             this.is_edit = false;
-            if (this.api_answer?.answer == 'input_code') {
-                this.step = 'input_code';
+            if (this.api_answer?.answer == 'INPUT_CODE') {
+                this.step = 'INPUT_CODE';
             } else {
                 this.data = JSON.parse(JSON.stringify(this.user));
                 this.adminStore.snackMsg(null, "Das Profil wurde erfolreich gespeichert", 'success');
-                console.log("snack");
                 await this.adminStore.loadConfig();
                 this.abort();
             }
@@ -169,7 +206,7 @@ export default {
         },
 
         async updateWithCode(data) {
-            await this.$refs.form.validate(); if (!this.is_valid) return;
+            if (this.data.token_2fa.length != 6) return;
             if (await this.userStore.updateWithCode(data)) {
                 this.adminStore.snackMsg(null, "Das Profil wurde erfolreich gespeichert", 'success');
                 await this.adminStore.loadConfig();
@@ -180,9 +217,19 @@ export default {
         async savePassword(data) {
             await this.$refs.form.validate(); if (!this.is_valid) return;
             const answer = await this.userStore.savePassword(data);
+
             if (answer) {
-                this.step = 'enter_password_code';
+                this.step = answer;
             } else {
+                this.abort();
+            }
+        },
+
+
+        async savePasswordWithCode(data) {
+            if (this.data.token_2fa.length != 6) return;
+            if (await this.userStore.savePasswordWithCode(data)) {
+                this.adminStore.snackMsg(null, "Das Kennwort wurde erfolreich gespeichert", 'success');
                 this.abort();
             }
 

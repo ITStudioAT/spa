@@ -8,7 +8,6 @@ use Composer\InstalledVersions;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Itstudioat\Spa\Services\AdminService;
-use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Itstudioat\Spa\Services\NavigationService;
 use Itstudioat\Spa\Http\Resources\Admin\UserResource;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep1Request;
@@ -28,9 +27,6 @@ class AdminController extends Controller
 
     public function config(Request $request)
     {
-        info(1);
-        ToastMagic::success('Successfully Updated');
-        info(2);
 
         $navigationService = new NavigationService();
 
@@ -208,7 +204,6 @@ class AdminController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        info("loggedout");
         return response()->noContent();
     }
 }

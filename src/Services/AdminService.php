@@ -128,7 +128,7 @@ class AdminService
         $data = [
             'from_address' => env('MAIL_FROM_ADDRESS'),
             'from_name' => env('MAIL_FROM_NAME'),
-            'subject' => 'Code zum Zurücksetzen des Kennwortes',
+            'subject' => 'Code zum Setzen des Kennwortes',
             'markdown' => 'spa::mails.admin.sendCode',
             'token_2fa' => $token_2fa,
             'token-expire-time' => config('spa.token_expire_time'),

@@ -36,11 +36,11 @@ laravel new new-laravel-app
     - DB-configuration
     - MAIL-configuration
     - SESSION_DOMAIN='.localhost'
-    - (REDIS_CLIENT=phpredis to REDIS_CLIENT=predis)
+    - LOCALE-configuration
     
 - config/app.php
     - timezone
-    - locale-configuration
+   
 
 **Create a new empty database like in .env configured**
 
@@ -88,7 +88,7 @@ composer require symfony/postmark-mailer
 composer require symfony/http-client
 ```
 
-To inividualize the Mail-Logo, pusblish de Markdown files to resources/views/vendor/mail
+To inividualize the Mail-Logo, publish the Markdown files to resources/views/vendor/mail
 ```bash
 php artisan vendor:publish --tag=laravel-mail
 ```

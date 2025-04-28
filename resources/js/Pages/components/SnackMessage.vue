@@ -1,5 +1,6 @@
 <template>
-    <v-snackbar v-model="is_snackbar" timeout="3000" :color="type == 'error' ? 'error' : 'success'">
+    <v-snackbar timer="accent" v-model="is_snackbar" :timeout="my_timeout"
+        :color="type == 'error' ? 'error' : 'success'" style="z-index:9000;">
 
         <div class="d-flex flex-row align-center ga-2">
             <v-icon :icon="icon(type)" />
@@ -19,10 +20,18 @@
 
 <script>
 export default {
-    props: ['status', 'message', 'type'],
+    props: ['status', 'message', 'type', 'timeout'],
+
+    beforeMount() {
+        if (this.timeout) this.my_timeout = this.timeout;
+    },
+
 
     data() {
-        return { is_snackbar: true, };
+        return {
+            is_snackbar: true,
+            my_timeout: 3000,
+        };
     },
 
     methods: {

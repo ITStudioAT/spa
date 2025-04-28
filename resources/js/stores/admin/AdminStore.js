@@ -1,24 +1,27 @@
 import { defineStore } from 'pinia'
+import { createBaseStore } from "./BaseStore";
+
+const baseStore = createBaseStore('users', 'user'); // <-- first create it
+
 export const useAdminStore = defineStore("AdminAdminStore", {
 
 
-    state: () => {
-        return {
-            router: null,
-            config: null,
-            is_loading: 0,
-            snack_message: {
-                show: false,
-                status: null,
-                message: null,
-                type: 'error',
-            },
-            api_response: null,
-            show_navigation_drawer: true,
-        }
-    },
+
+
+    state: () => ({
+        ...baseStore.state(), // merge the base state
+        router: null,
+        config: null,
+        is_loading: 0,
+        api_response: null,
+        show_navigation_drawer: true,
+    }),
+
 
     actions: {
+        ...baseStore.actions,
+
+
         initialize(router) {
             this.router = router;
         },
@@ -188,11 +191,15 @@ export const useAdminStore = defineStore("AdminAdminStore", {
             window.location.href = redirectUrl; // This is a real redirect
         },
 
-        snackMsg(status, message, type = 'error') {
+        snackMsg(status, message, type = 'error', timeout = 3000) {
             this.snack_message.status = status;
             this.snack_message.message = message;
             this.snack_message.type = type;
             this.snack_message.show = true;
+
+            setTimeout(() => {
+                this.snack_message.show = false;
+            }, timeout);
         }
 
     }

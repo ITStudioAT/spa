@@ -41,6 +41,8 @@ Route::middleware(['throttle:global', 'throttle:api', 'api-allowed'])->group(fun
             Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);
             Route::resource('/admin/users', UserController::class);
             Route::post('/admin/users/update_with_code/',  [UserController::class, 'updateWithCode']);
+            Route::post('/admin/users/save_password/',  [UserController::class, 'savePassword']);
+            Route::post('/admin/users/save_password_with_code/',  [UserController::class, 'savePasswordWithCode']);
         });
     });
 });
