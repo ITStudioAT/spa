@@ -37,7 +37,6 @@ class SpaServiceProvider extends PackageServiceProvider
                         $command->info('Hello, and welcome to my great new package!');
                     })
                     ->publishConfigFile()
-                    ->publishMigrations()
                     ->endWith(function (InstallCommand $command) {
                         $command->info('Have a great day!');
                     });
