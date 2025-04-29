@@ -1,4 +1,4 @@
-# Initial Laraval Spa Installation
+# Laraval-Spa
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/itstudioat/spa.svg?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/itstudioat/spa/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/itstudioat/spa/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -6,31 +6,34 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/itstudioat/spa.svg?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
 
 
-# What is SPA
-SPA is the initial Laravel installtion for a single page application.
+# What is Laravel-Spa
+Laravel-Spa installs all necessary items for a fresh Laravel Single Page Application.
 
-It contains:
-- Vue with Vue-Router as Javascript-Framework
-- Pinia as store for vue
-- Vuetify as vue component framework
-- Sanctum as authentication system for SPAs 
+The installation uses next to laravel:
+- Vue with Vue-Router as Javascript-Framework and routing
+- Pinia as state store
+- Vuetify as css-framework
+- Sanctum as authentication-system for single-page-applications
 - Vite for asset bundling
 
 It provides:
-- Login page 
-- Unknown password page
-- Register page
-- Small Dashboard with
-    - Logout
+- a login page together with a unkown password page and a register page
 
+For the authetificated admin it supports
+- profile update with password change
+- logout
+
+It integrates the Spatie roles and you can manage the role-based access to all web- and api-routes.
+
+After installing this package, you can easily start to develop your own single page application with all necessary requirements.
 
 ## Installation
-First install a new Laravel app
+First install a new laravel app
 ```bash
 laravel new new-laravel-app
 ```
 
-**Make the correct configurations in**
+### Make all necessary configurations
 - .env
     - APP_URL
     - DB-configuration
@@ -42,21 +45,22 @@ laravel new new-laravel-app
     - timezone
    
 
-**Create a new empty database like in .env configured**
+### Create an empty database correspondig ito the .env configuration
 
-You can install the package via composer:
+### Install this package and run the install-commands
+
 ```bash
 composer require itstudioat/spa
 ```
 
-Run the Install-Command & the Complete-Command:
 ```bash
 php artisan spa:install
 php artisan spa:complete
 ```
 
+### Make important entries in some files
 
-Put this line in composer.json
+**Put this line in composer.json**
 ```bash
     "autoload": {
         "psr-4": {
@@ -66,13 +70,13 @@ Put this line in composer.json
     },
 ```
 
-Change the config/cors.php file
+**Change the config/cors.php file**
 ```bash
  'supports_credentials' => true,
 ```
 
 
-Add to your Http/Controllers/Controller the HasRoleTrait:
+**Add the HasRoleTrait to your Http/Controllers/Controller**
 ```bash
   namespace App\Http\Controllers;
   use Itstudioat\Spa\Traits\HasRoleTrait;
@@ -82,18 +86,22 @@ Add to your Http/Controllers/Controller the HasRoleTrait:
       use HasRoleTrait;
 ```
 
-If you use Postmark for Mailing (i use it):
+**Comment the standard route out in routes/web.php**
 ```bash
-composer require symfony/postmark-mailer
-composer require symfony/http-client
+/*
+Route::get('/', function () {
+    return view('welcome');
+});
+*/
 ```
 
-To inividualize the Mail-Logo, publish the Markdown files to resources/views/vendor/mail
+
+### You may inividualize your logo for mails
 ```bash
 php artisan vendor:publish --tag=laravel-mail
 ```
 
-After that change the file resources/views/mail/html/header.blade.php
+**Change the file resources/views/mail/html/header.blade.php to:**
 ```bash
 @props(['url'])
 <tr>
@@ -106,14 +114,13 @@ After that change the file resources/views/mail/html/header.blade.php
 ```
 
 
-**Comment the standard route out in routes/web.php**
+### Install your mailing system
+If you use Postmark for Mailing (i use it):
 ```bash
-/*
-Route::get('/', function () {
-    return view('welcome');
-});
-*/
+composer require symfony/postmark-mailer
+composer require symfony/http-client
 ```
+
 
 ## Usage
 ```bash
@@ -144,7 +151,6 @@ admin.php
 routes.php
 
 There you may define routes, which are protected with roles.
-
 
 
 ### Sending E-Mails ###
