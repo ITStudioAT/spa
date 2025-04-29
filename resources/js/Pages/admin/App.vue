@@ -48,10 +48,6 @@
             v-if="is_loading > 0">
             <v-progress-circular indeterminate size="70" width="7" />
         </div>
-
-        <SnackMessage :status="snack_message.status" :message="snack_message.message" :type="snack_message.type"
-            v-if="snack_message.show">
-        </SnackMessage>
     </v-app>
 
 
@@ -66,11 +62,10 @@ import GlobalSnackbar from "@/pages/components/GlobalSnackbar.vue";
 <script>
 import { mapWritableState } from "pinia";
 import { useAdminStore } from "@/stores/admin/AdminStore";
-import SnackMessage from "@/pages/components/SnackMessage.vue";
 
 export default {
 
-    components: { SnackMessage },
+    components: {},
 
     async beforeMount() {
         this.adminStore = useAdminStore(); this.adminStore.initialize(this.$router);
@@ -92,7 +87,7 @@ export default {
 
 
     computed: {
-        ...mapWritableState(useAdminStore, ['config', 'is_loading', 'snack_message', 'show_navigation_drawer', 'load_config']),
+        ...mapWritableState(useAdminStore, ['config', 'is_loading', 'show_navigation_drawer', 'load_config']),
     },
 
     methods: {

@@ -6,7 +6,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/itstudioat/spa.svg?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
 
 
-# What is Laravel-Spa
+## What is Laravel-Spa
 Laravel-Spa installs all necessary items for a fresh Laravel Single Page Application.
 
 The installation uses next to laravel:
@@ -45,7 +45,7 @@ laravel new new-laravel-app
     - timezone
    
 
-### Create an empty database correspondig ito the .env configuration
+### Create an empty database correspondig to the .env configuration
 
 ### Install this package and run the install-commands
 
@@ -115,7 +115,7 @@ php artisan vendor:publish --tag=laravel-mail
 
 
 ### Install your mailing system
-If you use Postmark for Mailing (i use it):
+If you use Postmark for mailing (i use it):
 ```bash
 composer require symfony/postmark-mailer
 composer require symfony/http-client

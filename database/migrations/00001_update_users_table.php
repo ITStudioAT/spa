@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('first_name')->nullable();
             $table->timestamp('login_at')->nullable();
             $table->string('login_ip')->nullable();
-            $table->boolean('is_fa2')->nullable()->default(0);
+            $table->boolean('is_2fa')->nullable()->default(0);
             $table->string('token_2fa')->nullable();
             $table->timestamp('token_2fa_expires_at')->nullable();
             $table->string('token_2fa_2')->nullable();

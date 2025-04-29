@@ -35,8 +35,8 @@ export const useHomepageStore = defineStore("HomepageStore", {
         },
 
 
-        redirect(status, message, type, timeout) {
-            const redirectUrl = '/application/error?status=' + status + '&message=' + encodeURIComponent(message) + '&type=' + type + '&timeout=' + timeout;
+        redirect(status, message, type) {
+            const redirectUrl = '/application/error?status=' + status + '&message=' + encodeURIComponent(message) + '&type=' + type;
             window.location.href = redirectUrl; // This is a real redirect
         }
 

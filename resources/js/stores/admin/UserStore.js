@@ -21,7 +21,12 @@ export const useUserStore = defineStore("AdminUserStore", {
                 this.user = response.data;
                 return true;
             } catch (error) {
-                this.snackMsg(error.response.status, error.response.data.message, 'error');
+                notification.notify({
+                    status: error.response.status,
+                    message: error.response.data.message || 'Fehler passiert.',
+                    type: 'error',
+                    timeout: this.adminStore?.timeout,
+                });
                 return false;
             } finally {
                 adminStore.is_loading--;
@@ -29,16 +34,22 @@ export const useUserStore = defineStore("AdminUserStore", {
         },
 
         async savePassword(data) {
-            this.api_answer = null;
+            const notification = useNotificationStore();
             const adminStore = useAdminStore();
             adminStore.is_loading++;
+            this.api_answer = null;
             try {
                 const response = await axios.post('/api/admin/users/save_password/', data);
                 if (response.data.step) {
                     return response.data.step;
                 }
             } catch (error) {
-                this.snackMsg(error.response.status, error.response.data.message, 'error');
+                notification.notify({
+                    status: error.response.status,
+                    message: error.response.data.message || 'Fehler passiert.',
+                    type: 'error',
+                    timeout: this.adminStore?.timeout,
+                });
                 return false;
             } finally {
                 adminStore.is_loading--;
@@ -47,18 +58,17 @@ export const useUserStore = defineStore("AdminUserStore", {
 
         async savePasswordWithCode(data) {
             const notification = useNotificationStore();
-            this.api_answer = null;
             const adminStore = useAdminStore();
             adminStore.is_loading++;
+            this.api_answer = null;
             try {
-                const response = await axios.post('/api/admin/users/save_password_with_code/', data);
-                if (response.data.step) {
-                    return response.data.step;
-                }
+                return true;
             } catch (error) {
                 notification.notify({
-                    message: error.response.data.message || 'Something went wrong',
+                    status: error.response.status,
+                    message: error.response.data.message || 'Fehler passiert.',
                     type: 'error',
+                    timeout: adminStore.config?.timeout,
                 });
                 return false;
             } finally {

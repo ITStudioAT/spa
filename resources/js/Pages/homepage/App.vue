@@ -5,6 +5,7 @@
         <v-layout v-if="is_loading == 0" class="bg-background">
             <v-main>
                 <router-view></router-view>
+                <GlobalSnackbar />
             </v-main>
 
             <v-footer app>
@@ -22,21 +23,23 @@
             <v-progress-circular indeterminate size="70" width="7"></v-progress-circular>
         </v-container>
 
-        <SnackMessage :status="error.status" :message="error.message" v-if="error.is_error"></SnackMessage>
     </v-app>
 
 
 
 </template>
 
+<script setup>
+import GlobalSnackbar from "@/pages/components/GlobalSnackbar.vue";
+</script>
+
 <script>
 import { mapWritableState } from "pinia";
 import { useHomepageStore } from "@/stores/homepage/HomepageStore";
-import SnackMessage from "@/pages/components/SnackMessage.vue";
 
 export default {
 
-    components: { SnackMessage },
+    components: {},
 
     async beforeMount() {
         this.homepageStore = useHomepageStore(); this.homepageStore.initialize(this.$router);

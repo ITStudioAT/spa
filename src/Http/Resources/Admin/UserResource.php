@@ -19,6 +19,7 @@ class UserResource extends JsonResource
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
+            'is_2fa' => $this->is_2fa ? true : false,
         ];
     }
 }

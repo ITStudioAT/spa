@@ -6,6 +6,10 @@
     cursor: pointer;
 }
 
-.v-field--disabled {
-    opacity: 0.8 !important;
+.v-form .v-field--disabled {
+    opacity: 0.7 !important;
+}
+
+.v-form .v-switch .v-selection-control--disabled {
+    opacity: 0.7 !important;
 }

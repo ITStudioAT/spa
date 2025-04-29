@@ -22,6 +22,9 @@
                         <v-text-field flat rounded="0" v-model="data.email" label="E-Mail"
                             :rules="[required(), mail(), maxLength(255)]" />
 
+                        <v-switch true-icon="mdi-check" v-model="data.is_2fa" label="2-Faktoren-Authentifizierung"
+                            hide-details color="success" :base-color="is_edit ? 'error' : ''" :disabled="!is_edit" />
+
                     </v-form>
                     <div v-if="!is_edit">
                         <v-btn block color="primary" slim flat rounded="0" @click="is_edit = true">Ändern</v-btn>
@@ -121,7 +124,7 @@
 
             </v-col>
         </v-row>
-
+        {{ data }}
     </v-container>
 
 
@@ -132,6 +135,7 @@ import { useValidationRulesSetup } from "@/helpers/rules";
 import { mapWritableState } from "pinia";
 import { useAdminStore } from "@/stores/admin/AdminStore";
 import { useUserStore } from "@/stores/admin/UserStore";
+import { useNotificationStore } from "@/stores/spa/NotificationStore";
 import ItsButton from "@/pages/components/ItsButton.vue";
 import ItsGridBox from "@/pages/components/ItsGridBox.vue";
 
@@ -167,7 +171,7 @@ export default {
     },
 
     computed: {
-        ...mapWritableState(useAdminStore, ['config', 'is_loading', 'snack_message', 'show_navigation_drawer', 'load_config']),
+        ...mapWritableState(useAdminStore, ['config', 'is_loading', 'show_navigation_drawer', 'load_config']),
         ...mapWritableState(useUserStore, ['user', 'api_answer']),
     },
 
@@ -195,21 +199,36 @@ export default {
                 this.step = 'INPUT_CODE';
             } else {
                 this.data = JSON.parse(JSON.stringify(this.user));
-                this.adminStore.snackMsg(null, "Das Profil wurde erfolreich gespeichert", 'success');
                 await this.adminStore.loadConfig();
                 this.abort();
             }
         },
 
         async update(data) {
-            await this.userStore.update(data);
+            this.userStore.api_answer = null;
+            await this.userStore.update(data)
+            if (!this.userStore.api_answer) {
+                const notification = useNotificationStore();
+                notification.notify({
+                    message: 'Das Profil wurde erfolreich gespeichert.',
+                    type: 'success',
+                    timeout: this.adminStore.config?.timeout,
+                });
+                await this.adminStore.loadConfig();
+            }
+
         },
 
         async updateWithCode(data) {
             if (this.data.token_2fa.length != 6) return;
             if (await this.userStore.updateWithCode(data)) {
-                this.adminStore.snackMsg(null, "Das Profil wurde erfolreich gespeichert", 'success');
                 await this.adminStore.loadConfig();
+                const notification = useNotificationStore();
+                notification.notify({
+                    message: 'Die Profil mit geänderter E-Mail wurde erfolreich gespeichert.',
+                    type: 'success',
+                    timeout: this.adminStore.config?.timeout,
+                });
                 this.abort();
             }
         },
@@ -229,7 +248,12 @@ export default {
         async savePasswordWithCode(data) {
             if (this.data.token_2fa.length != 6) return;
             if (await this.userStore.savePasswordWithCode(data)) {
-                this.adminStore.snackMsg(null, "Das Kennwort wurde erfolreich gespeichert", 'success');
+                const notification = useNotificationStore();
+                notification.notify({
+                    message: 'Das Kennwort wurde erfolreich gespeichert.',
+                    type: 'success',
+                    timeout: this.adminStore.config?.timeout,
+                });
                 this.abort();
             }
 
@@ -240,3 +264,24 @@ export default {
 
 }
 </script>
+<style scoped>
+.switch-success .v-switch__thumb {
+    background-color: #4caf50 !important;
+    /* grün */
+}
+
+.switch-success .v-switch__track {
+    background-color: #a5d6a7 !important;
+    /* hellgrün */
+}
+
+.switch-error .v-switch__thumb {
+    background-color: #f44336 !important;
+    /* rot */
+}
+
+.switch-error .v-switch__track {
+    background-color: #ef9a9a !important;
+    /* hellrot */
+}
+</style>

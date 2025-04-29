@@ -26,6 +26,7 @@ class UserController extends Controller
 
     public function show($id)
     {
+
         $user = $this->hasRole(['admin']);
         if ($user->id != $id) abort(403, 'Sie wollen einen falschen Benutzer abfragen.');
 
@@ -37,6 +38,7 @@ class UserController extends Controller
         $user = $this->hasRole(['admin']);
         $validated = $request->validated();
 
+        info($validated);
 
         if ($user->email != $validated['email']) {
             // Neue E-Mail-Adresse, die muss natürlich zunächst bestätigt werden

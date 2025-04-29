@@ -26,6 +26,7 @@ class UpdateUserRequest extends FormRequest
             'last_name' => 'required|max:255',
             'first_name' => 'nullable|max:255',
             'email' => 'email|required|max:255|unique:users,email,' . $this->id,
+            'is_2fa' => 'boolean',
         ];
     }
 }

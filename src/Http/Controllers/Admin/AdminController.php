@@ -27,7 +27,6 @@ class AdminController extends Controller
 
     public function config(Request $request)
     {
-
         $navigationService = new NavigationService();
 
         $data = [
