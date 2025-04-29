@@ -103,7 +103,7 @@ class AdminController extends Controller
         $validated = $request->validated();
 
         $user = $adminService->checkPasswordUnknown($validated['data']);
-        if (!$user->is_fa2) {
+        if (!$user->is_2fa) {
             $data = ['step' => 'PASSWORD_UNKNOWN_SUCCESS'];
             return response()->json($data, 200);
         }
@@ -124,7 +124,7 @@ class AdminController extends Controller
         $validated = $request->validated();
 
         $user = $adminService->checkPasswordUnknown($validated['data']);
-        if (!$user->is_fa2) abort(401, "Kennwort zurücksetzen funktioniert nicht. 2-Faktoren-Authentifizierung ist nicht aktiviert.");
+        if (!$user->is_2fa) abort(401, "Kennwort zurücksetzen funktioniert nicht. 2-Faktoren-Authentifizierung ist nicht aktiviert.");
 
         $data = ['step' => 'PASSWORD_UNKNOWN_ENTER_PASSWORD'];
         return response()->json($data, 200);
@@ -160,7 +160,7 @@ class AdminController extends Controller
 
         $user = $adminService->checkUserLogin($validated['data']);
 
-        if ($user->is_fa2) {
+        if ($user->is_2fa) {
             // Bei Benutzer ist 2-Faktoren-Authentifizierung aktiviert => wir brauchen einen Code
             $adminService->continueLoginFor2FaUser($user);
             $data = ['step' => 'LOGIN_ENTER_TOKEN'];
