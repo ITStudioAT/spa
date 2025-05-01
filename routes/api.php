@@ -39,7 +39,6 @@ Route::middleware(['throttle:global', 'throttle:api', 'api-allowed'])->group(fun
 
     /* SANCTUM */
     Route::middleware(['auth:sanctum'])->group(function () {
-        info("roue");
         Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);
         Route::get('/admin/managable_user_roles',  [AdminController::class, 'managableUserRoles']);
 

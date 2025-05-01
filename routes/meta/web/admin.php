@@ -13,5 +13,6 @@ return [
         '/admin/unknown_password' => [],
         '/admin/profile' => ['admin'],
         '/admin/users' => ['admin'],
+        '/admin/users/all_users' => ['admin'],
     ]
 ];

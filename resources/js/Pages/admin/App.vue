@@ -13,8 +13,9 @@
             </v-toolbar>
             <v-list>
                 <template v-for="(item, i) in config.menu" :key="i">
-                    <v-list-item :title="item.title" :prepend-icon="item.icon" v-if="item.to" :to="item.to" />
-                    <v-list-item v-if="item.click" :title="item.title" :prepend-icon="item.icon"
+                    <v-list-item :exact="false" :title="item.title" :prepend-icon="item.icon" v-if="item.to"
+                        :to="item.to" />
+                    <v-list-item :exact="false" v-if="item.click" :title="item.title" :prepend-icon="item.icon"
                         @click="() => this[item.click]()" />
                 </template>
             </v-list>

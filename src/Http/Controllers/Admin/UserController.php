@@ -18,9 +18,64 @@ use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
 class UserController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(['message' => 'Index']);
+        $auth_user = $this->hasRole(['admin']);
+        $search_model = $request->search_model ?? [];
+        $query = User::query();
+
+        // is_active
+        if (isset($search_model['is_active'])) {
+            if ($search_model['is_active'] === '1') {
+                $query->where('is_active', true);
+            } elseif ($search_model['is_active'] === '2') {
+                $query->where('is_active', false);
+            }
+        }
+
+        // is_confirmed (based on confirmed_at)
+        if (isset($search_model['is_confirmed'])) {
+            if ($search_model['is_confirmed'] === '1') {
+                $query->whereNotNull('confirmed_at');
+            } elseif ($search_model['is_confirmed'] === '2') {
+                $query->whereNull('confirmed_at');
+            }
+        }
+
+        // is_verified (based on email_verified_at)
+        if (isset($search_model['is_verified'])) {
+            if ($search_model['is_verified'] === '1') {
+                $query->whereNotNull('email_verified_at');
+            } elseif ($search_model['is_verified'] === '2') {
+                $query->whereNull('email_verified_at');
+            }
+        }
+
+        // is_2fa
+        if (isset($search_model['is_2fa'])) {
+            if ($search_model['is_2fa'] === '1') {
+                $query->where('is_2fa', true);
+            } elseif ($search_model['is_2fa'] === '2') {
+                $query->where('is_2fa', false);
+            }
+        }
+
+        // search_string (optional)
+        if (!empty($search_model['search_string'])) {
+            $search = $search_model['search_string'];
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+
+        info($query->get());
+
+        return;
+
+        return response()->json($query->get());
     }
 
     public function store(Request $request) {}
@@ -96,5 +151,4 @@ class UserController extends Controller
             ]
         );
     }
-
 }

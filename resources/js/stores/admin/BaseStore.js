@@ -26,7 +26,8 @@ export function createBaseStore(modelName, itemKey = 'item') {
 
                 async index() {
                     const notification = useNotificationStore();
-                    this.is_loading++;
+                    const adminStore = useAdminStore();
+                    adminStore.is_loading++;
                     try {
                         const response = await axios.get(`/api/admin/${modelName}`);
                         this.items = response.data;
