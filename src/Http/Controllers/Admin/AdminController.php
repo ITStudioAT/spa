@@ -36,11 +36,22 @@ class AdminController extends Controller
             'company' => config('spa.company', 'ItStudio.at'),
             'version' => InstalledVersions::getPrettyVersion('itstudioat/spa'),
             'register_admin_allowed' => config('spa.register_admin_allowed', false),
+            'timeout' => config('spa.timeout', 3000),
             'is_auth' => auth()->check(),
             'user' => auth()->check() ? new UserResource(auth()->user()) : null,
             'menu' => $navigationService->menu(),
         ];
 
+        return response()->json($data, 200);
+    }
+
+    public function managableUserRoles(Request $request)
+    {
+
+        $auth_user = $this->hasRole(['admin']);
+        $adminService = new AdminService();
+
+        $data = ['user_roles' => $adminService->managableUserRoles($auth_user)];
         return response()->json($data, 200);
     }
 

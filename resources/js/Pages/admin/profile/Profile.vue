@@ -1,5 +1,6 @@
 <template>
     <v-container fluid class="ma-0 w-100 pa-2">
+        <!-- Menüleiste oben -->
         <v-row class="d-flex flex-row ga-2 mb-2 mt-0 w-100" no-gutters>
             <its-button subtitle="Home" icon="mdi-home" color="secondary" to="/admin" />
             <its-button subtitle="Kennwort ändern" icon="mdi-form-textbox-password" color="secondary"
@@ -124,7 +125,7 @@
 
             </v-col>
         </v-row>
-        {{ data }}
+
     </v-container>
 
 
@@ -264,24 +265,3 @@ export default {
 
 }
 </script>
-<style scoped>
-.switch-success .v-switch__thumb {
-    background-color: #4caf50 !important;
-    /* grün */
-}
-
-.switch-success .v-switch__track {
-    background-color: #a5d6a7 !important;
-    /* hellgrün */
-}
-
-.switch-error .v-switch__thumb {
-    background-color: #f44336 !important;
-    /* rot */
-}
-
-.switch-error .v-switch__track {
-    background-color: #ef9a9a !important;
-    /* hellrot */
-}
-</style>

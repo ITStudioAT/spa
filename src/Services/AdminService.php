@@ -106,7 +106,7 @@ class AdminService
     public function continueLoginFor2FaUser($user)
     {
 
-        $token_2fa = $user->setToken2Fa(1, config('spa.token_expire_time'));
+        $token_2fa = $user->setToken2Fa(config('spa.token_expire_time'), 1);
 
         $data = [
             'from_address' => env('MAIL_FROM_ADDRESS'),
@@ -123,7 +123,7 @@ class AdminService
 
     public function sendPasswordResetToken($select = 1, $user, $email)
     {
-        $token_2fa = $user->setToken2Fa($select, config('spa.token_expire_time'));
+        $token_2fa = $user->setToken2Fa(config('spa.token_expire_time'), $select);
 
         $data = [
             'from_address' => env('MAIL_FROM_ADDRESS'),
@@ -139,7 +139,7 @@ class AdminService
 
     public function sendRegisterToken($select = 1, $user, $email)
     {
-        $token_2fa = $user->setToken2Fa($select, config('spa.token_expire_time'));
+        $token_2fa = $user->setToken2Fa(config('spa.token_expire_time'), $select);
 
         $data = [
             'from_address' => env('MAIL_FROM_ADDRESS'),
@@ -156,7 +156,7 @@ class AdminService
 
     public function sendEmailValidationToken($select = 1, $user, $email)
     {
-        $token_2fa = $user->setToken2Fa($select, config('spa.token_expire_time'));
+        $token_2fa = $user->setToken2Fa(config('spa.token_expire_time'), $select);
 
         $data = [
             'from_address' => env('MAIL_FROM_ADDRESS'),
@@ -168,5 +168,53 @@ class AdminService
         ];
 
         Notification::route('mail', $email)->notify(new StandardEmail($data));
+    }
+
+    public function managableUserRoles($user): array
+    {
+        $user_roles = [];
+
+        $all_users = ['title' => 'Alle Benutzer', 'icon' => 'mdi-account-group', 'url' => '/admin/users/all_users', 'infos' => $this->allUsersInfos()];
+
+        if ($this->hasRoleOrIsSuperAdmin($user, ['admin'])) {
+            $user_roles[] = $all_users;
+        }
+        return $user_roles;
+    }
+
+    public function allUsersInfos(): array
+    {
+        $data = [];
+        $users_count = User::query()->count();
+        $users_is_active_count = User::where('is_active', 1)->count();
+        $users_is_2fa_count = User::where('is_2fa', 1)->count();
+        $users_is_confirmed_count = User::whereNotNull('confirmed_at')->count();
+        $users_is_email_verified_count = User::whereNotNull('email_verified_at')->count();
+
+        $data = [
+            ['title' => 'Benutzer gesamt', 'content' => $users_count],
+            ['title' => 'Aktive Benutzer', 'content' => $users_is_active_count],
+            ['title' => 'Benutzer mit 2-FA-Authentifizierung', 'content' => $users_is_2fa_count],
+            ['title' => 'Benutzer mit bestätigter E-Mail', 'content' => $users_is_email_verified_count],
+            ['title' => 'Bestätigte Benutzer', 'content' => $users_is_confirmed_count],
+        ];
+
+        return $data;
+    }
+
+    private function hasRoleOrIsSuperAdmin($user, $par_roles)
+    {
+        $roles = [];
+        if (is_array($par_roles)) {
+            $roles = $par_roles;
+        } else {
+            $roles[] = $par_roles;
+        }
+
+        if (!empty(config('spa.super_admin'))) {
+            $roles[] = config('spa.super_admin');
+        }
+
+        return $user->hasRole($roles);
     }
 }

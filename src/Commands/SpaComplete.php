@@ -27,6 +27,7 @@ class SpaComplete extends Command
 
         $this->call('vendor:publish', [
             '--tag' => 'spa-multi',
+            '--force' => 'true'
         ]);
 
         $this->info('✅ All Laravel-Spa-Files are published.');

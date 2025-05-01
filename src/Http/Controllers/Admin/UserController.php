@@ -3,7 +3,8 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
-use app\Models\User;
+
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -24,21 +25,16 @@ class UserController extends Controller
 
     public function store(Request $request) {}
 
-    public function show($id)
+    public function show(User $user)
     {
-
-        $user = $this->hasRole(['admin']);
-        if ($user->id != $id) abort(403, 'Sie wollen einen falschen Benutzer abfragen.');
-
+        $auth_user = $this->hasRole(['admin']);
         return response()->json(new UserResource($user), 200);
     }
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user = $this->hasRole(['admin']);
+        $auth_user = $this->hasRole(['admin']);
         $validated = $request->validated();
-
-        info($validated);
 
         if ($user->email != $validated['email']) {
             // Neue E-Mail-Adresse, die muss natürlich zunächst bestätigt werden
@@ -48,14 +44,17 @@ class UserController extends Controller
         }
 
         $user->update($validated);
-
         return response()->json(new UserResource($user), 200);
     }
 
-    public function destroy($id)
+
+
+
+    public function destroy(User $user)
     {
         return response()->json(['message' => "Destroy {$id}"]);
     }
+
 
     public function updateWithCode(UpdateUserWithCodeRequest $request)
     {
@@ -97,4 +96,5 @@ class UserController extends Controller
             ]
         );
     }
+
 }

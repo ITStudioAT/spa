@@ -90,6 +90,26 @@ export function createBaseStore(modelName, itemKey = 'item') {
                     }
                 },
 
+                async destroy(data) {
+                    const notification = useNotificationStore();
+                    const adminStore = useAdminStore();
+                    adminStore.is_loading++;
+                    try {
+                        const response = await axios.delete('/api/admin/users/' + data.id, {});
+                        return true;
+                    } catch (error) {
+                        notification.notify({
+                            status: error.response.status,
+                            message: error.response.data.message || 'Fehler passiert.',
+                            type: 'error',
+                            timeout: this.timeout,
+                        });
+                        return false;
+                    } finally {
+                        adminStore.is_loading--;
+                    }
+                },
+
                 redirect(status, message, type) {
                     const redirectUrl = '/application/error?status=' + status + '&message=' + encodeURIComponent(message) + '&type=' + type;
                     window.location.href = redirectUrl; // This is a real redirect

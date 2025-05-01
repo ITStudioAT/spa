@@ -11,7 +11,7 @@ ITStudioAT
 
 trait UserTrait
 {
-    public function setToken2Fa($select = 1, $minutes): string
+    public function setToken2Fa($minutes, $select = 1): string
     {
         if ($select == 1) {
             $this->token_2fa = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);

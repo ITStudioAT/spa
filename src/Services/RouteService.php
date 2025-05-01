@@ -47,7 +47,7 @@ class RouteService
         }
 
         if (!empty(config('spa.super_admin'))) {
-            $requiredRoles[] = 'super_admin';
+            $requiredRoles[] = config('spa.super_admin');
         }
 
         if ($user->hasAnyRole($requiredRoles)) {
@@ -102,7 +102,7 @@ class RouteService
 
         // Wenn super_admin in der Konfiguration gesetzt ist, füge ihn zu den erforderlichen Rollen hinzu
         if (!empty(config('spa.super_admin'))) {
-            $requiredRoles[] = 'super_admin';
+            $requiredRoles[] = config('spa.super_admin');
         }
 
         // Überprüfe, ob der Benutzer die erforderlichen Rollen hat

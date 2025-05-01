@@ -12,6 +12,7 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         is_loading: 0,
         api_response: null,
         show_navigation_drawer: true,
+        user_roles: [],
     }),
 
 
@@ -230,6 +231,28 @@ export const useAdminStore = defineStore("AdminAdminStore", {
             this.is_loading++; this.api_response = null;
             try {
                 this.api_response = await axios.post("/api/admin/execute_logout", {});
+                return true;
+            } catch (error) {
+                notification.notify({
+                    status: error.response.status,
+                    message: error.response.data.message || 'Fehler passiert.',
+                    type: 'error',
+                    timeout: this.config?.timeout,
+                });
+                return false;
+            } finally {
+                this.is_loading--;
+            }
+        },
+
+        async managableUserRoles() {
+            const notification = useNotificationStore();
+            this.user_roles = [];
+
+            this.is_loading++; this.api_response = null;
+            try {
+                const answer = await axios.get("/api/admin/managable_user_roles", {});
+                this.user_roles = answer.data.user_roles;
                 return true;
             } catch (error) {
                 notification.notify({
