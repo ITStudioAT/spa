@@ -6,7 +6,7 @@ import Register from '@/pages/admin/auth/Register.vue'
 import Dashboard from '@/pages/admin/dashboard/Dashboard.vue'
 import Profile from '@/pages/admin/profile/Profile.vue'
 import Users from '@/pages/admin/users/Users.vue'
-import Users_AllUsers from '@/pages/admin/users/AllUsers/AllUsers.vue'
+import Users_AllUsers from '@/pages/admin/users/AllUsers/Items.vue'
 
 
 const routes = [

@@ -4,7 +4,7 @@ namespace Itstudioat\Spa\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserRequest extends FormRequest
+class IndexUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,14 +22,11 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:users,id',
-            'last_name' => 'required|max:255',
-            'first_name' => 'nullable|max:255',
-            'email' => 'email|required|max:255|unique:users,email,' . $this->id,
-            'is_active' => 'boolean',
-            'is_confirmed' => 'boolean',
-            'is_verified' => 'boolean',
-            'is_2fa' => 'boolean',
+            'search_model.is_active' => 'nullable|in:0,1,2',
+            'search_model.is_confirmed' => 'nullable|in:0,1,2',
+            'search_model.is_verified' => 'nullable|in:0,1,2',
+            'search_model.is_2fa' => 'nullable|in:0,1,2',
+            'search_model.search_string' => 'nullable|string|max:255',
         ];
     }
 }

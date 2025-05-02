@@ -6,10 +6,12 @@ namespace Itstudioat\Spa\Http\Controllers\Admin;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Itstudioat\Spa\Traits\PaginationTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Itstudioat\Spa\Services\AdminService;
 use Itstudioat\Spa\Http\Resources\Admin\UserResource;
+use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
 use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
 use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
 use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
@@ -18,10 +20,13 @@ use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
 class UserController extends Controller
 {
 
-    public function index(Request $request)
+    use PaginationTrait;
+
+    public function index(IndexUserRequest $request)
     {
         $auth_user = $this->hasRole(['admin']);
-        $search_model = $request->search_model ?? [];
+        $validated = $request->validated();
+        $search_model = $validated['search_model'] ?? [];
         $query = User::query();
 
         // is_active
@@ -60,6 +65,7 @@ class UserController extends Controller
             }
         }
 
+
         // search_string (optional)
         if (!empty($search_model['search_string'])) {
             $search = $search_model['search_string'];
@@ -71,11 +77,8 @@ class UserController extends Controller
         }
 
 
-        info($query->get());
-
-        return;
-
-        return response()->json($query->get());
+        $pagination = UserResource::collection($query->paginate(config('spa.pagination')));
+        return response()->json($this->makePagination($pagination), 200);
     }
 
     public function store(Request $request) {}
@@ -87,6 +90,43 @@ class UserController extends Controller
     }
 
     public function update(UpdateUserRequest $request, User $user)
+    {
+
+        $auth_user = $this->hasRole(['admin']);
+        $validated = $request->validated();
+
+        // Benutzer is_confirmed?
+        if ($validated['is_confirmed']) {
+            if (!$user->confirmed_at) {
+                $validated['confirmed_at'] = now();
+            }
+        } else {
+            $validated['confirmed_at'] = null;
+        }
+        unset($validated['is_confirmed']);
+
+        // E-Mail is_validated
+        if ($validated['is_verified']) {
+            if (!$user->email_verified_at) {
+                $validated['email_verified_at'] = now();
+            }
+        } else {
+            $validated['email_verified_at'] = null;
+        }
+        unset($validated['is_verified']);
+
+        $user->update($validated);
+        return response()->json(new UserResource($user), 200);
+    }
+
+
+    public function destroy(User $user)
+    {
+        return response()->json(['message' => "Destroy {$id}"]);
+    }
+
+
+    public function updateProfile(UpdateUserRequest $request, User $user)
     {
         $auth_user = $this->hasRole(['admin']);
         $validated = $request->validated();
@@ -101,15 +141,6 @@ class UserController extends Controller
         $user->update($validated);
         return response()->json(new UserResource($user), 200);
     }
-
-
-
-
-    public function destroy(User $user)
-    {
-        return response()->json(['message' => "Destroy {$id}"]);
-    }
-
 
     public function updateWithCode(UpdateUserWithCodeRequest $request)
     {

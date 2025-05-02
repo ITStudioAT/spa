@@ -13,6 +13,7 @@ use Spatie\LaravelPackageTools\Package;
 use Itstudioat\Spa\Commands\SpaComplete;
 use Itstudioat\Spa\Commands\SpaPackages;
 use Illuminate\Session\Middleware\StartSession;
+use Itstudioat\Spa\Commands\Fake\UserFake;
 use Itstudioat\Spa\Providers\RouteServiceProvider;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -33,6 +34,7 @@ class SpaServiceProvider extends PackageServiceProvider
                 SpaComplete::class,
                 SpaUpdate::class,
                 SyncRoutes::class,
+                UserFake::class,
             ])
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
@@ -57,6 +59,7 @@ class SpaServiceProvider extends PackageServiceProvider
             __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
             __DIR__ . '/../stubs/api.php' => base_path('/routes/api.php'),
             __DIR__ . '/../bootstrap/app.php' => base_path('/bootstrap/app.php'),
+            __DIR__ . '/../database/factories' => base_path('/database/factories'),
             __DIR__ . '/../routes' => base_path('/routes'),
             __DIR__ . '/../src/Models' => app_path('/Models'),
             __DIR__ . '/../src/Providers' => app_path('/Providers'),
