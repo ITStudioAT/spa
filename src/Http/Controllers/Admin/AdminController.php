@@ -47,7 +47,7 @@ class AdminController extends Controller
 
     public function managableUserRoles(Request $request)
     {
-        $auth_user = $this->hasRole(['admin']);
+        $auth_user = $this->userHasRole(['admin']);
         $adminService = new AdminService();
 
         $data = ['user_roles' => $adminService->managableUserRoles($auth_user)];

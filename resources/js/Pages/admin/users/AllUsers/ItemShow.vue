@@ -26,14 +26,16 @@
 
             <v-row no-gutters>
                 <v-col cols=12 sm=6>
-                    <v-btn block color="success" slim flat rounded="0" @click="edit" v-if="!is_edit">Ändern</v-btn>
-                    <v-btn block color="success" slim flat rounded="0" @click="$emit('save', data)"
-                        v-if="is_edit">Speichern</v-btn>
+                    <v-btn append-icon="mdi-pencil" block color="success" slim flat rounded="0" @click="edit"
+                        v-if="!is_edit">Ändern</v-btn>
+                    <v-btn append-icon="mdi-content-save" block color="success" slim flat rounded="0"
+                        @click="$emit('save', data)" v-if="is_edit">Speichern</v-btn>
                 </v-col>
                 <v-col cols=12 sm=6>
-                    <v-btn block color="primary" slim flat rounded="0" @click="$emit('abortShow')"
-                        v-if="!is_edit">Übersicht</v-btn>
-                    <v-btn block color="error" slim flat rounded="0" @click="abortEdit" v-if="is_edit">Abbruch</v-btn>
+                    <v-btn append-icon="mdi-arrow-left" block color="primary" slim flat rounded="0"
+                        @click="$emit('abortShow')" v-if="!is_edit">Übersicht</v-btn>
+                    <v-btn append-icon="mdi-close" block color="error" slim flat rounded="0" @click="abortEdit"
+                        v-if="is_edit">Abbruch</v-btn>
                 </v-col>
             </v-row>
         </v-card-text>
@@ -64,7 +66,6 @@ export default {
 
 
     methods: {
-
         edit() {
             this.data = JSON.parse(JSON.stringify(this.item));
             this.is_edit = true;

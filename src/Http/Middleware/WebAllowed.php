@@ -66,6 +66,7 @@ class WebAllowed
         $user = auth()->user();
         $result = $routeService->checkWebRoles($user, $data, $route_roles);
 
+
         switch ($result) {
             case RouteResult::ALLOWED:
                 return $next($request); // Continue if allowed

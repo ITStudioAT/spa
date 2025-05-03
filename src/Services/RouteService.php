@@ -31,12 +31,13 @@ class RouteService
             }
         }
 
+
+
         if (!$matchedKey) {
             return RouteResult::NOT_EXISTS;
         }
 
         $requiredRoles = $rolesMap[$matchedKey];
-
 
         if (empty($requiredRoles)) {
             return RouteResult::ALLOWED;
@@ -59,8 +60,15 @@ class RouteService
 
     public function checkApiRoles($user, $data, $route_roles): RouteResult
     {
+
+
+
         $toPath = $data['to'] ?? null;  // z.B. '/api/admin/users/7'
         $method = strtoupper($data['method'] ?? 'GET'); // HTTP-Methode
+
+
+
+
 
         if (!$toPath) {
             return RouteResult::NOT_FOUND;
@@ -83,6 +91,8 @@ class RouteService
                 break;
             }
         }
+
+
         // Wenn keine Übereinstimmung gefunden wurde
         if (!$matchedKey) {
             return RouteResult::NOT_EXISTS;

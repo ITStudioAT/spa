@@ -58,6 +58,38 @@
                     </v-list-item>
                 </v-list>
             </v-card-text>
+            <v-card-text v-if="modelStore.pagination" class="mt-0 pt-0">
+
+                <div class="d-flex flex-row align-center justify-space-between text-body-2 mb-2">
+                    <div>{{ 'Gesamt: ' + modelStore.pagination.total }}</div>
+                    <div>Seite {{ modelStore.pagination.current_page + ' von ' + modelStore.pagination.last_page }}
+                    </div>
+                    <div>{{ modelStore.pagination.per_page + ' pro Seite' }}</div>
+                </div>
+                <div class="d-flex flex-row align-center justify-space-between">
+
+                    <div class="d-flex flex-row align-center ga-2">
+                        <v-btn flat size="small" variant="tonal" icon="mdi-chevron-double-left"
+                            :disabled="!modelStore.pagination.prev_page"
+                            @click="index(model, search_model, modelStore.pagination.first_page)" />
+                        <v-btn flat size="small" variant="tonal" icon="mdi-chevron-left"
+                            :disabled="!modelStore.pagination.prev_page"
+                            @click="index(model, search_model, modelStore.pagination.prev_page)" />
+                    </div>
+                    <div>
+
+                    </div>
+                    <div class="d-flex flex-row align-center ga-2">
+                        <v-btn flat size="small" variant="tonal" icon="mdi-chevron-right"
+                            :disabled="!modelStore.pagination.next_page"
+                            @click="index(model, search_model, modelStore.pagination.next_page)" />
+                        <v-btn flat size="small" variant="tonal" icon="mdi-chevron-double-right"
+                            :disabled="!modelStore.pagination.next_page"
+                            @click="index(model, search_model, modelStore.pagination.last_page)" />
+                    </div>
+
+                </div>
+            </v-card-text>
         </div>
 
         <!-- Anzeige eines Datensatzes -->
@@ -78,12 +110,12 @@ import { useSlots } from 'vue';
 
 export default {
     emits: ['saved'],
-    props: ['title', 'color', 'icon', 'search_options', 'model', 'multiple', 'save_data'],
+    props: ['title', 'color', 'icon', 'search_options', 'model', 'multiple', 'data', 'save_action', 'destroy_action'],
 
     async beforeMount() {
         this.modelStore = useModelStore(); this.modelStore.initialize(this.$router);
         this.slots = useSlots();
-        await this.index(this.model, this.search_model);
+        await this.index(this.model, this.search_model, 1);
     },
 
     mounted() {
@@ -110,12 +142,19 @@ export default {
     },
 
     watch: {
-        save_data: {
+        save_action: {
             handler(newVal, oldVal) {
-                this.save(this.model, newVal);
+                this.save(this.model, this.data);
             },
             deep: true
-        }
+        },
+
+        destroy_action: {
+            handler(newVal, oldVal) {
+                this.destroy(this.model, this.data, this.modelStore.pagination.current_page);
+            },
+            deep: true
+        },
 
     },
 
@@ -129,8 +168,8 @@ export default {
             await this.index(this.model, this.search_model);
         },
 
-        async index(model, search_model) {
-            await this.modelStore.index(model, search_model);
+        async index(model, search_model, page = 1) {
+            await this.modelStore.index(model, search_model, page);
         },
 
         async save(model, data) {
@@ -142,7 +181,13 @@ export default {
             } else {
                 // store
             }
-        }
+        },
+
+        async destroy(model, data, page = 1) {
+            await this.modelStore.destroy(model, data);
+            await this.index(model, this.search_model, page);
+            this.$emit('destroyed');
+        },
 
     }
 };

@@ -27,7 +27,7 @@ class UserResource extends JsonResource
             'confirmed_at' => Carbon::parse($this->confirmed_at)->format('d.m.Y'),
             'is_verified' => $this->email_verified_at ? true : false,
             'email_verified_at' => Carbon::parse($this->email_verified_at)->format('d.m.Y'),
-            'login_at' => $this->login_at ? Carbon::parse($this->login_at)->format('d.m.Y') : null,
+            'login_at' => $this->login_at ? Carbon::parse($this->login_at)->format('d.m.Y  H:i') : null,
             'login_ip' => $this->login_ip ? $this->login_ip : null,
         ];
     }

@@ -5,7 +5,7 @@ namespace Itstudioat\Spa\Traits;
 trait HasRoleTrait
 {
 
-    public function hasRole($par_roles)
+    public function userHasRole($par_roles)
     {
         if (!is_array($par_roles)) $roles[] = $par_roles;
         else $roles = $par_roles;

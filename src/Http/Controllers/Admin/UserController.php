@@ -24,10 +24,10 @@ class UserController extends Controller
 
     public function index(IndexUserRequest $request)
     {
-        $auth_user = $this->hasRole(['admin']);
+        $auth_user = $this->userHasRole(['admin']);
         $validated = $request->validated();
         $search_model = $validated['search_model'] ?? [];
-        $query = User::query();
+        $query = User::orderBy('last_name')->orderBy('first_name');
 
         // is_active
         if (isset($search_model['is_active'])) {
@@ -85,14 +85,13 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        $auth_user = $this->hasRole(['admin']);
+        $auth_user = $this->userHasRole(['admin']);
         return response()->json(new UserResource($user), 200);
     }
 
     public function update(UpdateUserRequest $request, User $user)
     {
-
-        $auth_user = $this->hasRole(['admin']);
+        $auth_user = $this->userHasRole(['admin']);
         $validated = $request->validated();
 
         // Benutzer is_confirmed?
@@ -122,13 +121,17 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        return response()->json(['message' => "Destroy {$id}"]);
+        $auth_user = $this->userHasRole(['admin']);
+
+        if ($user->id == $auth_user->id) abort(403, "Man kann sich selbst nicht löschen");
+        $user->shouldDelete();
+        return response()->noContent();
     }
 
 
     public function updateProfile(UpdateUserRequest $request, User $user)
     {
-        $auth_user = $this->hasRole(['admin']);
+        $auth_user = $this->userHasRole(['admin']);
         $validated = $request->validated();
 
         if ($user->email != $validated['email']) {
@@ -144,7 +147,7 @@ class UserController extends Controller
 
     public function updateWithCode(UpdateUserWithCodeRequest $request)
     {
-        $user = $this->hasRole(['admin']);
+        $user = $this->userHasRole(['admin']);
         $validated = $request->validated();
 
         if (!$user->checkToken2Fa($validated['token_2fa'])) abort(401, "Der Code ist falsch oder abgelaufen");
@@ -157,7 +160,7 @@ class UserController extends Controller
 
     public function savePassword(SavePasswordRequest $request)
     {
-        $user = $this->hasRole(['admin']);
+        $user = $this->userHasRole(['admin']);
         $validated = $request->validated();
 
         $adminService = new AdminService();
@@ -171,7 +174,7 @@ class UserController extends Controller
 
     public function savePasswordWithCode(SavePasswordWithCodeRequest $request)
     {
-        $user = $this->hasRole(['admin']);
+        $user = $this->userHasRole(['admin']);
         $validated = $request->validated();
 
         if (!$user->checkToken2Fa($validated['token_2fa'])) abort(401, "Kennwort setzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");

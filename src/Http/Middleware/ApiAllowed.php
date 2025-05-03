@@ -18,8 +18,6 @@ class ApiAllowed
     public function handle(Request $request, Closure $next): Response
     {
 
-
-
         $routeService = new RouteService();
 
         // z.B. '/admin/users/7'

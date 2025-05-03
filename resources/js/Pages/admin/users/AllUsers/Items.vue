@@ -9,9 +9,9 @@
         <v-row class="w-100" no-gutters>
             <v-col cols="12" md="6" xl="4">
                 <its-table :icon="icon" color="primary"
-                    :title="selected_item ? selected_item.last_name + ' ' + selected_item.first_name : title"
-                    :search_options="search_options" :model="this.model" :multiple="this.multiple" :save_data="data"
-                    @saved="saved">
+                    :title="is_show && data ? data.last_name + ' ' + data.first_name : title"
+                    :search_options="search_options" :model="this.model" :multiple="this.multiple" :data="data"
+                    :save_action="save_action" :destroy_action="destroy_action" @saved="saved">
 
                     <template v-slot:content="{ item }">
                         <v-col cols="12" lg="6">{{ item.last_name + ' ' + item.first_name }}</v-col>
@@ -21,13 +21,13 @@
                     <!-- Menüauswahl -->
                     <template v-slot:actions="{ item }">
                         <v-btn icon="mdi-details" color="primary" @click="show(item)"></v-btn>
-                        <v-btn flat icon="mdi-delete" color="error"></v-btn>
+                        <v-btn flat icon="mdi-delete" color="error" @click="destroy(item)"></v-btn>
                         <v-btn icon="mdi-close" color="warning"></v-btn>
                     </template>
 
                     <!-- Anzeigen, Editieren eines Records-->
                     <template v-slot:show="{ abortShow }" v-if="is_show">
-                        <item-show :item="selected_item" @abortShow="is_show = false" @save="save" :saved="saved" />
+                        <item-show :item="data" @abortShow="is_show = false" @save="save" :saved="saved" />
                     </template>
 
                 </its-table>
@@ -51,6 +51,10 @@ export default {
             multiple: true,
             title: 'Alle Benutzer',
             icon: 'mdi-account-group',
+            /********************************************* 
+             * The search_options represents the filters of the search request
+             * Each search_option is displayed on the items-screen and the user may select it
+            **********************************************/
             search_options: [
                 {
                     'type': 'toggle',
@@ -89,27 +93,34 @@ export default {
                     ]
                 },
             ],
+            save_action: 0,
+            destroy_action: 0,
             is_show: false,
             data: {},
             event: null,
-            selected_item: null,
+
 
         };
     },
 
     methods: {
         saved() {
-            this.selected_item = null;
+            this.data = null;
             this.is_show = false;
         },
         save(data) {
             this.data = data;
+            this.save_action++;
         },
         show(item) {
-            this.data = {};
-            this.selected_item = item;
+            this.data = item;
             this.is_show = true;
+        },
+        destroy(item) {
+            this.data = item;
+            this.destroy_action++;
         }
+
     }
 
 }
