@@ -3,7 +3,7 @@
     <!-- nur, wenn Suchoptionen übergeben wurden -->
     <!-- nur, wenn nicht SHOW ausgewählt wurde-->
     <div class="d-flex flex-row flex-wrap align-center ga-2 mb-2 bg-secondary pa-2"
-        v-if="search_options && !slots.show">
+        v-if="search_options.length > 0 && !slots.show">
         <div v-for="(search_option, i) in search_options" :key="i">
             <v-btn-toggle mandatory v-if="search_option.type === 'toggle'" v-model="search_model[search_option.field]"
                 density="compact" divided tile @update:model-value="onSearchInput">
@@ -23,17 +23,19 @@
                 <div>{{ title }}</div>
             </div>
         </v-card-title>
-
         <div v-if="!slots.show">
             <!-- Suchfeld -->
-            <v-card-text>
+            <v-card-text v-if="show_search_field">
                 <v-text-field clearable density="comfortable" append-icon="mdi-magnify" hide-details
                     v-model="search_model.search_string" @keydown.enter="onSearchInput" @click:append="onSearchInput"
                     @click:clear="onSearchInput"></v-text-field>
             </v-card-text>
 
+            <slot name="menu" :selected_items="selected_items" v-if="!!slots.menu" />
+
             <v-card-text>
-                <v-list :select-strategy="multiple ? 'classic' : 'single-leaf'" style="overflow: visible;">
+                <v-list :select-strategy="multiple ? 'classic' : 'single-leaf'" style="overflow: visible;"
+                    v-model:selected="selected_items">
                     <!-- Alle Einträge -->
                     <v-list-item :value="item" v-for="(item, i) in items">
                         <v-row>
@@ -110,7 +112,7 @@ import { useSlots } from 'vue';
 
 export default {
     emits: ['saved'],
-    props: ['title', 'color', 'icon', 'search_options', 'model', 'multiple', 'data', 'save_action', 'destroy_action'],
+    props: ['title', 'color', 'icon', 'search_options', 'model', 'multiple', 'data', 'data_multiple', 'save_action', 'destroy_action', 'destroy_multiple_action', 'select_all', 'show_search_field'],
 
     async beforeMount() {
         this.modelStore = useModelStore(); this.modelStore.initialize(this.$router);
@@ -136,12 +138,13 @@ export default {
             search_model: {},
             modelStore: null,
             slots: null,
-            selectedItem: null,
+            selected_items: [],
 
         };
     },
 
     watch: {
+
         save_action: {
             handler(newVal, oldVal) {
                 this.save(this.model, this.data);
@@ -155,6 +158,25 @@ export default {
             },
             deep: true
         },
+
+        destroy_multiple_action: {
+            handler(newVal, oldVal) {
+                this.destroyMultiple(this.model, this.data_multiple, this.modelStore.pagination.current_page);
+            },
+            deep: true
+        },
+
+        select_all: {
+            handler(newVal, oldVal) {
+                if (newVal) {
+                    this.selected_items = this.items;
+                } else {
+                    this.selected_items = [];
+                }
+            },
+            deep: true
+        },
+
 
     },
 
@@ -173,21 +195,34 @@ export default {
         },
 
         async save(model, data) {
+            this.selected_items = [];
             if (data.id) {
                 // update
                 await this.modelStore.update(model, data);
                 await this.index(model, this.search_model);
-                this.$emit('saved');
+                this.$emit('updated');
             } else {
                 // store
+                await this.modelStore.store(model, data);
+                await this.index(model, this.search_model);
+                this.$emit('stored');
             }
         },
 
         async destroy(model, data, page = 1) {
             await this.modelStore.destroy(model, data);
             await this.index(model, this.search_model, page);
+            this.selected_items = [];
             this.$emit('destroyed');
         },
+
+        async destroyMultiple(model, data, page = 1) {
+            await this.modelStore.destroyMultiple(model, data.map(item => item.id));
+            await this.index(model, this.search_model, page);
+            this.selected_items = [];
+            this.$emit('multiple_destroyed');
+        },
+
 
     }
 };

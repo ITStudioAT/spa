@@ -47,8 +47,9 @@ class User extends Authenticatable
         ];
     }
 
-    public function shouldDelete()
+    public function shouldDelete(): bool
     {
         $this->delete();
+        return true;
     }
 }

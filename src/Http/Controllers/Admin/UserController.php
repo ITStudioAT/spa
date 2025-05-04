@@ -6,12 +6,13 @@ namespace Itstudioat\Spa\Http\Controllers\Admin;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Itstudioat\Spa\Traits\PaginationTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Itstudioat\Spa\Services\AdminService;
+use Itstudioat\Spa\Traits\PaginationTrait;
 use Itstudioat\Spa\Http\Resources\Admin\UserResource;
 use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
 use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
 use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
 use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
@@ -81,7 +82,20 @@ class UserController extends Controller
         return response()->json($this->makePagination($pagination), 200);
     }
 
-    public function store(Request $request) {}
+    public function store(StoreUserRequest $request)
+    {
+
+        $auth_user = $this->userHasRole(['admin']);
+        $validated = $request->validated();
+
+        $validated = $this->convertConfirmedVerified($validated);
+        $validated['password'] = Hash::make(now());
+
+
+
+        $user = User::create($validated);
+        return response()->json(new UserResource($user), 200);
+    }
 
     public function show(User $user)
     {
@@ -94,9 +108,23 @@ class UserController extends Controller
         $auth_user = $this->userHasRole(['admin']);
         $validated = $request->validated();
 
+        $validated = $this->convertConfirmedVerified($validated, $user);
+
+
+        $user->update($validated);
+        return response()->json(new UserResource($user), 200);
+    }
+
+    private function convertConfirmedVerified($validated, $user = null)
+    {
+
         // Benutzer is_confirmed?
         if ($validated['is_confirmed']) {
-            if (!$user->confirmed_at) {
+            if ($user) {
+                if (!$user->confirmed_at) {
+                    $validated['confirmed_at'] = now();
+                }
+            } else {
                 $validated['confirmed_at'] = now();
             }
         } else {
@@ -106,7 +134,11 @@ class UserController extends Controller
 
         // E-Mail is_validated
         if ($validated['is_verified']) {
-            if (!$user->email_verified_at) {
+            if ($user) {
+                if (!$user->email_verified_at) {
+                    $validated['email_verified_at'] = now();
+                }
+            } else {
                 $validated['email_verified_at'] = now();
             }
         } else {
@@ -114,8 +146,7 @@ class UserController extends Controller
         }
         unset($validated['is_verified']);
 
-        $user->update($validated);
-        return response()->json(new UserResource($user), 200);
+        return $validated;
     }
 
 
@@ -123,8 +154,26 @@ class UserController extends Controller
     {
         $auth_user = $this->userHasRole(['admin']);
 
+        info($user->id);
+        info($auth_user->id);
+
         if ($user->id == $auth_user->id) abort(403, "Man kann sich selbst nicht löschen");
-        $user->shouldDelete();
+        if (!$user->shouldDelete()) abort(403, "Bei Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.");
+        return response()->noContent();
+    }
+
+    public function destroyMultiple(Request $request)
+    {
+        $auth_user = $this->userHasRole(['admin']);
+        info("destroyMultiple");
+
+        $ids = $request->all();
+
+        User::whereIn('id', $ids)->each(function ($user) use ($auth_user) {
+            if ($user->id == $auth_user->id) abort(403, "Man kann sich selbst nicht löschen");
+            if (!$user->shouldDelete()) abort(403, "Bei Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.");
+        });
+
         return response()->noContent();
     }
 

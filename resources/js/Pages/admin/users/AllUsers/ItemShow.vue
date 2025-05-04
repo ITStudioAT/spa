@@ -4,15 +4,15 @@
             <v-form ref="form" v-model="is_valid" :disabled="!is_edit">
                 <v-text-field autofocus v-model="data.last_name" label="Nachname"
                     :rules="[required(), maxLength(255)]" />
-                <v-text-field v-model="data.first_name" label="Vorname" :rules="[required(), maxLength(255)]" />
+                <v-text-field v-model="data.first_name" label="Vorname" :rules="[maxLength(255)]" />
                 <v-text-field v-model="data.email" label="E-Mail" :rules="[required(), mail(), maxLength(255)]" />
                 <v-switch true-icon="mdi-check" v-model="data.is_active" label="Aktiv" hide-details color="success"
                     :base-color="data.is_active ? 'success' : 'error'" />
                 <v-switch true-icon="mdi-check" v-model="data.is_confirmed"
-                    :label="data.is_confirmed ? 'Account am ' + data.confirmed_at + ' bestätigt' : 'Account bestätigt'"
+                    :label="data.is_confirmed ? 'Account am ' + (data.confirmed_at || new Date().toLocaleDateString('de-AT')) + ' bestätigt' : 'Account bestätigt'"
                     hide-details color="success" :base-color="data.is_confirmed ? 'success' : 'error'" />
                 <v-switch true-icon="mdi-check" v-model="data.is_verified"
-                    :label="data.is_verified ? 'E-Mail am ' + data.email_verified_at + ' verifiziert' : 'E-Mail verifiziert'"
+                    :label="data.is_verified ? 'E-Mail am ' + (data.email_verified_at || new Date().toLocaleDateString('de-AT')) + ' verifiziert' : 'E-Mail verifiziert'"
                     hide-details color="success" :base-color="data.is_verified ? 'success' : 'error'" disbled />
                 <v-switch true-icon="mdi-check" v-model="data.is_2fa" label="2-Faktoren-Authentifizierung" hide-details
                     color="success" :base-color="data.is_2fa ? 'success' : 'error'" />
@@ -29,7 +29,7 @@
                     <v-btn append-icon="mdi-pencil" block color="success" slim flat rounded="0" @click="edit"
                         v-if="!is_edit">Ändern</v-btn>
                     <v-btn append-icon="mdi-content-save" block color="success" slim flat rounded="0"
-                        @click="$emit('save', data)" v-if="is_edit">Speichern</v-btn>
+                        @click="save(data)" v-if="is_edit">Speichern</v-btn>
                 </v-col>
                 <v-col cols=12 sm=6>
                     <v-btn append-icon="mdi-arrow-left" block color="primary" slim flat rounded="0"
@@ -54,6 +54,7 @@ export default {
 
     async beforeMount() {
         this.data = JSON.parse(JSON.stringify(this.item));
+        if (!this.data.id) this.is_edit = true;
     },
 
     data() {
@@ -66,6 +67,15 @@ export default {
 
 
     methods: {
+        async save(data) {
+            this.is_valid = false;
+            await this.$refs.form.validate(); if (!this.is_valid) return;
+            this.is_edit = false;
+            this.$emit('save', data);
+
+        },
+
+
         edit() {
             this.data = JSON.parse(JSON.stringify(this.item));
             this.is_edit = true;

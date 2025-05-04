@@ -49,7 +49,33 @@ export const useModelStore = defineStore("AdminModelStore", {
             adminStore.is_loading++;
             try {
                 const response = await axios.put("/api/admin/" + model + "/" + data.id, data);
-                this.items = response.data.item;
+                this.item = response.data.item;
+                notification.notify({
+                    message: 'Das Speichern war erfolgreich',
+                    type: 'success',
+                    timeout: this.timeout,
+                });
+                return true;
+            } catch (error) {
+                notification.notify({
+                    status: error.response.status,
+                    message: error.response.data.message || 'Fehler passiert.',
+                    type: 'error',
+                    timeout: this.timeout,
+                });
+                return false;
+            } finally {
+                adminStore.is_loading = false;
+            }
+        },
+
+        async store(model, data) {
+            const notification = useNotificationStore();
+            const adminStore = useAdminStore();
+            adminStore.is_loading++;
+            try {
+                const response = await axios.post("/api/admin/" + model, data);
+                this.item = response.data.item;
                 notification.notify({
                     message: 'Das Speichern war erfolgreich',
                     type: 'success',
@@ -75,6 +101,32 @@ export const useModelStore = defineStore("AdminModelStore", {
             adminStore.is_loading++;
             try {
                 const response = await axios.delete("/api/admin/" + model + "/" + data.id, {});
+                notification.notify({
+                    message: 'Das Löschen war erfolgreich',
+                    type: 'success',
+                    timeout: this.timeout,
+                });
+                return true;
+            } catch (error) {
+                notification.notify({
+                    status: error.response.status,
+                    message: error.response.data.message || 'Fehler passiert.',
+                    type: 'error',
+                    timeout: this.timeout,
+                });
+                return false;
+            } finally {
+                adminStore.is_loading = false;
+            }
+        },
+
+
+        async destroyMultiple(model, data) {
+            const notification = useNotificationStore();
+            const adminStore = useAdminStore();
+            adminStore.is_loading++;
+            try {
+                const response = await axios.post("/api/admin/" + model + "/destroy_multiple", data);
                 notification.notify({
                     message: 'Das Löschen war erfolgreich',
                     type: 'success',
