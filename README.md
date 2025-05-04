@@ -17,18 +17,23 @@ The installation uses next to laravel:
 - Vite for asset bundling
 
 It provides:
-- a login page together with a unkown password page and a register page
+- Login page together with a 'Unkown password' page and a Register page
+- The login use a 2-factor-authentification (password an email), if the user has set 2-fa option
 
-For the authetificated admin it supports
-- profile update with password change
-- logout
+For the authenticated admins it supports
+- Dashboard
+- Users page, where all users are listed, may be added, changed or deleted
+- Profile update with password change
+- Logout
 
 It integrates the Spatie roles and you can manage the role-based access to all web- and api-routes.
 
 After installing this package, you can easily start to develop your own single page application with all necessary requirements.
 
 ## Installation
-First install a new laravel app
+
+### Install a new laravel project
+
 ```bash
 laravel new new-laravel-app
 ```
