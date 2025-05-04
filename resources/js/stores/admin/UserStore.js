@@ -23,6 +23,11 @@ export const useUserStore = defineStore("AdminUserStore", {
                     this.api_answer = response.data;
                 } else {
                     this.user = response.data;
+                    notification.notify({
+                        message: 'Das Profil wurde erfolreich gespeichert.',
+                        type: 'success',
+                        timeout: baseStore.timeout,
+                    });
                 }
                 return true;
             } catch (error) {
@@ -45,13 +50,18 @@ export const useUserStore = defineStore("AdminUserStore", {
             try {
                 const response = await axios.post('/api/admin/users/update_with_code/', data);
                 this.user = response.data;
+                notification.notify({
+                    message: 'Die Profil mit geänderter E-Mail wurde erfolreich gespeichert.',
+                    type: 'success',
+                    timeout: baseStore.timeout,
+                });
                 return true;
             } catch (error) {
                 notification.notify({
                     status: error.response.status,
                     message: error.response.data.message || 'Fehler passiert.',
                     type: 'error',
-                    timeout: this.adminStore?.timeout,
+                    timeout: baseStore.timeout,
                 });
                 return false;
             } finally {
@@ -69,6 +79,7 @@ export const useUserStore = defineStore("AdminUserStore", {
                 if (response.data.step) {
                     return response.data.step;
                 }
+                return true;
             } catch (error) {
                 notification.notify({
                     status: error.response.status,
@@ -88,6 +99,12 @@ export const useUserStore = defineStore("AdminUserStore", {
             adminStore.is_loading++;
             this.api_answer = null;
             try {
+                const response = await axios.post('/api/admin/users/save_password_with_code/', data);
+                notification.notify({
+                    message: 'Das Kennwort wurde erfolreich gespeichert.',
+                    type: 'success',
+                    timeout: baseStore.timeout,
+                });
                 return true;
             } catch (error) {
                 notification.notify({

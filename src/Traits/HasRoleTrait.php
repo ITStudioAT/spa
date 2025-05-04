@@ -10,21 +10,16 @@ trait HasRoleTrait
         if (!is_array($par_roles)) $roles[] = $par_roles;
         else $roles = $par_roles;
 
-        if (!auth()->check()) $this->abort();
-        if (!$user = auth()->user()) $this->abort();
+        if (!auth()->check()) return false;
+        if (!$user = auth()->user()) return false;
 
         // Wenn super_admin in der Konfiguration gesetzt ist, füge ihn zu den erforderlichen Rollen hinzu
         if (!empty(config('spa.super_admin'))) {
             $roles[] = 'super_admin';
         }
 
-        if (!$user->hasAnyRole($roles)) $this->abort();
+        if (!$user->hasAnyRole($roles)) return false;
 
         return $user;
-    }
-
-    private function abort()
-    {
-        abort(403, "Kein Zugriff!");
     }
 }

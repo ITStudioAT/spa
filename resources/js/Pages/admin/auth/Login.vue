@@ -53,6 +53,7 @@
                 <div class="text-caption text-center font-weight-light">oder</div>
                 <v-btn block color="warning" slim flat rounded="0" variant="text" @click="restartLogin">Zurück</v-btn>
             </v-card-text>
+
         </v-card>
 
     </v-container>
@@ -62,6 +63,9 @@
 import { useValidationRulesSetup } from "@/helpers/rules";
 import { mapWritableState } from "pinia";
 import { useAdminStore } from "@/stores/admin/AdminStore";
+import { useNotificationStore } from "@/stores/spa/NotificationStore";
+
+
 
 export default {
 
@@ -127,6 +131,15 @@ export default {
             data.step = 'LOGIN_ENTER_PASSWORD';
             if (await this.adminStore.loginStep2(data)) {
                 if (this.api_response.data.step == 'LOGIN_SUCCESS') {
+                    this.step = "LOGIN_SUCCESS";
+                    const notification = useNotificationStore();
+                    notification.notify({
+                        message: 'Sie haben sich erfolreich angemeldet',
+                        type: 'success',
+                        timeout: this.adminStore.config?.timeout,
+                    });
+
+
                     await this.adminStore.loadConfig();
                     this.$router.push('/admin/');
                 } else {
@@ -139,6 +152,14 @@ export default {
             if (this.data.token_2fa.length != 6) return;
             data.step = 'LOGIN_ENTER_TOKEN';
             await this.adminStore.loginStep3(data);
+            this.step = "LOGIN_SUCCESS";
+            const notification = useNotificationStore();
+            notification.notify({
+                message: 'Sie haben sich erfolreich angemeldet',
+                type: 'success',
+                timeout: this.adminStore.config?.timeout,
+            });
+
             await this.adminStore.loadConfig();
             this.$router.push('/admin/');
         },

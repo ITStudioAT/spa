@@ -194,7 +194,8 @@ export default {
         async save(data) {
             await this.$refs.form.validate(); if (!this.is_valid) return;
 
-            if (data.id) await this.update(data);
+            this.userStore.api_answer = null;
+            await this.userStore.updateProfile(data);
             this.is_edit = false;
             if (this.api_answer?.answer == 'INPUT_CODE') {
                 this.step = 'INPUT_CODE';
@@ -205,32 +206,10 @@ export default {
             }
         },
 
-        async update(data) {
-            this.userStore.api_answer = null;
-            if (await this.userStore.updateProfile(data)) {
-                if (!this.api_answer) {
-                    const notification = useNotificationStore();
-                    notification.notify({
-                        message: 'Das Profil wurde erfolreich gespeichert.',
-                        type: 'success',
-                        timeout: this.adminStore.config?.timeout,
-                    });
-                    await this.adminStore.loadConfig();
-                }
-            }
-
-        },
-
         async updateWithCode(data) {
             if (this.data.token_2fa.length != 6) return;
             if (await this.userStore.updateWithCode(data)) {
                 await this.adminStore.loadConfig();
-                const notification = useNotificationStore();
-                notification.notify({
-                    message: 'Die Profil mit geänderter E-Mail wurde erfolreich gespeichert.',
-                    type: 'success',
-                    timeout: this.adminStore.config?.timeout,
-                });
                 this.abort();
             }
         },
@@ -238,7 +217,6 @@ export default {
         async savePassword(data) {
             await this.$refs.form.validate(); if (!this.is_valid) return;
             const answer = await this.userStore.savePassword(data);
-
             if (answer) {
                 this.step = answer;
             } else {
@@ -246,16 +224,9 @@ export default {
             }
         },
 
-
         async savePasswordWithCode(data) {
             if (this.data.token_2fa.length != 6) return;
             if (await this.userStore.savePasswordWithCode(data)) {
-                const notification = useNotificationStore();
-                notification.notify({
-                    message: 'Das Kennwort wurde erfolreich gespeichert.',
-                    type: 'success',
-                    timeout: this.adminStore.config?.timeout,
-                });
                 this.abort();
             }
 

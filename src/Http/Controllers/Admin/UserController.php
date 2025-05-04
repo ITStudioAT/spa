@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function index(IndexUserRequest $request)
     {
-        $auth_user = $this->userHasRole(['admin']);
+        if (!$auth_user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
         $validated = $request->validated();
         $search_model = $validated['search_model'] ?? [];
         $query = User::orderBy('last_name')->orderBy('first_name');
@@ -81,7 +81,7 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
 
-        $auth_user = $this->userHasRole(['admin']);
+        if (!$auth_user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
         $validated = $request->validated();
 
         $validated = $this->convertConfirmedVerified($validated);
@@ -145,7 +145,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        $auth_user = $this->userHasRole(['admin']);
+        if (!$auth_user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
 
         info($user->id);
         info($auth_user->id);
@@ -157,9 +157,7 @@ class UserController extends Controller
 
     public function destroyMultiple(Request $request)
     {
-        $auth_user = $this->userHasRole(['admin']);
-        info("destroyMultiple");
-
+        if (!$auth_user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
         $ids = $request->all();
 
         User::whereIn('id', $ids)->each(function ($user) use ($auth_user) {
@@ -173,7 +171,7 @@ class UserController extends Controller
 
     public function updateProfile(UpdateProfileRequest $request, User $user)
     {
-        $auth_user = $this->userHasRole(['admin']);
+        if (!$auth_user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
         $validated = $request->validated();
 
         if ($user->email != $validated['email']) {
@@ -189,7 +187,7 @@ class UserController extends Controller
 
     public function updateWithCode(UpdateUserWithCodeRequest $request)
     {
-        $user = $this->userHasRole(['admin']);
+        if (!$user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
         $validated = $request->validated();
         if (!$user->checkToken2Fa($validated['token_2fa'])) abort(401, "Der Code ist falsch oder abgelaufen");
         $validated['email_verified_at'] = now();
@@ -200,7 +198,7 @@ class UserController extends Controller
 
     public function savePassword(SavePasswordRequest $request)
     {
-        $user = $this->userHasRole(['admin']);
+        if (!$user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
         $validated = $request->validated();
 
         $adminService = new AdminService();
@@ -214,10 +212,10 @@ class UserController extends Controller
 
     public function savePasswordWithCode(SavePasswordWithCodeRequest $request)
     {
-        $user = $this->userHasRole(['admin']);
+        if (!$user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
         $validated = $request->validated();
 
-        if (!$user->checkToken2Fa($validated['token_2fa'])) abort(401, "Kennwort setzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+        if (!$user->checkToken2Fa($validated['token_2fa'])) abort(401, "Kennwort speichern funktioniert nicht. Code falsch oder Zeit abgelaufen.");
 
         $user->update(
             [

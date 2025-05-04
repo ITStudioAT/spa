@@ -47,7 +47,7 @@ class AdminController extends Controller
 
     public function managableUserRoles(Request $request)
     {
-        $auth_user = $this->userHasRole(['admin']);
+        if (!$auth_user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
         $adminService = new AdminService();
 
         $data = ['user_roles' => $adminService->managableUserRoles($auth_user)];
