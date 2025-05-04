@@ -41,8 +41,8 @@ Route::middleware(['throttle:global', 'throttle:api', 'api-allowed'])->group(fun
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);
         Route::get('/admin/managable_user_roles',  [AdminController::class, 'managableUserRoles']);
-
         Route::apiResource('/admin/users', UserController::class);
+        Route::put('/admin/users/update_profile/{user}',  [UserController::class, 'updateProfile']);
         Route::post('/admin/users/destroy_multiple',  [UserController::class, 'destroyMultiple']);
         Route::post('/admin/users/update_with_code',  [UserController::class, 'updateWithCode']);
         Route::post('/admin/users/save_password',  [UserController::class, 'savePassword']);

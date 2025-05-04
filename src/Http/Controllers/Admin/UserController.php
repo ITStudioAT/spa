@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Itstudioat\Spa\Http\Controllers\Admin;
-
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,12 +13,12 @@ use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
 use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
 use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
 use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
 use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
 use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
 
 class UserController extends Controller
 {
-
     use PaginationTrait;
 
     public function index(IndexUserRequest $request)
@@ -66,7 +64,6 @@ class UserController extends Controller
             }
         }
 
-
         // search_string (optional)
         if (!empty($search_model['search_string'])) {
             $search = $search_model['search_string'];
@@ -76,7 +73,6 @@ class UserController extends Controller
                     ->orWhere('email', 'like', "%{$search}%");
             });
         }
-
 
         $pagination = UserResource::collection($query->paginate(config('spa.pagination')));
         return response()->json($this->makePagination($pagination), 200);
@@ -90,8 +86,6 @@ class UserController extends Controller
 
         $validated = $this->convertConfirmedVerified($validated);
         $validated['password'] = Hash::make(now());
-
-
 
         $user = User::create($validated);
         return response()->json(new UserResource($user), 200);
@@ -109,7 +103,6 @@ class UserController extends Controller
         $validated = $request->validated();
 
         $validated = $this->convertConfirmedVerified($validated, $user);
-
 
         $user->update($validated);
         return response()->json(new UserResource($user), 200);
@@ -178,7 +171,7 @@ class UserController extends Controller
     }
 
 
-    public function updateProfile(UpdateUserRequest $request, User $user)
+    public function updateProfile(UpdateProfileRequest $request, User $user)
     {
         $auth_user = $this->userHasRole(['admin']);
         $validated = $request->validated();
@@ -198,9 +191,7 @@ class UserController extends Controller
     {
         $user = $this->userHasRole(['admin']);
         $validated = $request->validated();
-
         if (!$user->checkToken2Fa($validated['token_2fa'])) abort(401, "Der Code ist falsch oder abgelaufen");
-
         $validated['email_verified_at'] = now();
         $user->update($validated);
 

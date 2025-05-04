@@ -13,7 +13,33 @@ export const useUserStore = defineStore("AdminUserStore", {
     actions: {
         ...baseStore.actions(),
 
+        async updateProfile(data) {
+            const notification = useNotificationStore();
+            const adminStore = useAdminStore();
+            adminStore.is_loading++;
+            try {
+                const response = await axios.put('/api/admin/users/update_profile/' + data.id, data);
+                if (response.data.answer) {
+                    this.api_answer = response.data;
+                } else {
+                    this.user = response.data;
+                }
+                return true;
+            } catch (error) {
+                notification.notify({
+                    status: error.response.status,
+                    message: error.response.data.message || 'Fehler passiert.',
+                    type: 'error',
+                    timeout: baseStore.timeout,
+                });
+                return false;
+            } finally {
+                adminStore.is_loading--;
+            }
+        },
+
         async updateWithCode(data) {
+            const notification = useNotificationStore();
             const adminStore = useAdminStore();
             adminStore.is_loading++;
             try {

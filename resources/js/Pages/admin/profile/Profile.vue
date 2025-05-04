@@ -207,15 +207,16 @@ export default {
 
         async update(data) {
             this.userStore.api_answer = null;
-            await this.userStore.update(data)
-            if (!this.userStore.api_answer) {
-                const notification = useNotificationStore();
-                notification.notify({
-                    message: 'Das Profil wurde erfolreich gespeichert.',
-                    type: 'success',
-                    timeout: this.adminStore.config?.timeout,
-                });
-                await this.adminStore.loadConfig();
+            if (await this.userStore.updateProfile(data)) {
+                if (!this.api_answer) {
+                    const notification = useNotificationStore();
+                    notification.notify({
+                        message: 'Das Profil wurde erfolreich gespeichert.',
+                        type: 'success',
+                        timeout: this.adminStore.config?.timeout,
+                    });
+                    await this.adminStore.loadConfig();
+                }
             }
 
         },
