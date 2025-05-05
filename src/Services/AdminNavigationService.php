@@ -4,7 +4,6 @@ namespace Itstudioat\Spa\Services;
 
 use App\Models\User;
 use Itstudioat\Spa\Traits\HasRoleTrait;
-use Itstudioat\Spa\Services\UserService;
 
 class AdminNavigationService
 {
@@ -48,6 +47,7 @@ class AdminNavigationService
             $menu[] = ['title' => '', 'subtitle' => 'Home', 'icon' => 'mdi-home', 'color' => 'secondary',  'to' => '/admin'];
             $menu[] = ['title' => '', 'subtitle' => 'Kennwort ändern', 'icon' => 'mdi-form-textbox-password', 'color' => 'secondary',  'action' => 'wantToChangePassword'];
         }
+
         return $menu;
     }
 
@@ -57,6 +57,7 @@ class AdminNavigationService
         if ($this->userHasRole(['admin'])) {
             $menu[] = ['title' => '', 'subtitle' => 'Home', 'icon' => 'mdi-home', 'color' => 'secondary',  'to' => '/admin'];
         }
+
         return $menu;
     }
 

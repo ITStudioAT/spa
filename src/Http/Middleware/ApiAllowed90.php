@@ -65,6 +65,7 @@ class ApiAllowed
             case RouteResult::NOT_ALLOWED:
                 $status = 403;
                 $message = 'Sie dürfen diese Aktion nicht ausführen';
+
                 break;
 
             case RouteResult::NOT_EXISTS:
