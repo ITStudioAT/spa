@@ -2,8 +2,9 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/itstudioat/spa.svg?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/itstudioat/spa/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/itstudioat/spa/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![Code Style](https://github.com/itstudioat/spa/actions/workflows/check-and-fix-styling.yml/badge.svg?branch=main)](https://github.com/itstudioat/spa/actions/workflows/check-and-fix-styling.yml)
+[![GitHub Code Style Action Status](https://github.com/itstudioat/spa/actions/workflows/check-and-fix-styling.yml/badge.svg?branch=main)](https://github.com/itstudioat/spa/actions/workflows/check-and-fix-styling.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/itstudioat/spa.svg?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
+
 
 
 ## What is Laravel-Spa
