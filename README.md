@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/itstudioat/spa.svg?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/itstudioat/spa/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/itstudioat/spa/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/itstudioat/spa/Check%20%26%20fix%20styling/main?label=code%20style&style=flat-square)](https://github.com/itstudioat/spa/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
+[![Code Style](https://github.com/itstudioat/spa/actions/workflows/check-and-fix-style.yml/badge.svg?branch=main)](https://github.com/itstudioat/spa/actions/workflows/check-and-fix-style.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/itstudioat/spa.svg?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
 
 
