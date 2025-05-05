@@ -57,7 +57,11 @@ export default {
 
     methods: {
 
-
+        runAction(methodName) {
+            if (typeof this[methodName] === 'function') {
+                this[methodName]();
+            }
+        }
 
 
     }

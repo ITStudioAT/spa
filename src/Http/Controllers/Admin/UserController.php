@@ -99,7 +99,9 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        $auth_user = $this->userHasRole(['admin']);
+        if (! $auth_user = $this->userHasRole(['super_admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
 
         return response()->json(new UserResource($user), 200);
     }

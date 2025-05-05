@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Itstudioat\Spa\Http\Controllers\Spa\RouteController;
+use Itstudioat\Spa\Http\Controllers\Admin\RoleController;
 use Itstudioat\Spa\Http\Controllers\Admin\UserController;
 use Itstudioat\Spa\Http\Controllers\Admin\AdminController;
 use Itstudioat\Spa\Http\Controllers\Admin\NavigationController;
@@ -53,5 +54,8 @@ Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
         Route::post('/admin/users/update_with_code',  [UserController::class, 'updateWithCode']);
         Route::post('/admin/users/save_password',  [UserController::class, 'savePassword']);
         Route::post('/admin/users/save_password_with_code',  [UserController::class, 'savePasswordWithCode']);
+
+        // roles
+        Route::apiResource('/admin/roles', RoleController::class);
     });
 });
