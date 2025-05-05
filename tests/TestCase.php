@@ -2,9 +2,8 @@
 
 namespace Itstudioat\Spa\Tests;
 
-use Orchestra\Testbench\TestCase as Orchestra;
 use Itstudioat\Spa\SpaServiceProvider;
-
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
