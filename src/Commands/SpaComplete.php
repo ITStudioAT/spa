@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Itstudioat\Spa\Commands;
 
 use Illuminate\Console\Command;
@@ -22,17 +21,16 @@ class SpaComplete extends Command
         // Second vendor:publish with --tag=spa-migrations
         $this->call('vendor:publish', [
             '--tag' => 'spa-once',
-            '--force' => 'true'
+            '--force' => 'true',
         ]);
 
         $this->call('vendor:publish', [
             '--tag' => 'spa-multi',
-            '--force' => 'true'
+            '--force' => 'true',
         ]);
 
         $this->info('✅ All Laravel-Spa-Files are published.');
         $this->newLine();
-
 
         // Spatie Permission
         $this->call('vendor:publish', [
@@ -59,7 +57,6 @@ class SpaComplete extends Command
         $this->call('migrate');
         $this->info('✅ Laravel Sanctum installed.');
         $this->newLine();
-
 
         // package.json installations
         $this->call('spa:packages');

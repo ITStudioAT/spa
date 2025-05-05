@@ -2,20 +2,20 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
+use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
+use Itstudioat\Spa\Http\Resources\Admin\UserResource;
 use Itstudioat\Spa\Services\AdminService;
 use Itstudioat\Spa\Traits\PaginationTrait;
-use Itstudioat\Spa\Http\Resources\Admin\UserResource;
-use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
 
 class UserController extends Controller
 {
@@ -23,7 +23,9 @@ class UserController extends Controller
 
     public function index(IndexUserRequest $request)
     {
-        if (!$auth_user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
+        if (! $auth_user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
         $validated = $request->validated();
         $search_model = $validated['search_model'] ?? [];
         $query = User::orderBy('last_name')->orderBy('first_name');
@@ -65,7 +67,7 @@ class UserController extends Controller
         }
 
         // search_string (optional)
-        if (!empty($search_model['search_string'])) {
+        if (! empty($search_model['search_string'])) {
             $search = $search_model['search_string'];
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
@@ -75,25 +77,30 @@ class UserController extends Controller
         }
 
         $pagination = UserResource::collection($query->paginate(config('spa.pagination')));
+
         return response()->json($this->makePagination($pagination), 200);
     }
 
     public function store(StoreUserRequest $request)
     {
 
-        if (!$auth_user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
+        if (! $auth_user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
         $validated = $request->validated();
 
         $validated = $this->convertConfirmedVerified($validated);
         $validated['password'] = Hash::make(now());
 
         $user = User::create($validated);
+
         return response()->json(new UserResource($user), 200);
     }
 
     public function show(User $user)
     {
         $auth_user = $this->userHasRole(['admin']);
+
         return response()->json(new UserResource($user), 200);
     }
 
@@ -105,6 +112,7 @@ class UserController extends Controller
         $validated = $this->convertConfirmedVerified($validated, $user);
 
         $user->update($validated);
+
         return response()->json(new UserResource($user), 200);
     }
 
@@ -114,7 +122,7 @@ class UserController extends Controller
         // Benutzer is_confirmed?
         if ($validated['is_confirmed']) {
             if ($user) {
-                if (!$user->confirmed_at) {
+                if (! $user->confirmed_at) {
                     $validated['confirmed_at'] = now();
                 }
             } else {
@@ -128,7 +136,7 @@ class UserController extends Controller
         // E-Mail is_validated
         if ($validated['is_verified']) {
             if ($user) {
-                if (!$user->email_verified_at) {
+                if (! $user->email_verified_at) {
                     $validated['email_verified_at'] = now();
                 }
             } else {
@@ -142,54 +150,73 @@ class UserController extends Controller
         return $validated;
     }
 
-
     public function destroy(User $user)
     {
-        if (!$auth_user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
+        if (! $auth_user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
 
         info($user->id);
         info($auth_user->id);
 
-        if ($user->id == $auth_user->id) abort(403, "Man kann sich selbst nicht löschen");
-        if (!$user->shouldDelete()) abort(403, "Bei Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.");
+        if ($user->id == $auth_user->id) {
+            abort(403, 'Man kann sich selbst nicht löschen');
+        }
+        if (! $user->shouldDelete()) {
+            abort(403, 'Bei Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.');
+        }
+
         return response()->noContent();
     }
 
     public function destroyMultiple(Request $request)
     {
-        if (!$auth_user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
+        if (! $auth_user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
         $ids = $request->all();
 
         User::whereIn('id', $ids)->each(function ($user) use ($auth_user) {
-            if ($user->id == $auth_user->id) abort(403, "Man kann sich selbst nicht löschen");
-            if (!$user->shouldDelete()) abort(403, "Bei Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.");
+            if ($user->id == $auth_user->id) {
+                abort(403, 'Man kann sich selbst nicht löschen');
+            }
+            if (! $user->shouldDelete()) {
+                abort(403, 'Bei Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.');
+            }
         });
 
         return response()->noContent();
     }
 
-
     public function updateProfile(UpdateProfileRequest $request, User $user)
     {
-        if (!$auth_user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
+        if (! $auth_user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
         $validated = $request->validated();
 
         if ($user->email != $validated['email']) {
             // Neue E-Mail-Adresse, die muss natürlich zunächst bestätigt werden
             $adminService = new AdminService();
             $adminService->sendEmailValidationToken(1, $user, $validated['email']);
+
             return response()->json(['answer' => 'INPUT_CODE', 'email' => $user->email, 'email_new' => $validated['email']]);
         }
 
         $user->update($validated);
+
         return response()->json(new UserResource($user), 200);
     }
 
     public function updateWithCode(UpdateUserWithCodeRequest $request)
     {
-        if (!$user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
+        if (! $user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
         $validated = $request->validated();
-        if (!$user->checkToken2Fa($validated['token_2fa'])) abort(401, "Der Code ist falsch oder abgelaufen");
+        if (! $user->checkToken2Fa($validated['token_2fa'])) {
+            abort(401, 'Der Code ist falsch oder abgelaufen');
+        }
         $validated['email_verified_at'] = now();
         $user->update($validated);
 
@@ -198,7 +225,9 @@ class UserController extends Controller
 
     public function savePassword(SavePasswordRequest $request)
     {
-        if (!$user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
+        if (! $user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
         $validated = $request->validated();
 
         $adminService = new AdminService();
@@ -206,16 +235,20 @@ class UserController extends Controller
         $adminService->sendPasswordResetToken(1, $user, $user->email);
 
         $data = ['step' => 'PASSWORD_ENTER_TOKEN'];
+
         return response()->json($data, 200);
     }
 
-
     public function savePasswordWithCode(SavePasswordWithCodeRequest $request)
     {
-        if (!$user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
+        if (! $user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
         $validated = $request->validated();
 
-        if (!$user->checkToken2Fa($validated['token_2fa'])) abort(401, "Kennwort speichern funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+        if (! $user->checkToken2Fa($validated['token_2fa'])) {
+            abort(401, 'Kennwort speichern funktioniert nicht. Code falsch oder Zeit abgelaufen.');
+        }
 
         $user->update(
             [

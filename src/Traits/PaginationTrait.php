@@ -7,7 +7,6 @@ trait PaginationTrait
     public function makePagination($pagination): array
     {
 
-
         $nextPage = $pagination->currentPage() == $pagination->lastPage() ? null : $pagination->currentPage() + 1;
         $prevPage = $pagination->currentPage() == 1 ? null : $pagination->currentPage() - 1;
 

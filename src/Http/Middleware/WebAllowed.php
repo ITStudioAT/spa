@@ -4,8 +4,8 @@ namespace Itstudioat\Spa\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Itstudioat\Spa\Enums\RouteResult;
 use Illuminate\Support\Facades\Redirect;
+use Itstudioat\Spa\Enums\RouteResult;
 use Itstudioat\Spa\Services\RouteService;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -40,8 +40,7 @@ class WebAllowed
 
         $routeFile = base_path('routes/meta/web/' . $routeGroup . '.php');
 
-
-        if (!file_exists($routeFile)) {
+        if (! file_exists($routeFile)) {
             $status = 404;
             $message = 'Die Seite konnte nicht gefunden werden';
 
@@ -49,7 +48,7 @@ class WebAllowed
                 return response()->json([
                     'status' => $status,
                     'message' => $message,
-                    'type' => 'error'
+                    'type' => 'error',
                 ], $status);
             }
 
@@ -66,7 +65,6 @@ class WebAllowed
         $user = auth()->user();
         $result = $routeService->checkWebRoles($user, $data, $route_roles);
 
-
         switch ($result) {
             case RouteResult::ALLOWED:
                 return $next($request); // Continue if allowed
@@ -74,16 +72,19 @@ class WebAllowed
             case RouteResult::NOT_ALLOWED:
                 $status = 403;
                 $message = 'Sie können auf diese Seite nicht zugreifen';
+
                 break;
 
             case RouteResult::NOT_EXISTS:
                 $status = 404;
                 $message = 'Die Seite konnte nicht gefunden werden';
+
                 break;
 
             case RouteResult::NOT_FOUND:
                 $status = 404;
                 $message = 'Die Seite ist nicht registriert: Programmierer verständigen';
+
                 break;
 
             default:
@@ -97,7 +98,6 @@ class WebAllowed
             'message' => $message,
             'type' => 'error',
         ]));
-
 
         return $next($request);
     }

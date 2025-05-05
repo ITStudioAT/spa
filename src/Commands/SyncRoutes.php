@@ -64,7 +64,7 @@ class SyncRoutes extends Command
 
             // Add missing routes
             foreach ($jsRoutes as $route) {
-                if (!array_key_exists($route, $existingRoles)) {
+                if (! array_key_exists($route, $existingRoles)) {
                     $this->info("  ➕ Adding missing route: $route");
                     $existingRoles[$route] = [];
                 }
@@ -72,7 +72,7 @@ class SyncRoutes extends Command
 
             // Remove obsolete routes
             foreach (array_keys($existingRoles) as $route) {
-                if (!in_array($route, $jsRoutes)) {
+                if (! in_array($route, $jsRoutes)) {
                     $this->warn("  ❌ Removing obsolete route: $route");
                     unset($existingRoles[$route]);
                 }
@@ -81,7 +81,7 @@ class SyncRoutes extends Command
             // Save updated PHP file
             $phpOutput = "<?php\n\nreturn [\n    'roles' => [\n";
             foreach ($existingRoles as $path => $roles) {
-                $rolesArray = '[' . implode(', ', array_map(fn($r) => "'$r'", $roles)) . ']';
+                $rolesArray = '[' . implode(', ', array_map(fn ($r) => "'$r'", $roles)) . ']';
                 $phpOutput .= "        '$path' => $rolesArray,\n";
             }
             $phpOutput .= "    ]\n];\n";
@@ -92,7 +92,8 @@ class SyncRoutes extends Command
             $this->info("✅ {$baseName}.php synced.\n");
         }
 
-        $this->info("🎉 All route metadata files synced successfully.");
+        $this->info('🎉 All route metadata files synced successfully.');
+
         return 0;
     }
 }

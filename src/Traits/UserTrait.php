@@ -4,8 +4,7 @@ namespace Itstudioat\Spa\Traits;
 
 use Illuminate\Support\Facades\Hash;
 
-
-/* =============================== 
+/* ===============================
 ITStudioAT
 =============================== */
 
@@ -17,11 +16,13 @@ trait UserTrait
             $this->token_2fa = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             $this->token_2fa_expires_at = now()->addMinutes($minutes);
             $this->save();
+
             return $this->token_2fa;
         } else {
             $this->token_2fa_2 = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             $this->token_2fa_2_expires_at = now()->addMinutes($minutes);
             $this->save();
+
             return $this->token_2fa_2;
         }
     }
@@ -52,7 +53,6 @@ trait UserTrait
         $this->login_ip = request()->ip();
         $this->save();
     }
-
 
     public function setPassword($password)
     {

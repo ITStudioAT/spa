@@ -3,9 +3,9 @@
 namespace Itstudioat\Spa\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class StandardEmail extends Notification implements ShouldQueue
 {
@@ -14,7 +14,9 @@ class StandardEmail extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct(public array $data) {}
+    public function __construct(public array $data)
+    {
+    }
 
     /**
      * Get the notification's delivery channels.
@@ -32,7 +34,7 @@ class StandardEmail extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
 
-        return (new MailMessage)
+        return (new MailMessage())
             ->from($this->data['from_address'], $this->data['from_name'])
             ->subject($this->data['subject'])
             ->markdown($this->data['markdown'], ['notifiable' => $notifiable, 'data' => $this->data]);

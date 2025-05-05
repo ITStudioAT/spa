@@ -3,57 +3,81 @@
 namespace Itstudioat\Spa\Services;
 
 use App\Models\User;
-use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Itstudioat\Spa\Notifications\StandardEmail;
 
-
 class AdminService
 {
-
     public function checkPasswordUnknown($data): User
     {
-        if (!$user = User::where('email', $data['email'])->first()) abort(401, "Kennwort zurücksetzen funktioniert mit dieser E-Mail-Adresse nicht");
-        if (!$user->confirmed_at) abort(423, "Benutzer ist noch nicht bestätigt");
-        if (!$user->is_active) abort(423, "Benutzer ist gesperrt");
+        if (! $user = User::where('email', $data['email'])->first()) {
+            abort(401, 'Kennwort zurücksetzen funktioniert mit dieser E-Mail-Adresse nicht');
+        }
+        if (! $user->confirmed_at) {
+            abort(423, 'Benutzer ist noch nicht bestätigt');
+        }
+        if (! $user->is_active) {
+            abort(423, 'Benutzer ist gesperrt');
+        }
 
         if ($data['step'] == 'PASSWORD_UNKNOWN_ENTER_TOKEN') {
-            if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+            if (! $user->checkToken2Fa($data['token_2fa'])) {
+                abort(401, 'Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.');
+            }
         }
 
         if ($data['step'] == 'PASSWORD_UNKNOWN_ENTER_TOKEN_2') {
-            if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
-            if (!$user->checkToken2Fa_2($data['token_2fa_2']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+            if (! $user->checkToken2Fa($data['token_2fa'])) {
+                abort(401, 'Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.');
+            }
+            if (! $user->checkToken2Fa_2($data['token_2fa_2'])) {
+                abort(401, 'Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.');
+            }
         }
 
         if ($data['step'] == 'PASSWORD_UNKNOWN_ENTER_PASSWORD') {
-            if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
-            if ($user->is_2fa && !$user->checkToken2Fa_2($data['token_2fa_2']))  abort(401, "Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+            if (! $user->checkToken2Fa($data['token_2fa'])) {
+                abort(401, 'Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.');
+            }
+            if ($user->is_2fa && ! $user->checkToken2Fa_2($data['token_2fa_2'])) {
+                abort(401, 'Kennwort zurücksetzen funktioniert nicht. Code falsch oder Zeit abgelaufen.');
+            }
 
-            if ($data['password'] != $data['password_repeat']) abort(401, "Kennwort zurücksetzen funktioniert nicht. Kennwort und Wiederholung Kennwort sind nicht identisch");
+            if ($data['password'] != $data['password_repeat']) {
+                abort(401, 'Kennwort zurücksetzen funktioniert nicht. Kennwort und Wiederholung Kennwort sind nicht identisch');
+            }
         }
 
         return $user;
     }
 
-
     public function checkRegister($data): User | null
     {
         if ($user = User::where('email', $data['email'])->first()) {
-            if (!$user->register_started_at) abort(401, "Registrieren funktioniert mit dieser E-Mail-Adresse nicht");
+            if (! $user->register_started_at) {
+                abort(401, 'Registrieren funktioniert mit dieser E-Mail-Adresse nicht');
+            }
         }
 
         if ($data['step'] == 'REGISTER_ENTER_TOKEN') {
-            if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Registrieren funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+            if (! $user->checkToken2Fa($data['token_2fa'])) {
+                abort(401, 'Registrieren funktioniert nicht. Code falsch oder Zeit abgelaufen.');
+            }
         }
 
         if ($data['step'] == 'REGISTER_ENTER_FIELDS') {
-            if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Registrieren funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+            if (! $user->checkToken2Fa($data['token_2fa'])) {
+                abort(401, 'Registrieren funktioniert nicht. Code falsch oder Zeit abgelaufen.');
+            }
 
-            if (!$data['last_name']) abort(401, "Kennwort zurücksetzen funktioniert nicht. Nachname darf nicht leer sein.");
+            if (! $data['last_name']) {
+                abort(401, 'Kennwort zurücksetzen funktioniert nicht. Nachname darf nicht leer sein.');
+            }
 
-            if ($data['password'] != $data['password_repeat']) abort(401, "Kennwort zurücksetzen funktioniert nicht. Kennwort und Wiederholung Kennwort sind nicht identisch");
+            if ($data['password'] != $data['password_repeat']) {
+                abort(401, 'Kennwort zurücksetzen funktioniert nicht. Kennwort und Wiederholung Kennwort sind nicht identisch');
+            }
         }
 
         return $user;
@@ -69,6 +93,7 @@ class AdminService
                 'is_active' => false,
             ]
         );
+
         return $user;
     }
 
@@ -82,22 +107,35 @@ class AdminService
             'confirmed_at' => config('spa.registered_admin_must_be_confirmed') ? null : now(),
             'is_active' => config('spa.registered_admin_must_be_confirmed') ? 0 : 1,
         ]);
+
         return $user;
     }
 
     public function checkUserLogin($data): User
     {
-        if (!$user = User::where('email', $data['email'])->first()) abort(401, "Login funktioniert mit dieser E-Mail-Adresse nicht");
-        if (!$user->confirmed_at) abort(423, "Benutzer ist noch nicht bestätigt");
-        if (!$user->is_active) abort(423, "Benutzer ist gesperrt");
+        if (! $user = User::where('email', $data['email'])->first()) {
+            abort(401, 'Login funktioniert mit dieser E-Mail-Adresse nicht');
+        }
+        if (! $user->confirmed_at) {
+            abort(423, 'Benutzer ist noch nicht bestätigt');
+        }
+        if (! $user->is_active) {
+            abort(423, 'Benutzer ist gesperrt');
+        }
 
         if ($data['step'] == 'LOGIN_ENTER_PASSWORD') {
-            if (!Hash::check($data['password'], $user->password)) abort(401, "Login funktioniert mit diesem Kennwort nicht");
+            if (! Hash::check($data['password'], $user->password)) {
+                abort(401, 'Login funktioniert mit diesem Kennwort nicht');
+            }
         }
 
         if ($data['step'] == 'LOGIN_ENTER_TOKEN') {
-            if (!Hash::check($data['password'], $user->password)) abort(401, "Login funktioniert mit diesem Kennwort nicht");
-            if (!$user->checkToken2Fa($data['token_2fa']))  abort(401, "Login funktioniert nicht. Code falsch oder Zeit abgelaufen.");
+            if (! Hash::check($data['password'], $user->password)) {
+                abort(401, 'Login funktioniert mit diesem Kennwort nicht');
+            }
+            if (! $user->checkToken2Fa($data['token_2fa'])) {
+                abort(401, 'Login funktioniert nicht. Code falsch oder Zeit abgelaufen.');
+            }
         }
 
         return $user;
@@ -119,7 +157,6 @@ class AdminService
 
         Notification::route('mail', $user->email)->notify(new StandardEmail($data));
     }
-
 
     public function sendPasswordResetToken($select = 1, $user, $email)
     {
@@ -153,7 +190,6 @@ class AdminService
         Notification::route('mail', $email)->notify(new StandardEmail($data));
     }
 
-
     public function sendEmailValidationToken($select = 1, $user, $email)
     {
         $token_2fa = $user->setToken2Fa(config('spa.token_expire_time'), $select);
@@ -179,6 +215,7 @@ class AdminService
         if ($this->hasRoleOrIsSuperAdmin($user, ['admin'])) {
             $user_roles[] = $all_users;
         }
+
         return $user_roles;
     }
 
@@ -211,7 +248,7 @@ class AdminService
             $roles[] = $par_roles;
         }
 
-        if (!empty(config('spa.super_admin'))) {
+        if (! empty(config('spa.super_admin'))) {
             $roles[] = config('spa.super_admin');
         }
 

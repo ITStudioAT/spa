@@ -2,4 +2,6 @@
 
 namespace Itstudioat\Spa;
 
-class Spa {}
+class Spa
+{
+}

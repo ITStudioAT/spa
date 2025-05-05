@@ -9,13 +9,14 @@ use Itstudioat\Spa\Services\InstallUpdateService;
 
 class InstallUpdateController extends Controller
 {
-
     public function index(Request $request)
     {
         $installUpdateService = new InstallUpdateService();
 
         /* 1. User der Users-Tabelle laden */
-        if (!$user = User::query()->first()) abort(404, "1. Benutzer wurde nicht gefunden. Bitte mit php artsian user:create anlegen");
+        if (! $user = User::query()->first()) {
+            abort(404, '1. Benutzer wurde nicht gefunden. Bitte mit php artsian user:create anlegen');
+        }
 
         /* Rollen erzeugen */
         $roles = ['super_admin', 'admin'];

@@ -2,21 +2,15 @@
 
 namespace Itstudioat\Spa\Services;
 
-use app\Models\User;
-use Spatie\Permission\Models\Role;
 use Itstudioat\Spa\Enums\RouteResult;
-
-
 
 class RouteService
 {
-
-
     public function checkWebRoles($user, $data, $route_roles): RouteResult
     {
 
         $toPath = $data['to'] ?? null; // actual route like /admin/test_route/7
-        if (!$toPath) {
+        if (! $toPath) {
             return RouteResult::NOT_FOUND;
         }
 
@@ -27,13 +21,12 @@ class RouteService
         foreach ($rolesMap as $pattern => $roles) {
             if (self::matchesPath($pattern, $toPath)) {
                 $matchedKey = $pattern;
+
                 break;
             }
         }
 
-
-
-        if (!$matchedKey) {
+        if (! $matchedKey) {
             return RouteResult::NOT_EXISTS;
         }
 
@@ -43,11 +36,11 @@ class RouteService
             return RouteResult::ALLOWED;
         }
 
-        if (!$user) {
+        if (! $user) {
             return RouteResult::NOT_ALLOWED;
         }
 
-        if (!empty(config('spa.super_admin'))) {
+        if (! empty(config('spa.super_admin'))) {
             $requiredRoles[] = config('spa.super_admin');
         }
 
@@ -61,16 +54,10 @@ class RouteService
     public function checkApiRoles($user, $data, $route_roles): RouteResult
     {
 
-
-
         $toPath = $data['to'] ?? null;  // z.B. '/api/admin/users/7'
         $method = strtoupper($data['method'] ?? 'GET'); // HTTP-Methode
 
-
-
-
-
-        if (!$toPath) {
+        if (! $toPath) {
             return RouteResult::NOT_FOUND;
         }
 
@@ -88,13 +75,13 @@ class RouteService
         foreach ($rolesMap as $pattern => $roles) {
             if (self::matchesRoute($pattern, $routeKey)) {
                 $matchedKey = $pattern;
+
                 break;
             }
         }
 
-
         // Wenn keine Übereinstimmung gefunden wurde
-        if (!$matchedKey) {
+        if (! $matchedKey) {
             return RouteResult::NOT_EXISTS;
         }
 
@@ -106,12 +93,12 @@ class RouteService
         }
 
         // Wenn kein Benutzer eingeloggt ist, nicht erlauben
-        if (!$user) {
+        if (! $user) {
             return RouteResult::NOT_ALLOWED;
         }
 
         // Wenn super_admin in der Konfiguration gesetzt ist, füge ihn zu den erforderlichen Rollen hinzu
-        if (!empty(config('spa.super_admin'))) {
+        if (! empty(config('spa.super_admin'))) {
             $requiredRoles[] = config('spa.super_admin');
         }
 
@@ -122,8 +109,6 @@ class RouteService
 
         return RouteResult::NOT_ALLOWED;
     }
-
-
 
     private static function matchesPath(string $pattern, string $path): bool
     {

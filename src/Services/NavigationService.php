@@ -3,21 +3,20 @@
 namespace Itstudioat\Spa\Services;
 
 use App\Models\User;
-use Spatie\Permission\Models\Role;
-use Itstudioat\Spa\Enums\RouteResult;
 use Itstudioat\Spa\Traits\HasRoleTrait;
-
-
 
 class NavigationService
 {
     use HasRoleTrait;
+
     public function menu(): array
     {
         $menu = [];
-        if (!auth()->check()) return [];
+        if (! auth()->check()) {
+            return [];
+        }
 
-        $user  = User::findOrFail(auth()->user()->id);
+        $user = User::findOrFail(auth()->user()->id);
         $user_name = substr($user->last_name . ' ' . $user->first_name, 0, 17);
 
         $menu[] = ['title' => 'Home', 'icon' => 'mdi-home', 'to' => '/admin'];
@@ -34,7 +33,6 @@ class NavigationService
 
         // PROFILE
         $menu[] = ['title' => $user_name, 'icon' => 'mdi-account', 'to' => '/admin/profile'];
-
 
         // ABMELDEN
         $menu[] = ['title' => 'Abmelden', 'icon' => 'mdi-power-cycle', 'click' => 'logout'];

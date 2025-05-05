@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Itstudioat\Spa\Commands;
 
 use Illuminate\Console\Command;
@@ -17,8 +16,9 @@ class SpaPackages extends Command
         // package.json
         $packageJsonPath = base_path('package.json');
 
-        if (!file_exists($packageJsonPath)) {
+        if (! file_exists($packageJsonPath)) {
             $this->error('package.json not found.');
+
             return;
         }
 
@@ -35,7 +35,6 @@ class SpaPackages extends Command
         $json['devDependencies']['axios'] = '^1.6.4';
         $json['devDependencies']['laravel-vite-plugin'] = '^1.0';
         $json['devDependencies']['vite'] = '^5.0';
-
 
         ksort($json['dependencies']);
         ksort($json['devDependencies']);

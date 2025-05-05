@@ -3,11 +3,8 @@
 use Itstudioat\Spa\SpaServiceProvider;
 use Spatie\Permission\PermissionServiceProvider;
 
-
-
 class TestCase extends Orchestra
 {
-
     /**
      * Set up the environment before each test.
      */

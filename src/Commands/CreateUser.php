@@ -2,7 +2,6 @@
 
 namespace Itstudioat\Spa\Commands;
 
-
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
@@ -25,6 +24,7 @@ class CreateUser extends Command
         // Validierung
         if (User::where('email', $email)->exists()) {
             $this->error('Diese E-Mail-Adresse existiert bereits!');
+
             return;
         }
 

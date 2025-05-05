@@ -2,8 +2,8 @@
 
 namespace Itstudioat\Spa\Commands;
 
-use Illuminate\Http\Request;
 use Illuminate\Console\Command;
+use Illuminate\Http\Request;
 use Itstudioat\Spa\Http\Controllers\Spa\InstallUpdateController;
 
 class SpaUpdate extends Command
@@ -20,7 +20,7 @@ class SpaUpdate extends Command
         $request = Request::create('', 'GET');
         $response = $controller->index($request);
 
-        $this->info("✅ Das Update wurde erfolreich ausgeführt!");
+        $this->info('✅ Das Update wurde erfolreich ausgeführt!');
 
         return Command::SUCCESS;
     }

@@ -2,29 +2,26 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
-use Illuminate\Support\Arr;
-use Illuminate\Http\Request;
-use Composer\InstalledVersions;
 use App\Http\Controllers\Controller;
+use Composer\InstalledVersions;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Itstudioat\Spa\Services\AdminService;
-use Itstudioat\Spa\Services\NavigationService;
-use Itstudioat\Spa\Http\Resources\Admin\UserResource;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep1Request;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep2Request;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep3Request;
-use Itstudioat\Spa\Http\Requests\Admin\RegisterStep1Request;
-use Itstudioat\Spa\Http\Requests\Admin\RegisterStep2Request;
-use Itstudioat\Spa\Http\Requests\Admin\RegisterStep3Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep1Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep2Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep3Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep4Request;
-
+use Itstudioat\Spa\Http\Requests\Admin\RegisterStep1Request;
+use Itstudioat\Spa\Http\Requests\Admin\RegisterStep2Request;
+use Itstudioat\Spa\Http\Requests\Admin\RegisterStep3Request;
+use Itstudioat\Spa\Http\Resources\Admin\UserResource;
+use Itstudioat\Spa\Services\AdminService;
+use Itstudioat\Spa\Services\NavigationService;
 
 class AdminController extends Controller
 {
-
     public function config(Request $request)
     {
         $navigationService = new NavigationService();
@@ -47,10 +44,13 @@ class AdminController extends Controller
 
     public function managableUserRoles(Request $request)
     {
-        if (!$auth_user = $this->userHasRole(['admin'])) abort(403, 'Sie haben keine Berechtigung');
+        if (! $auth_user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
         $adminService = new AdminService();
 
         $data = ['user_roles' => $adminService->managableUserRoles($auth_user)];
+
         return response()->json($data, 200);
     }
 
@@ -60,11 +60,14 @@ class AdminController extends Controller
         $validated = $request->validated();
 
         $user = $adminService->checkRegister($validated['data']);
-        if (!$user)  $user = $adminService->createRegisterUser($validated['data']);
+        if (! $user) {
+            $user = $adminService->createRegisterUser($validated['data']);
+        }
 
         // Token zusenden
         $adminService->sendRegisterToken(1, $user, $validated['data']['email']);
         $data = ['step' => 'REGISTER_ENTER_TOKEN'];
+
         return response()->json($data, 200);
     }
 
@@ -80,18 +83,21 @@ class AdminController extends Controller
         $user->save();
 
         $data = ['step' => 'REGISTER_ENTER_FIELDS'];
+
         return response()->json($data, 200);
     }
 
     public function registerStep3(RegisterStep3Request $request)
     {
         $adminService = new AdminService();
+
         $validated = $request->validated();
 
         $user = $adminService->checkRegister($validated['data']);
         $user = $adminService->updateRegisterUser($user, $validated['data']);
 
         $data = ['step' => $user->confirmed_at ? 'REGISTER_FINISHED' : 'REGISTER_MUST_BE_CONFIRMED'];
+
         return response()->json($data, 200);
     }
 
@@ -104,6 +110,7 @@ class AdminController extends Controller
         // Token zusenden
         $adminService->sendPasswordResetToken(1, $user, $user->email);
         $data = ['step' => 'PASSWORD_UNKNOWN_ENTER_TOKEN'];
+
         return response()->json($data, 200);
     }
 
@@ -113,18 +120,22 @@ class AdminController extends Controller
         $validated = $request->validated();
 
         $user = $adminService->checkPasswordUnknown($validated['data']);
-        if (!$user->is_2fa) {
+        if (! $user->is_2fa) {
             $data = ['step' => 'PASSWORD_UNKNOWN_SUCCESS'];
+
             return response()->json($data, 200);
         }
 
         // User hat 2-Faktoren-Authentifizierung, es existiert jedoch keine 2. E-Mail
-        if (!$user->email_2fa) abort(401, "Kennwort zurücksetzen funktioniert nicht. Sie haben keine weitere E-Mail-Adresse.");
+        if (! $user->email_2fa) {
+            abort(401, 'Kennwort zurücksetzen funktioniert nicht. Sie haben keine weitere E-Mail-Adresse.');
+        }
 
         // Token 2 zusenden
         $adminService->sendPasswordResetToken(2, $user, $user->email_2fa);
 
         $data = ['step' => 'PASSWORD_UNKNOWN_ENTER_TOKEN_2'];
+
         return response()->json($data, 200);
     }
 
@@ -134,9 +145,12 @@ class AdminController extends Controller
         $validated = $request->validated();
 
         $user = $adminService->checkPasswordUnknown($validated['data']);
-        if (!$user->is_2fa) abort(401, "Kennwort zurücksetzen funktioniert nicht. 2-Faktoren-Authentifizierung ist nicht aktiviert.");
+        if (! $user->is_2fa) {
+            abort(401, 'Kennwort zurücksetzen funktioniert nicht. 2-Faktoren-Authentifizierung ist nicht aktiviert.');
+        }
 
         $data = ['step' => 'PASSWORD_UNKNOWN_ENTER_PASSWORD'];
+
         return response()->json($data, 200);
     }
 
@@ -149,9 +163,9 @@ class AdminController extends Controller
         $user->setPassword($validated['data']['password']);
 
         $data = ['step' => 'PASSWORD_UNKNOWN_FINISHED'];
+
         return response()->json($data, 200);
     }
-
 
     public function loginStep1(LoginStep1Request $request)
     {
@@ -160,6 +174,7 @@ class AdminController extends Controller
 
         $user = $adminService->checkUserLogin($validated['data']);
         $data = ['step' => 'LOGIN_ENTER_PASSWORD'];
+
         return response()->json($data, 200);
     }
 
@@ -174,6 +189,7 @@ class AdminController extends Controller
             // Bei Benutzer ist 2-Faktoren-Authentifizierung aktiviert => wir brauchen einen Code
             $adminService->continueLoginFor2FaUser($user);
             $data = ['step' => 'LOGIN_ENTER_TOKEN'];
+
             return response()->json($data, 200);
         } else {
             // Keine 2-Faktoren-Authentifizierung ==> Login fertig
@@ -185,6 +201,7 @@ class AdminController extends Controller
                 'user' => $user,
             ];
             $user->rememberLogin();
+
             return response()->json($data, 200);
         }
     }
@@ -203,12 +220,15 @@ class AdminController extends Controller
             'user' => $user,
         ];
         $user->rememberLogin();
+
         return response()->json($data, 200);
     }
 
     public function executeLogout(Request $request)
     {
-        if (!auth()->check()) abort(400, "Sie sind gar nicht eingeloggt.");
+        if (! auth()->check()) {
+            abort(400, 'Sie sind gar nicht eingeloggt.');
+        }
         auth('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

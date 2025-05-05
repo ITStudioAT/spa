@@ -4,8 +4,8 @@ namespace Itstudioat\Spa\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Itstudioat\Spa\Services\RouteService;
 use Itstudioat\Spa\Enums\RouteResult;
+use Itstudioat\Spa\Services\RouteService;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiAllowed
@@ -40,16 +40,13 @@ class ApiAllowed
 
         $routeFile = base_path('routes/meta/api/' . $routeGroup . '.php');
 
-
-
-        if (!file_exists($routeFile)) {
+        if (! file_exists($routeFile)) {
             return response()->json([
                 'status' => 404,
                 'message' => 'Die Seite konnte nicht gefunden werden',
                 'type' => 'error',
             ], 404);
         }
-
 
         $route_roles = require $routeFile;
 
@@ -68,15 +65,18 @@ class ApiAllowed
             case RouteResult::NOT_ALLOWED:
                 $status = 403;
                 $message = 'Sie dürfen diese Aktion nicht ausführen';
+
                 break;
 
             case RouteResult::NOT_EXISTS:
                 return $next($request); // Zugriff erlaubt
+
                 break;
 
             case RouteResult::NOT_FOUND:
                 $status = 404;
                 $message = 'Fehlerhafte Routenprüfung (Route nicht gefunden)';
+
                 break;
 
             default:
