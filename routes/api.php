@@ -5,12 +5,11 @@ use Illuminate\Support\Facades\Route;
 use Itstudioat\Spa\Http\Controllers\Spa\RouteController;
 use Itstudioat\Spa\Http\Controllers\Admin\UserController;
 use Itstudioat\Spa\Http\Controllers\Admin\AdminController;
+use Itstudioat\Spa\Http\Controllers\Admin\NavigationController;
 use Itstudioat\Spa\Http\Controllers\Homepage\HomepageController;
 
 // Globales Throttle
-Route::middleware(['throttle:global', 'throttle:api', 'api-allowed'])->group(function () {
-
-
+Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
 
 
     /***** OTHER ROUTES *****/
@@ -38,9 +37,16 @@ Route::middleware(['throttle:global', 'throttle:api', 'api-allowed'])->group(fun
     Route::post('/admin/register_step_3',  [AdminController::class, 'registerStep3']);
 
     /* SANCTUM */
-    Route::middleware(['auth:sanctum'])->group(function () {
+    Route::middleware(['auth:sanctum', 'api-allowed:admin'])->group(function () {
+
+
         Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);
-        Route::get('/admin/managable_user_roles',  [AdminController::class, 'managableUserRoles']);
+
+        // navigation, menus
+        Route::get('/admin/navigation/profile_menu',  [NavigationController::class, 'profileMenu']);
+        Route::get('/admin/navigation/user_menu',  [NavigationController::class, 'userMenu']);
+
+        // users
         Route::apiResource('/admin/users', UserController::class);
         Route::put('/admin/users/update_profile/{user}',  [UserController::class, 'updateProfile']);
         Route::post('/admin/users/destroy_multiple',  [UserController::class, 'destroyMultiple']);

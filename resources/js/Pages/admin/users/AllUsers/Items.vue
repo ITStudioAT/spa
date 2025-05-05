@@ -49,7 +49,7 @@
                     <!-- Show item (=one line) -->
                     <template v-slot:content="{ item }">
                         <v-col cols="12" lg="6">{{ item.last_name + ' ' + (item.first_name || '')
-                            }}</v-col>
+                        }}</v-col>
                         <v-col cols="12" lg="6">{{ item.email }}</v-col>
                     </template>
 
@@ -81,11 +81,8 @@ import ItsTable from "@/pages/components/ItsTable.vue";
 import ItemShow from "./ItemShow.vue";
 
 export default {
-
     components: { ItsButton, ItsTable, ItemShow },
     beforeMount() {
-
-
     },
 
     data() {

@@ -2,29 +2,30 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Composer\InstalledVersions;
 use Illuminate\Http\Request;
+use Composer\InstalledVersions;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Itstudioat\Spa\Services\AdminService;
+use Itstudioat\Spa\Services\AdminNavigationService;
+use Itstudioat\Spa\Http\Resources\Admin\UserResource;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep1Request;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep2Request;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep3Request;
+use Itstudioat\Spa\Http\Requests\Admin\RegisterStep1Request;
+use Itstudioat\Spa\Http\Requests\Admin\RegisterStep2Request;
+use Itstudioat\Spa\Http\Requests\Admin\RegisterStep3Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep1Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep2Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep3Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep4Request;
-use Itstudioat\Spa\Http\Requests\Admin\RegisterStep1Request;
-use Itstudioat\Spa\Http\Requests\Admin\RegisterStep2Request;
-use Itstudioat\Spa\Http\Requests\Admin\RegisterStep3Request;
-use Itstudioat\Spa\Http\Resources\Admin\UserResource;
-use Itstudioat\Spa\Services\AdminService;
-use Itstudioat\Spa\Services\NavigationService;
+
 
 class AdminController extends Controller
 {
     public function config(Request $request)
     {
-        $navigationService = new NavigationService();
+        $navigationService = new AdminNavigationService();
 
         $data = [
             'logo' => config('spa.logo', ''),
@@ -36,23 +37,12 @@ class AdminController extends Controller
             'timeout' => config('spa.timeout', 3000),
             'is_auth' => auth()->check(),
             'user' => auth()->check() ? new UserResource(auth()->user()) : null,
-            'menu' => $navigationService->menu(),
+            'menu' => $navigationService->dashboardMenu(),
         ];
 
         return response()->json($data, 200);
     }
 
-    public function managableUserRoles(Request $request)
-    {
-        if (! $auth_user = $this->userHasRole(['admin'])) {
-            abort(403, 'Sie haben keine Berechtigung');
-        }
-        $adminService = new AdminService();
-
-        $data = ['user_roles' => $adminService->managableUserRoles($auth_user)];
-
-        return response()->json($data, 200);
-    }
 
     public function registerStep1(RegisterStep1Request $request)
     {

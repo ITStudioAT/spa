@@ -137,7 +137,7 @@ composer require symfony/http-client
 ## Permissions for routes ##
 ### Web-Routes ###
 Under routes/meta/web there is for each route.js-file a php-file.
-Here you may define, which routes need which (spatie-)roles.
+Here you may define, which route needs which (spatie-)roles.
 if the array is empty, no permission is needed.
 
 With a simple command you can synchronize these files.
@@ -147,21 +147,19 @@ The php-file is made actual with the route-js-file as basis:
 ```
 
 ### Api-Routes ###
-Under routes/meta/api there must exist a file for each api-route.
-If you have following api-routes: 
-/admin/config
-/routes/check
-You must have two files:
-admin.php
-routes.php
 
-There you may define routes, which are protected with roles.
+Api-Routes may secured with the 'api-allowed'-Middleware followed from the allowed roles.
+In this example all users with the role admin may pass the apis
+```bash
+    Route::middleware(['auth:sanctum', 'api-allowed:admin'])->group(function () {
+        ...
+```
 
 
 ### Sending E-Mails ###
 That everything works fine, sending E-Mails must be configured.
 I use Postmark for Mailing and everything is fine.
-You can find more infos under Laravel/Notifications
+You can find more infos under Laravel/Notifications.
 
 ## Changelog
 

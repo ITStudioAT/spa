@@ -57,6 +57,7 @@ class SpaServiceProvider extends PackageServiceProvider
             __DIR__ . '/../routes' => base_path('/routes'),
             __DIR__ . '/../src/Models' => app_path('/Models'),
             __DIR__ . '/../src/Providers' => app_path('/Providers'),
+            __DIR__ . '/../src/Services' => app_path('/Services'),
             __DIR__ . '/../stubs/images' => storage_path('/app/public/images'),
         ], 'spa-once');
 

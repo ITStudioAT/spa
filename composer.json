@@ -79,7 +79,10 @@
         "laravel": {
             "providers": [
                 "Itstudioat\\Spa\\SpaServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "Spa": "Itstudioat\\Spa\\Facades\\Spa"
+            }
         }
     },
     "minimum-stability": "dev",

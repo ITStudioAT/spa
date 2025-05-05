@@ -2,9 +2,13 @@
     <v-container fluid class="ma-0 w-100 pa-2">
         <!-- Menüleiste oben -->
         <v-row class="d-flex flex-row ga-2 mb-2 mt-0 w-100" no-gutters>
+            <!--
             <its-button subtitle="Home" icon="mdi-home" color="secondary" to="/admin" />
             <its-button subtitle="Kennwort ändern" icon="mdi-form-textbox-password" color="secondary"
                 @click="wantToChangePassword" />
+                -->
+            <its-button :title="item.title" :subtitle="item.subtitle" :icon="item.icon" :to="item.to"
+                :color="item.color" @click="runAction(item.action)" v-for="(item, i) in navigationStore.menu" />
         </v-row>
         <v-row class="w-100" no-gutters>
             <v-col cols="12" sm="6" md="4" xl="3">
@@ -136,7 +140,7 @@ import { useValidationRulesSetup } from "@/helpers/rules";
 import { mapWritableState } from "pinia";
 import { useAdminStore } from "@/stores/admin/AdminStore";
 import { useUserStore } from "@/stores/admin/UserStore";
-import { useNotificationStore } from "@/stores/spa/NotificationStore";
+import { useNavigationStore } from "@/stores/admin/NavigationStore";
 import ItsButton from "@/pages/components/ItsButton.vue";
 import ItsGridBox from "@/pages/components/ItsGridBox.vue";
 
@@ -150,6 +154,9 @@ export default {
         this.adminStore = useAdminStore(); this.adminStore.initialize(this.$router);
         this.userStore = useUserStore(); this.userStore.initialize(this.$router);
 
+        this.navigationStore = useNavigationStore();
+        await this.navigationStore.loadMenu('profile_menu');
+
         await this.userStore.show(this.config.user.id);
         if (this.user) this.data = JSON.parse(JSON.stringify(this.user));
 
@@ -162,6 +169,7 @@ export default {
         return {
             adminStore: null,
             userStore: null,
+            navigationStore: null,
             is_valid: false,
             data: {},
             is_edit: false,
@@ -230,6 +238,12 @@ export default {
                 this.abort();
             }
 
+        },
+
+        runAction(methodName) {
+            if (typeof this[methodName] === 'function') {
+                this[methodName]();
+            }
         }
 
 

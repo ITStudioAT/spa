@@ -1,7 +1,10 @@
 <?php
 
+namespace Itstudioat\Spa\Tests;
+
+use Orchestra\Testbench\TestCase as Orchestra;
 use Itstudioat\Spa\SpaServiceProvider;
-use Spatie\Permission\PermissionServiceProvider;
+
 
 class TestCase extends Orchestra
 {
@@ -11,16 +14,6 @@ class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->loadLaravelMigrations();
-        $this->artisan('vendor:publish', [
-            '--provider' => 'Spatie\Permission\PermissionServiceProvider',
-            '--tag' => 'migrations',
-        ]);
-
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations'); // if your package has migrations
-
-        $this->artisan('migrate');
     }
 
     /**
@@ -30,7 +23,6 @@ class TestCase extends Orchestra
     {
         return [
             SpaServiceProvider::class, // Register the package's service provider
-            PermissionServiceProvider::class,
         ];
     }
 
