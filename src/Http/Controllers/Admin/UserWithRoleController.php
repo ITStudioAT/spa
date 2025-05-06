@@ -2,24 +2,23 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Itstudioat\Spa\Services\AdminService;
-use Itstudioat\Spa\Traits\PaginationTrait;
-use Itstudioat\Spa\Http\Resources\Admin\RoleResource;
-use Itstudioat\Spa\Http\Resources\Admin\UserWithRoleResource;
-use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
 use Itstudioat\Spa\Http\Requests\Admin\IndexUserWithRoleRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
 use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
 use Itstudioat\Spa\Http\Requests\Admin\SaveUserRoleRequest;
+use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
+use Itstudioat\Spa\Http\Resources\Admin\RoleResource;
+use Itstudioat\Spa\Http\Resources\Admin\UserWithRoleResource;
+use Itstudioat\Spa\Services\AdminService;
+use Itstudioat\Spa\Traits\PaginationTrait;
 
 class UserWithRoleController extends Controller
 {
@@ -33,7 +32,7 @@ class UserWithRoleController extends Controller
 
         $roles = Role::whereNotIn('name', ['super_admin'])->orderBy('name')->get();
         $roleResource = RoleResource::collection($roles);
-        $data = ['roles' =>  $roleResource];
+        $data = ['roles' => $roleResource];
 
         session(['roles' => $roleResource->resolve()]);
         $roles = session('roles', []);
@@ -50,7 +49,9 @@ class UserWithRoleController extends Controller
         $validated = $request->validated();
 
         $user = User::findOrFail($validated['id']);
-        if ($user->hasRole('super_admin')) $validated['roles'][] = "super_admin";
+        if ($user->hasRole('super_admin')) {
+            $validated['roles'][] = 'super_admin';
+        }
 
         $user->syncRoles($validated['roles']);
     }
@@ -78,7 +79,6 @@ class UserWithRoleController extends Controller
         if (isset($search_model['role'])) {
             $query->role($search_model['role']);
         }
-
 
         $pagination = UserWithRoleResource::collection($query->paginate(config('spa.pagination')));
 

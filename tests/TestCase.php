@@ -2,11 +2,10 @@
 
 namespace Itstudioat\Spa\Tests;
 
-
-use Illuminate\Http\Request;
-use Itstudioat\Spa\SpaServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Itstudioat\Spa\SpaServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra

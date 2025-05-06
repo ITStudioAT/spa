@@ -12,8 +12,12 @@ class Role extends SpatieRole
     {
 
         // Irgend ein User hat die Rolle noch zugeordnet
-        if ($this->users()->exists()) return false;
-        if ($this->name == 'super_admin') return false;
+        if ($this->users()->exists()) {
+            return false;
+        }
+        if ($this->name == 'super_admin') {
+            return false;
+        }
 
         $this->delete();
 

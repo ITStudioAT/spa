@@ -22,7 +22,6 @@ trait HasRoleTrait
         // Wenn super_admin in der Konfiguration gesetzt ist, füge ihn zu den erforderlichen Rollen hinzu
         $roles[] = 'super_admin';
 
-
         if (! $user->hasAnyRole($roles)) {
             return false;
         }

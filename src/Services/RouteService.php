@@ -98,7 +98,6 @@ class RouteService
         // Wenn super_admin in der Konfiguration gesetzt ist, füge ihn zu den erforderlichen Rollen hinzu
         $requiredRoles[] = 'super_admin';
 
-
         // Überprüfe, ob der Benutzer die erforderlichen Rollen hat
         if ($user->hasAnyRole($requiredRoles)) {
             return RouteResult::ALLOWED;
