@@ -7,6 +7,8 @@ import Dashboard from '@/pages/admin/dashboard/Dashboard.vue'
 import Profile from '@/pages/admin/profile/Profile.vue'
 import Users from '@/pages/admin/users/Users.vue'
 import Users_AllUsers from '@/pages/admin/users/AllUsers/Items.vue'
+import Users_Roles from '@/pages/admin/users/Roles/Items.vue'
+import Users_UsersWithRoles from '@/pages/admin/users/UsersWithRoles/Items.vue'
 
 
 const routes = [
@@ -18,6 +20,8 @@ const routes = [
     { path: '/admin/profile', component: Profile },
     { path: '/admin/users', component: Users },
     { path: '/admin/users/all_users', component: Users_AllUsers },
+    { path: '/admin/users/roles', component: Users_Roles },
+    { path: '/admin/users/users_with_roles', component: Users_UsersWithRoles },
 ];
 
 const router = createRouter({

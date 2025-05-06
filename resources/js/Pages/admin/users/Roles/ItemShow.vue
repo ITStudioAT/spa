@@ -2,27 +2,9 @@
     <v-card flat rounded="0">
         <v-card-text>
             <v-form ref="form" v-model="is_valid" :disabled="!is_edit">
-                <v-text-field autofocus v-model="data.last_name" label="Nachname"
+                <v-text-field autofocus v-model="data.name" label="Name der Rolle"
                     :rules="[required(), maxLength(255)]" />
-                <v-text-field v-model="data.first_name" label="Vorname" :rules="[maxLength(255)]" />
-                <v-text-field v-model="data.email" label="E-Mail" :rules="[required(), mail(), maxLength(255)]" />
-                <v-switch true-icon="mdi-check" v-model="data.is_active" label="Aktiv" hide-details color="success"
-                    :base-color="data.is_active ? 'success' : 'error'" />
-                <v-switch true-icon="mdi-check" v-model="data.is_confirmed"
-                    :label="data.is_confirmed ? 'Account am ' + (data.confirmed_at || new Date().toLocaleDateString('de-AT')) + ' bestätigt' : 'Account bestätigt'"
-                    hide-details color="success" :base-color="data.is_confirmed ? 'success' : 'error'" />
-                <v-switch true-icon="mdi-check" v-model="data.is_verified"
-                    :label="data.is_verified ? 'E-Mail am ' + (data.email_verified_at || new Date().toLocaleDateString('de-AT')) + ' verifiziert' : 'E-Mail verifiziert'"
-                    hide-details color="success" :base-color="data.is_verified ? 'success' : 'error'" disbled />
-                <v-switch true-icon="mdi-check" v-model="data.is_2fa" label="2-Faktoren-Authentifizierung" hide-details
-                    color="success" :base-color="data.is_2fa ? 'success' : 'error'" />
             </v-form>
-
-            <div class="d-flex flex-row align-center ga-2 my-4 text-text" v-if="data.login_at">
-                <div>Letztes Login:</div>
-                <div>{{ data.login_at }}</div>
-                <div>IP: {{ data.login_ip }}</div>
-            </div>
 
             <v-row no-gutters>
                 <v-col cols=12 sm=6>

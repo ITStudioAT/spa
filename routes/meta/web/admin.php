@@ -14,5 +14,7 @@ return [
         '/admin/profile' => ['admin'],
         '/admin/users' => ['admin'],
         '/admin/users/all_users' => ['admin'],
+        '/admin/users/roles' => ['admin'],
+        '/admin/users/users_with_roles' => ['admin'],
     ]
 ];

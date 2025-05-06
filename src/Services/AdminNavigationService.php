@@ -54,8 +54,9 @@ class AdminNavigationService
     public function userMenu(): array
     {
         $menu = [];
-        if ($this->userHasRole(['admin'])) {
-            $menu[] = ['title' => '', 'subtitle' => 'Home', 'icon' => 'mdi-home', 'color' => 'secondary',  'to' => '/admin'];
+        $menu[] = ['title' => '', 'subtitle' => 'Home', 'icon' => 'mdi-home', 'color' => 'secondary',  'to' => '/admin'];
+        if ($this->userHasRole(['super_admin'])) {
+            $menu[] = ['title' => '', 'subtitle' => 'Rollen', 'icon' => 'mdi-badge-account-horizontal-outline', 'color' => 'secondary',  'to' => '/admin/users/roles'];
         }
 
         return $menu;

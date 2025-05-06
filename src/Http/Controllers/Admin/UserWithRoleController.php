@@ -2,26 +2,60 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
-use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
-use Itstudioat\Spa\Http\Resources\Admin\UserResource;
 use Itstudioat\Spa\Services\AdminService;
 use Itstudioat\Spa\Traits\PaginationTrait;
+use Itstudioat\Spa\Http\Resources\Admin\RoleResource;
+use Itstudioat\Spa\Http\Resources\Admin\UserWithRoleResource;
+use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
+use Itstudioat\Spa\Http\Requests\Admin\IndexUserWithRoleRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SaveUserRoleRequest;
 
-class UserController extends Controller
+class UserWithRoleController extends Controller
 {
     use PaginationTrait;
 
-    public function index(IndexUserRequest $request)
+    public function roles(Request $request)
+    {
+        if (! $auth_user = $this->userHasRole(['super_admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
+
+        $roles = Role::whereNotIn('name', ['super_admin'])->orderBy('name')->get();
+        $roleResource = RoleResource::collection($roles);
+        $data = ['roles' =>  $roleResource];
+
+        session(['roles' => $roleResource->resolve()]);
+        $roles = session('roles', []);
+
+        return response()->json($data, 200);
+    }
+
+    public function saveUserRoles(SaveUserRoleRequest $request)
+    {
+        if (! $auth_user = $this->userHasRole(['super_admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
+
+        $validated = $request->validated();
+
+        $user = User::findOrFail($validated['id']);
+        if ($user->hasRole('super_admin')) $validated['roles'][] = "super_admin";
+
+        $user->syncRoles($validated['roles']);
+    }
+
+    public function index(IndexUserWithRoleRequest $request)
     {
         if (! $auth_user = $this->userHasRole(['admin'])) {
             abort(403, 'Sie haben keine Berechtigung');
@@ -29,42 +63,6 @@ class UserController extends Controller
         $validated = $request->validated();
         $search_model = $validated['search_model'] ?? [];
         $query = User::orderBy('last_name')->orderBy('first_name');
-
-        // is_active
-        if (isset($search_model['is_active'])) {
-            if ($search_model['is_active'] === '1') {
-                $query->where('is_active', true);
-            } elseif ($search_model['is_active'] === '2') {
-                $query->where('is_active', false);
-            }
-        }
-
-        // is_confirmed (based on confirmed_at)
-        if (isset($search_model['is_confirmed'])) {
-            if ($search_model['is_confirmed'] === '1') {
-                $query->whereNotNull('confirmed_at');
-            } elseif ($search_model['is_confirmed'] === '2') {
-                $query->whereNull('confirmed_at');
-            }
-        }
-
-        // is_verified (based on email_verified_at)
-        if (isset($search_model['is_verified'])) {
-            if ($search_model['is_verified'] === '1') {
-                $query->whereNotNull('email_verified_at');
-            } elseif ($search_model['is_verified'] === '2') {
-                $query->whereNull('email_verified_at');
-            }
-        }
-
-        // is_2fa
-        if (isset($search_model['is_2fa'])) {
-            if ($search_model['is_2fa'] === '1') {
-                $query->where('is_2fa', true);
-            } elseif ($search_model['is_2fa'] === '2') {
-                $query->where('is_2fa', false);
-            }
-        }
 
         // search_string (optional)
         if (! empty($search_model['search_string'])) {
@@ -76,7 +74,13 @@ class UserController extends Controller
             });
         }
 
-        $pagination = UserResource::collection($query->paginate(config('spa.pagination')));
+        // is_active
+        if (isset($search_model['role'])) {
+            $query->role($search_model['role']);
+        }
+
+
+        $pagination = UserWithRoleResource::collection($query->paginate(config('spa.pagination')));
 
         return response()->json($this->makePagination($pagination), 200);
     }
@@ -94,7 +98,7 @@ class UserController extends Controller
 
         $user = User::create($validated);
 
-        return response()->json(new UserResource($user), 200);
+        return response()->json(new UserWithRoleResource($user), 200);
     }
 
     public function show(User $user)
@@ -103,7 +107,7 @@ class UserController extends Controller
             abort(403, 'Sie haben keine Berechtigung');
         }
 
-        return response()->json(new UserResource($user), 200);
+        return response()->json(new UserWithRoleResource($user), 200);
     }
 
     public function update(UpdateUserRequest $request, User $user)
@@ -115,7 +119,7 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return response()->json(new UserResource($user), 200);
+        return response()->json(new UserWithRoleResource($user), 200);
     }
 
     private function convertConfirmedVerified($validated, $user = null)
@@ -207,7 +211,7 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return response()->json(new UserResource($user), 200);
+        return response()->json(new UserWithRoleResource($user), 200);
     }
 
     public function updateWithCode(UpdateUserWithCodeRequest $request)
@@ -222,7 +226,7 @@ class UserController extends Controller
         $validated['email_verified_at'] = now();
         $user->update($validated);
 
-        return response()->json(new UserResource($user), 200);
+        return response()->json(new UserWithRoleResource($user), 200);
     }
 
     public function savePassword(SavePasswordRequest $request)

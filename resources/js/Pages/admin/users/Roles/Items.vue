@@ -3,6 +3,8 @@
         <!-- Menüleiste oben -->
         <v-row class="d-flex flex-row ga-2 mb-2 mt-0 w-100" no-gutters>
             <its-button subtitle="Benutzer" icon="mdi-arrow-left" color="secondary" to="/admin/users" />
+            <its-button title="Benutzer" subtitle="mit Rollen" icon="mdi-relation-one-to-many" color="secondary"
+                to="/admin/users/users_with_roles" />
         </v-row>
 
         <!-- TABELLE -->
@@ -27,11 +29,11 @@
                 * @multiple_destroyed
                 **********************************************-->
                 <its-table :icon="icon" color="primary"
-                    :title="is_show_or_edit && data ? data.id ? data.last_name + ' ' + data.first_name : title_new : title"
+                    :title="is_show_or_edit && data ? data.id ? data.name : title_new : title"
                     :search_options="search_options" :model="this.model" :multiple="this.multiple" :data="data"
                     :data_multiple="data_multiple" :save_action="save_action" :destroy_action="destroy_action"
                     :destroy_multiple_action="destroy_multiple_action" :select_all="select_all"
-                    :show_search_field="show_search_field">
+                    :show_search_field="show_search_field" v-if="action == 'items'">
 
                     <!-- Menu on the top -->
                     <!-- You can comment out any of these actions  or the whole template-->
@@ -40,8 +42,6 @@
                         <v-card-text class="d-flex flex-row align-center ga-2">
                             <v-checkbox hide-details v-model="select_all"></v-checkbox>
                             <v-btn prepend-icon="mdi-plus" flat rounded="0" color="success" @click="add">Neu</v-btn>
-                            <v-btn prepend-icon="mdi-relation-one-to-many" flat rounded="0" color="secondary"
-                                @click="add" v-if="selected_items.length > 0">Rollen zuordnen</v-btn>
 
                             <v-btn :prepend-icon="selected_items.length == 1 ? 'mdi-delete' : 'mdi-delete-sweep'" flat
                                 rounded="0" color="error" v-if="selected_items.length > 0"
@@ -51,9 +51,7 @@
 
                     <!-- Show item (=one line) -->
                     <template v-slot:content="{ item }">
-                        <v-col cols="12" lg="6">{{ item.last_name + ' ' + (item.first_name || '')
-                            }}</v-col>
-                        <v-col cols="12" lg="6">{{ item.email }}</v-col>
+                        <v-col cols="12" lg="6">{{ item.name || '' }}</v-col>
                     </template>
 
                     <!-- Menu for each item-->
@@ -86,16 +84,17 @@ import ItemShow from "./ItemShow.vue";
 export default {
     components: { ItsButton, ItsTable, ItemShow },
     beforeMount() {
+        console.log("Roles.Items mounted");
     },
 
     data() {
         return {
-            model: 'users', // The used model
+            model: 'roles', // The used model
             multiple: true, // multi-selection of records (for deletion)
-            title: 'Benutzer', // Title, if all records are shown
-            title_new: 'Neuer Benutzer', // Title for a new record
-            icon: 'mdi-account-group', // Icon shown directly before the title
-            show_search_field: true, // Searach field should be shown
+            title: 'Rollen', // Title, if all records are shown
+            title_new: 'Neue Rolle', // Title for a new record
+            icon: 'mdi-badge-account-horizontal-outline', // Icon shown directly before the title
+            show_search_field: true, // Search field should be shown
             /********************************************* 
              * The search_options represents the filters of the search request
              * Each search_option is displayed on the items-screen and the user may select it
@@ -111,42 +110,7 @@ export default {
             **********************************************/
 
             search_options: [
-                {
-                    'type': 'toggle',
-                    'field': 'is_active',
-                    'options': [
-                        { 'name': 'Alle', 'value': 0, 'default': true },
-                        { 'name': 'Aktive', 'value': 1, },
-                        { 'name': 'Nicht aktive', 'value': 2 }
-                    ]
-                },
-                {
-                    'type': 'toggle',
-                    'field': 'is_confirmed',
-                    'options': [
-                        { 'name': 'Alle', 'value': 0, 'default': true },
-                        { 'name': 'Bestätigte', 'value': 1, },
-                        { 'name': 'Nicht Bestätigte', 'value': 2 }
-                    ]
-                },
-                {
-                    'type': 'toggle',
-                    'field': 'is_verified',
-                    'options': [
-                        { 'name': 'Alle', 'value': 0, 'default': true },
-                        { 'name': 'Verifizierte', 'value': 1, },
-                        { 'name': 'Nicht Verifizierte', 'value': 2 }
-                    ]
-                },
-                {
-                    'type': 'toggle',
-                    'field': 'is_2fa',
-                    'options': [
-                        { 'name': 'Alle', 'value': 0, 'default': true },
-                        { 'name': '2-Fakoren', 'value': 1 },
-                        { 'name': 'Ohne 2-Faktoren', 'value': 2 }
-                    ]
-                },
+
             ],
             save_action: 0,
             destroy_action: 0,
@@ -157,14 +121,14 @@ export default {
             data: {},
             data_multiple: [],
             event: null,
+            role: null,
+            action: 'items',
 
 
         };
     },
 
     methods: {
-
-
 
         save(data) {
             this.data = data;

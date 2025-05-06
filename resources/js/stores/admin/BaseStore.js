@@ -25,6 +25,7 @@ export function createBaseStore(modelName, itemKey = 'item') {
                 },
 
                 async index() {
+                    console.log("BASESTORE.INDEX");
                     const notification = useNotificationStore();
                     const adminStore = useAdminStore();
                     adminStore.is_loading++;
@@ -46,6 +47,7 @@ export function createBaseStore(modelName, itemKey = 'item') {
                 },
 
                 async show(id) {
+                    console.log("BASESTORE.SHOW");
                     const notification = useNotificationStore();
                     const adminStore = useAdminStore();
                     adminStore.is_loading++;
@@ -67,6 +69,7 @@ export function createBaseStore(modelName, itemKey = 'item') {
                 },
 
                 async update(data) {
+                    console.log("BASESTORE.UPDATE");
                     const notification = useNotificationStore();
                     const adminStore = useAdminStore();
                     adminStore.is_loading++;
@@ -92,6 +95,7 @@ export function createBaseStore(modelName, itemKey = 'item') {
                 },
 
                 async destroy(data) {
+                    console.log("BASESTORE.DESTROY");
                     const notification = useNotificationStore();
                     const adminStore = useAdminStore();
                     adminStore.is_loading++;

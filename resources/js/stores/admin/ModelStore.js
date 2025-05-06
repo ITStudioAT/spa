@@ -9,14 +9,29 @@ export const useModelStore = defineStore("AdminModelStore", {
         items: [],
         item: null,
         pagination: null,
+        reload: 0,
 
+        model: null,
+        search_model: null,
+        page: null,
     }),
 
     actions: {
         initialize(router) {
             this.router = router;
         },
+
+        async reload() {
+            if (!this.model || !this.search_model || !this.page) return;
+            this.index(this.model, this.search_model, this.page);
+        },
+
         async index(model, search_model, page = 1) {
+            this.model = model;
+            this.search_model = search_model;
+            this.page = page;
+
+            this.items = [];
             const notification = useNotificationStore();
             const adminStore = useAdminStore();
             adminStore.is_loading++;
