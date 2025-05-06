@@ -2,15 +2,15 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
-use App\Models\Role;
-
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Itstudioat\Spa\Traits\PaginationTrait;
-use Itstudioat\Spa\Http\Resources\Admin\RoleResource;
+
+use App\Models\Role;
+use Illuminate\Http\Request;
 use Itstudioat\Spa\Http\Requests\Admin\IndexRoleRequest;
 use Itstudioat\Spa\Http\Requests\Admin\StoreRoleRequest;
 use Itstudioat\Spa\Http\Requests\Admin\UpdateRoleRequest;
+use Itstudioat\Spa\Http\Resources\Admin\RoleResource;
+use Itstudioat\Spa\Traits\PaginationTrait;
 
 class RoleController extends Controller
 {
@@ -23,7 +23,7 @@ class RoleController extends Controller
         }
         $validated = $request->validated();
         $search_model = $validated['search_model'] ?? [];
-        $query = Role::orderBy('name');
+        $query = Role::whereNotIn('name', ['super_admin'])->orderBy('name');
 
         // search_string (optional)
         if (! empty($search_model['search_string'])) {
@@ -45,6 +45,7 @@ class RoleController extends Controller
             abort(403, 'Sie haben keine Berechtigung');
         }
         $validated = $request->validated();
+        $validated['guard_name'] = 'web';
 
         $role = Role::create($validated);
 
@@ -62,9 +63,10 @@ class RoleController extends Controller
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        $auth_user = $this->userHasRole(['super_admin']);
+        if (! $auth_user = $this->userHasRole(['super_admin']) || $role->name == 'super_admin') {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
         $validated = $request->validated();
-
         $role->update($validated);
 
         return response()->json(new RoleResource($role), 200);
@@ -76,10 +78,7 @@ class RoleController extends Controller
             abort(403, 'Sie haben keine Berechtigung');
         }
 
-        info($user->id);
-        info($auth_user->id);
-
-        if (!$role->shouldDelete()) {
+        if (! $role->shouldDelete()) {
             abort(403, 'Bei Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.');
         }
 
@@ -93,84 +92,12 @@ class RoleController extends Controller
         }
         $ids = $request->all();
 
-        User::whereIn('id', $ids)->each(function ($user) use ($auth_user) {
-            if ($user->id == $auth_user->id) {
-                abort(403, 'Man kann sich selbst nicht löschen');
-            }
-            if (! $user->shouldDelete()) {
+        Role::whereIn('id', $ids)->each(function ($item) {
+            if (! $item->shouldDelete()) {
                 abort(403, 'Bei Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.');
             }
         });
 
         return response()->noContent();
-    }
-
-    public function updateProfile(UpdateProfileRequest $request, User $user)
-    {
-        if (! $auth_user = $this->userHasRole(['admin'])) {
-            abort(403, 'Sie haben keine Berechtigung');
-        }
-        $validated = $request->validated();
-
-        if ($user->email != $validated['email']) {
-            // Neue E-Mail-Adresse, die muss natürlich zunächst bestätigt werden
-            $adminService = new AdminService();
-            $adminService->sendEmailValidationToken(1, $user, $validated['email']);
-
-            return response()->json(['answer' => 'INPUT_CODE', 'email' => $user->email, 'email_new' => $validated['email']]);
-        }
-
-        $user->update($validated);
-
-        return response()->json(new UserResource($user), 200);
-    }
-
-    public function updateWithCode(UpdateUserWithCodeRequest $request)
-    {
-        if (! $user = $this->userHasRole(['admin'])) {
-            abort(403, 'Sie haben keine Berechtigung');
-        }
-        $validated = $request->validated();
-        if (! $user->checkToken2Fa($validated['token_2fa'])) {
-            abort(401, 'Der Code ist falsch oder abgelaufen');
-        }
-        $validated['email_verified_at'] = now();
-        $user->update($validated);
-
-        return response()->json(new UserResource($user), 200);
-    }
-
-    public function savePassword(SavePasswordRequest $request)
-    {
-        if (! $user = $this->userHasRole(['admin'])) {
-            abort(403, 'Sie haben keine Berechtigung');
-        }
-        $validated = $request->validated();
-
-        $adminService = new AdminService();
-
-        $adminService->sendPasswordResetToken(1, $user, $user->email);
-
-        $data = ['step' => 'PASSWORD_ENTER_TOKEN'];
-
-        return response()->json($data, 200);
-    }
-
-    public function savePasswordWithCode(SavePasswordWithCodeRequest $request)
-    {
-        if (! $user = $this->userHasRole(['admin'])) {
-            abort(403, 'Sie haben keine Berechtigung');
-        }
-        $validated = $request->validated();
-
-        if (! $user->checkToken2Fa($validated['token_2fa'])) {
-            abort(401, 'Kennwort speichern funktioniert nicht. Code falsch oder Zeit abgelaufen.');
-        }
-
-        $user->update(
-            [
-                'password' => Hash::make($validated['password']),
-            ]
-        );
     }
 }

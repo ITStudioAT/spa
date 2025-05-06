@@ -2,7 +2,11 @@
 
 namespace Itstudioat\Spa\Tests;
 
+
+use Illuminate\Http\Request;
 use Itstudioat\Spa\SpaServiceProvider;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -32,5 +36,17 @@ class TestCase extends Orchestra
     {
         // Set up the database configuration for testing
         config()->set('database.default', 'testing');
+
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(config('spa.api_throttle', 60))->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('web', function (Request $request) {
+            return Limit::perMinute(config('spa.web_throttle', 60))->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('global', function (Request $request) {
+            return Limit::perMinute(config('spa.global_throttle', 1000));
+        });
     }
 }

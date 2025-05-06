@@ -5,7 +5,7 @@ namespace Itstudioat\Spa\Http\Requests\Admin;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateRoleRequest extends FormRequest
+class SaveUserRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +23,9 @@ class UpdateRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:roles,id',
-            'name' => [
-                'required',
-                'max:255',
-                Rule::unique('roles', 'name')->ignore($this->id),
-            ],
+            'id' => 'required|exists:users,id',
+            'roles' => 'nullable|array',
+            'roles.*' => 'nullable|string|max:255',
         ];
     }
 }

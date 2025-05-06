@@ -99,8 +99,6 @@
             <slot name="show" />
         </v-card-text>
 
-
-
     </v-card>
 </template>
 
@@ -117,20 +115,11 @@ export default {
     async beforeMount() {
         this.modelStore = useModelStore(); this.modelStore.initialize(this.$router);
         this.slots = useSlots();
-        await this.index(this.model, this.search_model, 1);
+        await this.changeSearchOptions();
     },
 
     mounted() {
-        if (this.search_options) {
-            for (const searchOption of this.search_options) {
-                if (searchOption.type === 'toggle') {
-                    const defaultOption = searchOption.options.find((o) => o.default);
-                    this.search_model[searchOption.field] = defaultOption
-                        ? defaultOption.value
-                        : null;
-                }
-            }
-        }
+
     },
 
     data() {
@@ -145,9 +134,17 @@ export default {
 
     watch: {
 
+
+        search_options: {
+            handler(newVal, oldVal) {
+                this.changeSearchOptions();
+            },
+            deep: true
+        },
+
         save_action: {
             handler(newVal, oldVal) {
-                this.save(this.model, this.data);
+                this.save(this.model, this.data, this.modelStore.pagination.current_page);
             },
             deep: true
         },
@@ -186,6 +183,22 @@ export default {
 
 
     methods: {
+
+        async changeSearchOptions() {
+            if (this.search_options) {
+                for (const searchOption of this.search_options) {
+                    if (searchOption.type === 'toggle') {
+                        const defaultOption = searchOption.options.find((o) => o.default);
+                        this.search_model[searchOption.field] = defaultOption
+                            ? defaultOption.value
+                            : null;
+                    }
+                }
+            }
+            await this.index(this.model, this.search_model, 1);
+
+        },
+
         async onSearchInput() {
             await this.index(this.model, this.search_model);
         },
@@ -194,17 +207,18 @@ export default {
             await this.modelStore.index(model, search_model, page);
         },
 
-        async save(model, data) {
+        async save(model, data, page = 1) {
             this.selected_items = [];
             if (data.id) {
                 // update
                 await this.modelStore.update(model, data);
-                await this.index(model, this.search_model);
+                // await this.index(model, this.search_model, page); 2025-05-06
+                await this.modelStore.reload();
                 this.$emit('updated');
             } else {
                 // store
                 await this.modelStore.store(model, data);
-                await this.index(model, this.search_model);
+                await this.index(model, this.search_model, page);
                 this.$emit('stored');
             }
         },

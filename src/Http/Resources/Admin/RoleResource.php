@@ -2,8 +2,6 @@
 
 namespace Itstudioat\Spa\Http\Resources\Admin;
 
-use Carbon\Carbon;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

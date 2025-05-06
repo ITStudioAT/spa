@@ -1,11 +1,22 @@
 <template>
     <v-card flat rounded="0">
         <v-card-text>
-            <v-form ref="form" v-model="is_valid" :disabled="!is_edit">
-                <v-text-field autofocus v-model="data.name" label="Name der Rolle"
-                    :rules="[required(), maxLength(255)]" />
-            </v-form>
-
+            <v-list :disabled="!is_edit">
+                <v-list-item v-for="(role, i) in roles" :class="!is_edit ? 'disabled-opacity' : ''">
+                    <v-row>
+                        <v-col cols=" 10">
+                            {{ role.name }}
+                        </v-col>
+                        <!-- Menü -->
+                        <v-col cols="2" class="d-flex justify-end">
+                            <v-btn flat rounded="0" v-if="hasRole(role.name)" @click="removeRole(role.name)"><v-icon
+                                    color="success" icon="mdi-check-bold" /></v-btn>
+                            <v-btn flat rounded="0" v-if="!hasRole(role.name)" @click="addRole(role.name)"><v-icon
+                                    color="error" icon="mdi-close-thick" /></v-btn>
+                        </v-col>
+                    </v-row>
+                </v-list-item>
+            </v-list>
             <v-row no-gutters>
                 <v-col cols=12 sm=6>
                     <v-btn append-icon="mdi-pencil" block color="success" slim flat rounded="0" @click="edit"
@@ -28,19 +39,22 @@
 
 <script>
 import { useValidationRulesSetup } from "@/helpers/rules";
+import { useUserWithRoleStore } from "@/stores/admin/UserWithRoleStore";
 
 export default {
     setup() { return useValidationRulesSetup(); },
 
-    props: ['item', 'saved'],
+    props: ['item', 'saved', 'roles'],
 
     async beforeMount() {
+        this.userWithRoleStore = useUserWithRoleStore();
         this.data = JSON.parse(JSON.stringify(this.item));
         if (!this.data.id) this.is_edit = true;
     },
 
     data() {
         return {
+            userWithRoleStore: null,
             data: {},
             is_edit: false,
             is_valid: false,
@@ -49,15 +63,26 @@ export default {
 
 
     methods: {
+
+        hasRole(role) {
+            return this.data.roles.includes(role);
+        },
+        removeRole(role_to_remove) {
+            this.data.roles = this.data.roles.filter(role => role !== role_to_remove);
+        },
+
+        addRole(role) {
+            this.data.roles.push(role);
+        },
+
+
         async save(data) {
-            this.is_valid = false;
-            await this.$refs.form.validate(); if (!this.is_valid) return;
+            this.userWithRoleStore.saveUserRoles(data);
+
             this.is_edit = false;
-            this.$emit('save', data);
             this.$emit('abortShow');
 
         },
-
 
         edit() {
             this.data = JSON.parse(JSON.stringify(this.item));

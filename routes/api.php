@@ -7,6 +7,7 @@ use Itstudioat\Spa\Http\Controllers\Admin\RoleController;
 use Itstudioat\Spa\Http\Controllers\Admin\UserController;
 use Itstudioat\Spa\Http\Controllers\Admin\AdminController;
 use Itstudioat\Spa\Http\Controllers\Admin\NavigationController;
+use Itstudioat\Spa\Http\Controllers\Admin\UserWithRoleController;
 use Itstudioat\Spa\Http\Controllers\Homepage\HomepageController;
 
 // Globales Throttle
@@ -39,8 +40,6 @@ Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
 
     /* SANCTUM */
     Route::middleware(['auth:sanctum', 'api-allowed:admin'])->group(function () {
-
-
         Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);
 
         // navigation, menus
@@ -57,5 +56,12 @@ Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
 
         // roles
         Route::apiResource('/admin/roles', RoleController::class);
+        Route::post('/admin/roles/destroy_multiple',  [RoleController::class, 'destroyMultiple']);
+
+        // users_with_roles
+        Route::get('/admin/users_with_roles/roles',  [UserWithRoleController::class, 'roles']);
+        Route::post('/admin/users_with_roles/roles',  [UserWithRoleController::class, 'saveUserRoles']);
+        Route::apiResource('/admin/users_with_roles', UserWithRoleController::class);
+        Route::apiResource('/admin/users_with_roles', UserWithRoleController::class);
     });
 });

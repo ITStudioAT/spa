@@ -72,6 +72,7 @@ export default {
             await this.$refs.form.validate(); if (!this.is_valid) return;
             this.is_edit = false;
             this.$emit('save', data);
+            this.$emit('abortShow');
 
         },
 
