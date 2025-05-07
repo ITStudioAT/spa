@@ -1,13 +1,12 @@
 # Laraval-Spa
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/itstudioat/spa.svg?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/itstudioat/spa/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/itstudioat/spa/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/itstudioat/spa?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/itstudioat/spa/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/itstudioat/spa/actions?query=workflow:"Tests"+branch:main)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/itstudioat/spa/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/itstudioat/spa/actions?query=workflow:"Check & fix styling"+branch:main)
-[![Total Downloads](https://img.shields.io/packagist/dt/itstudioat/spa.svg?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
-
+[![Total Downloads](https://img.shields.io/packagist/dt/itstudioat/spa?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
 
 ## What is Laravel-Spa
-Laravel-Spa installs all necessary items for a fresh Laravel Single Page Application..
+Laravel-Spa installs all necessary items for a fresh Laravel Single Page Application.
 
 The installation uses next to laravel:
 - Vue with Vue-Router as Javascript-Framework and routing
