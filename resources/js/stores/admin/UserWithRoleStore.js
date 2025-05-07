@@ -1,16 +1,18 @@
 import { defineStore } from 'pinia'
 import { useAdminStore } from "@/stores/admin/AdminStore";
-import { createBaseStore } from "./BaseStore";
+import { createResourceStore } from "./ResourceStore";
 import { useNotificationStore } from "@/stores/spa/NotificationStore";
-import { useModelStore } from "./ModelStore";
-const baseStore = createBaseStore('users_with_roles', 'user_with_role');
+const resourceStore = createResourceStore('users_with_roles');
 
 export const useUserWithRoleStore = defineStore("AdminUserWithRoleStore", {
     state: () => ({
+        ...resourceStore.state(),
         roles: [],
+
     }),
 
     actions: {
+        ...resourceStore.actions,
 
         async loadRoles() {
             const notification = useNotificationStore();

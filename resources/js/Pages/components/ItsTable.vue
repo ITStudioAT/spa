@@ -110,7 +110,7 @@ import { useSlots } from 'vue';
 
 export default {
     emits: ['saved'],
-    props: ['title', 'color', 'icon', 'search_options', 'model', 'multiple', 'data', 'data_multiple', 'save_action', 'destroy_action', 'destroy_multiple_action', 'select_all', 'show_search_field'],
+    props: ['title', 'color', 'icon', 'search_options', 'model', 'multiple', 'data', 'data_multiple', 'save_action', 'destroy_action', 'destroy_multiple_action', 'select_all', 'show_search_field', 'reload'],
 
     async beforeMount() {
         this.modelStore = useModelStore(); this.modelStore.initialize(this.$router);
@@ -133,6 +133,14 @@ export default {
     },
 
     watch: {
+
+        reload: {
+            handler(newVal, oldVal) {
+
+                this.modelStore.reload();
+            },
+            deep: true
+        },
 
 
         search_options: {
