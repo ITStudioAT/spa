@@ -1,11 +1,11 @@
 import { useAdminStore } from "@/stores/admin/AdminStore";
 import { useNotificationStore } from "@/stores/spa/NotificationStore";
 
-export function createBaseStore(modelName, itemKey = 'item') {
+export function createResourceStore(modelName) {
     return {
         state: () => ({
             items: [],
-            [itemKey]: null,
+            item: null,
             is_loading: false,
             error: {
                 status: null,
@@ -16,6 +16,7 @@ export function createBaseStore(modelName, itemKey = 'item') {
             router: null,
             api_answer: null,
             timeout: 3000,
+            reload: 0,
         }),
 
         actions() {
@@ -25,7 +26,6 @@ export function createBaseStore(modelName, itemKey = 'item') {
                 },
 
                 async index() {
-                    console.log("BASESTORE.INDEX");
                     const notification = useNotificationStore();
                     const adminStore = useAdminStore();
                     adminStore.is_loading++;
@@ -47,13 +47,12 @@ export function createBaseStore(modelName, itemKey = 'item') {
                 },
 
                 async show(id) {
-                    console.log("BASESTORE.SHOW");
                     const notification = useNotificationStore();
                     const adminStore = useAdminStore();
                     adminStore.is_loading++;
                     try {
                         const response = await axios.get(`/api/admin/${modelName}/${id}`);
-                        this[itemKey] = response.data;
+                        this.item = response.data;
                         return true;
                     } catch (error) {
                         notification.notify({
@@ -69,7 +68,7 @@ export function createBaseStore(modelName, itemKey = 'item') {
                 },
 
                 async update(data) {
-                    console.log("BASESTORE.UPDATE");
+
                     const notification = useNotificationStore();
                     const adminStore = useAdminStore();
                     adminStore.is_loading++;
@@ -78,7 +77,7 @@ export function createBaseStore(modelName, itemKey = 'item') {
                         if (response.data.answer) {
                             this.api_answer = response.data;
                         } else {
-                            this[itemKey] = response.data;
+                            this.item = response.data;
                         }
                         return true;
                     } catch (error) {
@@ -95,7 +94,6 @@ export function createBaseStore(modelName, itemKey = 'item') {
                 },
 
                 async destroy(data) {
-                    console.log("BASESTORE.DESTROY");
                     const notification = useNotificationStore();
                     const adminStore = useAdminStore();
                     adminStore.is_loading++;

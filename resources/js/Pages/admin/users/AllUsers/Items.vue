@@ -40,8 +40,8 @@
                         <v-card-text class="d-flex flex-row align-center ga-2">
                             <v-checkbox hide-details v-model="select_all"></v-checkbox>
                             <v-btn prepend-icon="mdi-plus" flat rounded="0" color="success" @click="add">Neu</v-btn>
-                            <v-btn prepend-icon="mdi-relation-one-to-many" flat rounded="0" color="secondary"
-                                @click="add" v-if="selected_items.length > 0">Rollen zuordnen</v-btn>
+                            <v-btn prepend-icon="mdi-relation-one-to-many" flat rounded="0" color="success" @click="add"
+                                v-if="selected_items.length > 0">Rollen zuordnen</v-btn>
 
                             <v-btn :prepend-icon="selected_items.length == 1 ? 'mdi-delete' : 'mdi-delete-sweep'" flat
                                 rounded="0" color="error" v-if="selected_items.length > 0"
@@ -60,7 +60,7 @@
                     <!-- You can comment out any of these actions or the whole template-->
                     <!-- You can add more actions, the selected item is in the var item -->
                     <template v-slot:actions="{ item }">
-                        <v-btn icon="mdi-details" color="primary" @click="show(item)"></v-btn>
+                        <v-btn icon="mdi-details" color="success" @click="show(item)"></v-btn>
                         <v-btn flat icon="mdi-delete" color="error" @click="destroy(item)"></v-btn>
                         <v-btn icon="mdi-close" color="warning"></v-btn>
                     </template>

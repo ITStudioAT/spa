@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia'
 import { useAdminStore } from "@/stores/admin/AdminStore";
-import { createBaseStore } from "./BaseStore";
+import { createResourceStore } from "./ResourceStore";
 import { useNotificationStore } from "@/stores/spa/NotificationStore";
 
-const baseStore = createBaseStore('users', 'user');
+const resourceStore = createResourceStore('users');
 
 export const useUserStore = defineStore("AdminUserStore", {
     state: () => ({
-        ...baseStore.state(),
+        ...resourceStore.state(),
     }),
 
     actions: {
-        ...baseStore.actions(),
+        ...resourceStore.actions(),
 
         async updateProfile(data) {
             const notification = useNotificationStore();
@@ -26,7 +26,7 @@ export const useUserStore = defineStore("AdminUserStore", {
                     notification.notify({
                         message: 'Das Profil wurde erfolreich gespeichert.',
                         type: 'success',
-                        timeout: baseStore.timeout,
+                        timeout: resourceStore.timeout,
                     });
                 }
                 return true;
@@ -35,7 +35,7 @@ export const useUserStore = defineStore("AdminUserStore", {
                     status: error.response.status,
                     message: error.response.data.message || 'Fehler passiert.',
                     type: 'error',
-                    timeout: baseStore.timeout,
+                    timeout: resourceStore.timeout,
                 });
                 return false;
             } finally {
@@ -53,7 +53,7 @@ export const useUserStore = defineStore("AdminUserStore", {
                 notification.notify({
                     message: 'Die Profil mit geänderter E-Mail wurde erfolreich gespeichert.',
                     type: 'success',
-                    timeout: baseStore.timeout,
+                    timeout: resourceStore.timeout,
                 });
                 return true;
             } catch (error) {
@@ -61,7 +61,7 @@ export const useUserStore = defineStore("AdminUserStore", {
                     status: error.response.status,
                     message: error.response.data.message || 'Fehler passiert.',
                     type: 'error',
-                    timeout: baseStore.timeout,
+                    timeout: resourceStore.timeout,
                 });
                 return false;
             } finally {
@@ -103,7 +103,7 @@ export const useUserStore = defineStore("AdminUserStore", {
                 notification.notify({
                     message: 'Das Kennwort wurde erfolreich gespeichert.',
                     type: 'success',
-                    timeout: baseStore.timeout,
+                    timeout: resourceStore.timeout,
                 });
                 return true;
             } catch (error) {

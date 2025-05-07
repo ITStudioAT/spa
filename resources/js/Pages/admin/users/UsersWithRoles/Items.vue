@@ -32,7 +32,7 @@
                     :search_options="search_options" :model="this.model" :multiple="this.multiple" :data="data"
                     :data_multiple="data_multiple" :save_action="save_action" :destroy_action="destroy_action"
                     :destroy_multiple_action="destroy_multiple_action" :select_all="select_all"
-                    :show_search_field="show_search_field">
+                    :show_search_field="show_search_field" :reload="userWithRoleStore.reload">
 
                     <!-- Menu on the top -->
                     <!-- You can comment out any of these actions  or the whole template-->
@@ -59,7 +59,7 @@
                     <!-- You can comment out any of these actions or the whole template-->
                     <!-- You can add more actions, the selected item is in the var item -->
                     <template v-slot:actions="{ item }">
-                        <v-btn icon="mdi-details" color="primary" @click="show(item)"></v-btn>
+                        <v-btn icon="mdi-details" color="success" @click="show(item)"></v-btn>
                         <v-btn icon="mdi-close" color="warning"></v-btn>
                     </template>
 

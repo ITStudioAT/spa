@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia'
-import { createBaseStore } from "./BaseStore";
+import { createResourceStore } from "./ResourceStore";
 import { useNotificationStore } from "@/stores/spa/NotificationStore";
 
-const baseStore = createBaseStore('users', 'user'); // <-- first create it
+const resourceStore = createResourceStore('users'); // <-- first create it
 
 export const useAdminStore = defineStore("AdminAdminStore", {
 
     state: () => ({
-        ...baseStore.state(), // merge the base state
+        ...resourceStore.state(), // merge the base state
         config: null,
         is_loading: 0,
         api_response: null,
@@ -17,7 +17,7 @@ export const useAdminStore = defineStore("AdminAdminStore", {
 
 
     actions: {
-        ...baseStore.actions(),
+        ...resourceStore.actions(),
 
         async loadConfig() {
             this.is_loading++; this.api_response = null;

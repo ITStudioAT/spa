@@ -26,7 +26,7 @@ export const useNavigationStore = defineStore("AdminNavigationStore", {
                     status: error.response.status,
                     message: error.response.data.message || 'Fehler passiert.',
                     type: 'error',
-                    timeout: baseStore.timeout,
+                    timeout: resourceStore.timeout,
                 });
                 return false;
             } finally {
