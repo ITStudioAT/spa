@@ -1,9 +1,9 @@
 # Laraval-Spa
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/itstudioat/spa?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/itstudioat/spa/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/itstudioat/spa/actions?query=workflow:"Tests"+branch:main)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/itstudioat/spa/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/itstudioat/spa/actions?query=workflow:"Check & fix styling"+branch:main)
-[![Total Downloads](https://img.shields.io/packagist/dt/itstudioat/spa?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/itstudioat/spa.svg?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/itstudioat/spa/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/itstudioat/spa/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/itstudioat/spa/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/itstudioat/spa/actions?query=workflow%3A"Check+&+fix+styling"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/itstudioat/spa.svg?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
 
 Latest Version on Packagist | GitHub Tests Action Status | GitHub Code Style Action Status | Total Downloads
 
