@@ -37,12 +37,13 @@
                     <!-- You can comment out any of these actions  or the whole template-->
                     <!-- You can add more actions, the selected items are in the var selected_items -->
                     <template v-slot:menu="{ selected_items }">
-                        <v-card-text class="d-flex flex-row align-center ga-2">
+                        <v-card-text class="d-flex flex-row flex-wrap  align-center ga-2">
                             <v-checkbox hide-details v-model="select_all"></v-checkbox>
                             <v-btn prepend-icon="mdi-plus" flat rounded="0" color="success" @click="add">Neu</v-btn>
-                            <v-btn prepend-icon="mdi-relation-one-to-many" flat rounded="0" color="success" @click="add"
+                            <v-btn prepend-icon="mdi-email-seal-outline" flat rounded="0" color="success" @click=""
+                                v-if="selected_items.length > 0">V-E-Mail senden</v-btn>
+                            <v-btn prepend-icon="mdi-relation-one-to-many" flat rounded="0" color="success" @click=""
                                 v-if="selected_items.length > 0">Rollen zuordnen</v-btn>
-
                             <v-btn :prepend-icon="selected_items.length == 1 ? 'mdi-delete' : 'mdi-delete-sweep'" flat
                                 rounded="0" color="error" v-if="selected_items.length > 0"
                                 @click="destroyMultiple(selected_items)">Löschen</v-btn>
@@ -52,7 +53,7 @@
                     <!-- Show item (=one line) -->
                     <template v-slot:content="{ item }">
                         <v-col cols="12" lg="6">{{ item.last_name + ' ' + (item.first_name || '')
-                            }}</v-col>
+                        }}</v-col>
                         <v-col cols="12" lg="6">{{ item.email }}</v-col>
                     </template>
 
