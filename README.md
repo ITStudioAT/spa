@@ -5,6 +5,9 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/itstudioat/spa/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/itstudioat/spa/actions?query=workflow:"Check & fix styling"+branch:main)
 [![Total Downloads](https://img.shields.io/packagist/dt/itstudioat/spa?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
 
+Latest Version on Packagist | GitHub Tests Action Status | GitHub Code Style Action Status | Total Downloads
+
+
 ## What is Laravel-Spa
 Laravel-Spa installs all necessary items for a fresh Laravel Single Page Application.
 
