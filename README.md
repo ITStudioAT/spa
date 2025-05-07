@@ -7,7 +7,7 @@
 
 
 ## What is Laravel-Spa
-Laravel-Spa installs all necessary items for a fresh Laravel Single Page Application.
+Laravel-Spa installs all necessary items for a fresh Laravel Single Page Application..
 
 The installation uses next to laravel:
 - Vue with Vue-Router as Javascript-Framework and routing
