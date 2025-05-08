@@ -2,25 +2,25 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Itstudioat\Spa\Services\UserService;
-use Itstudioat\Spa\Services\AdminService;
-use Itstudioat\Spa\Traits\PaginationTrait;
 use Itstudioat\Spa\Enums\VerificationResult;
-use Itstudioat\Spa\Http\Resources\Admin\UserResource;
-use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
 use Itstudioat\Spa\Http\Requests\Admin\EmailVerificationRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
+use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
 use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SendVerificationMailRequest;
 use Itstudioat\Spa\Http\Requests\Admin\SendVerificationEmailInitializedFromUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SendVerificationMailRequest;
+use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
+use Itstudioat\Spa\Http\Resources\Admin\UserResource;
+use Itstudioat\Spa\Services\AdminService;
+use Itstudioat\Spa\Services\UserService;
+use Itstudioat\Spa\Traits\PaginationTrait;
 
 class UserController extends Controller
 {
@@ -285,12 +285,16 @@ class UserController extends Controller
 
         if ($user->email_verified_at) {
             $user->emailVerified();
+
             return response()->json(VerificationResult::ALREADY_VERIFIED, 200);
         }
 
-        if (!$user->checkUuid($validated['uuid'])) abort(403, "Die E-Mail-Verifikation hat nicht geklappt. Vermutlich ist die Zeit abgelaufen.");
+        if (! $user->checkUuid($validated['uuid'])) {
+            abort(403, 'Die E-Mail-Verifikation hat nicht geklappt. Vermutlich ist die Zeit abgelaufen.');
+        }
 
         $user->emailVerified();
+
         return response()->json(VerificationResult::VERIFICATION_SUCCESS, 200);
     }
 

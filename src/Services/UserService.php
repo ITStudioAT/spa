@@ -22,6 +22,7 @@ class UserService
             ['title' => 'Benutzer mit bestätigter E-Mail', 'content' => $users_is_email_verified_count],
             ['title' => 'Bestätigte Benutzer', 'content' => $users_is_confirmed_count],
         ];
+
         return $data;
     }
 
