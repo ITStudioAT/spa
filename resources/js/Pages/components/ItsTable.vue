@@ -34,23 +34,24 @@
             <slot name="menu" :selected_items="selected_items" v-if="!!slots.menu" />
 
             <v-card-text>
-                <v-list :select-strategy="multiple ? 'classic' : 'single-leaf'" style="overflow: visible;"
-                    v-model:selected="selected_items">
+                <v-list density="compact" :select-strategy="multiple ? 'classic' : 'single-leaf'"
+                    style="overflow: visible;" v-model:selected="selected_items">
                     <!-- Alle Einträge -->
-                    <v-list-item :value="item" v-for="(item, i) in items">
-                        <v-row>
-                            <v-col cols="10">
+                    <v-list-item density="compact" :value="item" v-for="(item, i) in items" class="align-center"
+                        :class="i % 2 == 0 ? '' : 'bg-secondary-lighten-2'" color="success">
+                        <v-row dense class="align-center">
+                            <v-col cols="10" class="py-0">
                                 <v-row>
                                     <slot name="content" :item="item" />
                                 </v-row>
                             </v-col>
                             <!-- Menü -->
-                            <v-col cols="2" class="d-flex justify-end">
+                            <v-col cols="2" class="d-flex justify-end py-0">
                                 <v-list-item-action v-if="!!slots.actions">
                                     <v-speed-dial contained location="bottom left" transition="false">
                                         <template v-slot:activator="{ props: activatorProps }">
-                                            <v-btn size="small" v-bind="activatorProps" flat icon="mdi-dots-vertical"
-                                                variant="tonal"></v-btn>
+                                            <v-btn size="x-small" rounded="0" v-bind="activatorProps" flat
+                                                variant="text" icon="mdi-dots-vertical"></v-btn>
                                         </template>
                                         <slot name="actions" :item="item" />
                                     </v-speed-dial>

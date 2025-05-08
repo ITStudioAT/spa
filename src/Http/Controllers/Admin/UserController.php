@@ -2,20 +2,25 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
-use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
-use Itstudioat\Spa\Http\Resources\Admin\UserResource;
+use Itstudioat\Spa\Services\UserService;
 use Itstudioat\Spa\Services\AdminService;
 use Itstudioat\Spa\Traits\PaginationTrait;
+use Itstudioat\Spa\Enums\VerificationResult;
+use Itstudioat\Spa\Http\Resources\Admin\UserResource;
+use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
+use Itstudioat\Spa\Http\Requests\Admin\EmailVerificationRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SendVerificationMailRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SendVerificationEmailInitializedFromUserRequest;
 
 class UserController extends Controller
 {
@@ -257,5 +262,46 @@ class UserController extends Controller
                 'password' => Hash::make($validated['password']),
             ]
         );
+    }
+
+    public function sendVerificationEmail(SendVerificationMailRequest $request)
+    {
+        if (! $user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
+        $validated = $request->validated();
+
+        $userService = new UserService();
+        $userService->sendVerificationEmail($validated['ids']);
+
+        return response()->json(VerificationResult::EMAIL_SENT, 200);
+    }
+
+    public function emailVerification(EmailVerificationRequest $request)
+    {
+        $validated = $request->validated();
+
+        $user = User::where('email', $validated['email'])->first();
+
+        if ($user->email_verified_at) {
+            $user->emailVerified();
+            return response()->json(VerificationResult::ALREADY_VERIFIED, 200);
+        }
+
+        if (!$user->checkUuid($validated['uuid'])) abort(403, "Die E-Mail-Verifikation hat nicht geklappt. Vermutlich ist die Zeit abgelaufen.");
+
+        $user->emailVerified();
+        return response()->json(VerificationResult::VERIFICATION_SUCCESS, 200);
+    }
+
+    public function sendVerificationEmailInitializedFromUser(SendVerificationEmailInitializedFromUserRequest $request)
+    {
+        $validated = $request->validated();
+        $user = User::where('email', $validated['email'])->first();
+
+        $userService = new UserService();
+        $userService->sendVerificationEmail($user->id);
+
+        return response()->json(VerificationResult::EMAIL_SENT, 200);
     }
 }

@@ -40,8 +40,9 @@
                         <v-card-text class="d-flex flex-row flex-wrap  align-center ga-2">
                             <v-checkbox hide-details v-model="select_all"></v-checkbox>
                             <v-btn prepend-icon="mdi-plus" flat rounded="0" color="success" @click="add">Neu</v-btn>
-                            <v-btn prepend-icon="mdi-email-seal-outline" flat rounded="0" color="success" @click=""
-                                v-if="selected_items.length > 0">V-E-Mail senden</v-btn>
+                            <v-btn prepend-icon="mdi-email-seal-outline" flat rounded="0" color="success"
+                                @click="sendVerificationEmail(selected_items)" v-if="selected_items.length > 0">V-E-Mail
+                                senden</v-btn>
                             <v-btn prepend-icon="mdi-relation-one-to-many" flat rounded="0" color="success" @click=""
                                 v-if="selected_items.length > 0">Rollen zuordnen</v-btn>
                             <v-btn :prepend-icon="selected_items.length == 1 ? 'mdi-delete' : 'mdi-delete-sweep'" flat
@@ -52,9 +53,19 @@
 
                     <!-- Show item (=one line) -->
                     <template v-slot:content="{ item }">
-                        <v-col cols="12" lg="6">{{ item.last_name + ' ' + (item.first_name || '')
+                        <v-col cols="12" lg="4">{{ item.last_name + ' ' + (item.first_name || '')
                         }}</v-col>
-                        <v-col cols="12" lg="6">{{ item.email }}</v-col>
+                        <v-col cols="12" lg="5">{{ item.email }}</v-col>
+                        <v-col cols="12" lg="3" class="d-flex align-center justify-space-between">
+                            <v-icon :icon="item.is_active ? 'mdi-power-cycle' : 'mdi-lock'"
+                                :color="item.is_active ? 'success' : 'error'" />
+                            <v-icon :icon="item.is_confirmed ? 'mdi-check' : 'mdi-gesture-tap'"
+                                :color="item.is_confirmed ? 'success' : 'error'" />
+                            <v-icon :icon="item.is_verified ? 'mdi-email-seal' : 'mdi-email-fast'"
+                                :color="item.is_verified ? 'success' : 'error'" />
+                            <v-icon :icon="item.is_2fa ? 'mdi-two-factor-authentication' : 'mdi-form-textbox-password'"
+                                :color="item.is_2fa ? 'success' : 'warning'" />
+                        </v-col>
                     </template>
 
                     <!-- Menu for each item-->
@@ -80,17 +91,20 @@
     </v-container>
 </template>
 <script>
+import { useUserStore } from "@/stores/admin/UserStore";
 import ItsButton from "@/pages/components/ItsButton.vue";
 import ItsTable from "@/pages/components/ItsTable.vue";
 import ItemShow from "./ItemShow.vue";
 
 export default {
     components: { ItsButton, ItsTable, ItemShow },
-    beforeMount() {
+    async beforeMount() {
+        this.userStore = useUserStore(); this.userStore.initialize(this.$router);
     },
 
     data() {
         return {
+            userStore: null,
             model: 'users', // The used model
             multiple: true, // multi-selection of records (for deletion)
             title: 'Benutzer', // Title, if all records are shown
@@ -165,7 +179,11 @@ export default {
 
     methods: {
 
+        async sendVerificationEmail(items) {
+            const ids = items.map(item => item.id);
+            await this.userStore.sendVerificationEmail(ids);
 
+        },
 
         save(data) {
             this.data = data;

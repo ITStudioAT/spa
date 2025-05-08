@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Index from '@/pages/admin/index/Index.vue'
-import Login from '@/pages/admin/auth/Login.vue'
-import UnknownPassword from '@/pages/admin/auth/UnknownPassword.vue'
-import Register from '@/pages/admin/auth/Register.vue'
+import Auth_Login from '@/pages/admin/auth/Login.vue'
+import Auth_UnknownPassword from '@/pages/admin/auth/UnknownPassword.vue'
+import Auth_Register from '@/pages/admin/auth/Register.vue'
+import Auth_EmailVerification from '@/pages/admin/auth/EmailVerification.vue'
 import Dashboard from '@/pages/admin/dashboard/Dashboard.vue'
 import Profile from '@/pages/admin/profile/Profile.vue'
 import Users from '@/pages/admin/users/Users.vue'
@@ -13,9 +14,10 @@ import Users_UsersWithRoles from '@/pages/admin/users/UsersWithRoles/Items.vue'
 
 const routes = [
     { path: '/admin', component: Index },
-    { path: '/admin/login', component: Login },
-    { path: '/admin/unknown_password', component: UnknownPassword },
-    { path: '/admin/register', component: Register },
+    { path: '/admin/login', component: Auth_Login },
+    { path: '/admin/unknown_password', component: Auth_UnknownPassword },
+    { path: '/admin/register', component: Auth_Register },
+    { path: '/admin/email_verification', component: Auth_EmailVerification },
     { path: '/admin/dashboard', component: Dashboard },
     { path: '/admin/profile', component: Profile },
     { path: '/admin/users', component: Users },

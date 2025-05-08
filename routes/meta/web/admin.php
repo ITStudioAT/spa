@@ -11,6 +11,7 @@ return [
         '/admin/register' => [],
         '/admin/error' => [],
         '/admin/unknown_password' => [],
+        '/admin/email_verification' => [],
         '/admin/profile' => ['admin'],
         '/admin/users' => ['admin'],
         '/admin/users/all_users' => ['admin'],

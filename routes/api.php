@@ -38,6 +38,10 @@ Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
     Route::post('/admin/register_step_2',  [AdminController::class, 'registerStep2']);
     Route::post('/admin/register_step_3',  [AdminController::class, 'registerStep3']);
 
+    /* vom User ausgelöste APis zur E-Mail-Verifikation */
+    Route::post('/admin/users/send_verification_email_initialized_from_user',  [UserController::class, 'sendVerificationEmailInitializedFromUser']);
+    Route::post('/admin/users/email_verification',  [UserController::class, 'emailVerification']);
+
     /* SANCTUM */
     Route::middleware(['auth:sanctum', 'api-allowed:admin'])->group(function () {
         Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);
@@ -53,6 +57,9 @@ Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
         Route::post('/admin/users/update_with_code',  [UserController::class, 'updateWithCode']);
         Route::post('/admin/users/save_password',  [UserController::class, 'savePassword']);
         Route::post('/admin/users/save_password_with_code',  [UserController::class, 'savePasswordWithCode']);
+        Route::post('/admin/users/send_verification_email',  [UserController::class, 'sendVerificationEmail']);
+
+
 
         // roles
         Route::apiResource('/admin/roles', RoleController::class);

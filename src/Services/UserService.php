@@ -22,7 +22,18 @@ class UserService
             ['title' => 'Benutzer mit bestätigter E-Mail', 'content' => $users_is_email_verified_count],
             ['title' => 'Bestätigte Benutzer', 'content' => $users_is_confirmed_count],
         ];
-
         return $data;
+    }
+
+    public function sendVerificationEmail($par_ids)
+    // $par_ids ist ein Array von User_IDs oder eine einzelne User-ID
+    // an alle diese User wird eine E-Mail-Verifikation gesendet.
+    {
+
+        $ids = is_array($par_ids) ? $par_ids : [$par_ids];
+        foreach ($ids as $id) {
+            $user = User::findOrFail($id);
+            $user->sendVerificationEmail();
+        }
     }
 }
