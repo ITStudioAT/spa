@@ -2,24 +2,23 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
-
-use Illuminate\Http\Request;
 use Composer\InstalledVersions;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-use Itstudioat\Spa\Services\AdminService;
-use Itstudioat\Spa\Services\AdminNavigationService;
-use Itstudioat\Spa\Http\Resources\Admin\UserResource;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep1Request;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep2Request;
 use Itstudioat\Spa\Http\Requests\Admin\LoginStep3Request;
-use Itstudioat\Spa\Http\Requests\Admin\RegisterStep1Request;
-use Itstudioat\Spa\Http\Requests\Admin\RegisterStep2Request;
-use Itstudioat\Spa\Http\Requests\Admin\RegisterStep3Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep1Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep2Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep3Request;
 use Itstudioat\Spa\Http\Requests\Admin\PasswordUnknownStep4Request;
+use Itstudioat\Spa\Http\Requests\Admin\RegisterStep1Request;
+use Itstudioat\Spa\Http\Requests\Admin\RegisterStep2Request;
+use Itstudioat\Spa\Http\Requests\Admin\RegisterStep3Request;
+use Itstudioat\Spa\Http\Resources\Admin\UserResource;
+use Itstudioat\Spa\Services\AdminNavigationService;
+use Itstudioat\Spa\Services\AdminService;
 
 class AdminController extends Controller
 {

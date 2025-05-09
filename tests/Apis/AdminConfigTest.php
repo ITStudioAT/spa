@@ -1,10 +1,6 @@
 <?php
 
-
 use Composer\InstalledVersions;
-use function Pest\Laravel\artisan;
-use function Pest\Laravel\getJson;
-use function Pest\Laravel\postJson;
 
 it('can test /api/admin/config', function () {
 

@@ -1,10 +1,5 @@
 <?php
 
-
-use function Pest\Laravel\artisan;
-use function Pest\Laravel\getJson;
-use function Pest\Laravel\postJson;
-
 it('can test /api/homepage/config', function () {
 
     $response = $this->getJson('/api/homepage/config');

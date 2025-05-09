@@ -2,15 +2,12 @@
 
 namespace Itstudioat\Spa\Tests;
 
-use Faker\Factory;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
-use Itstudioat\Spa\SpaServiceProvider;
-
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\RateLimiter;
 use Itstudioat\Spa\Http\Middleware\WebAllowed;
+use Itstudioat\Spa\SpaServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -25,10 +22,6 @@ class TestCase extends Orchestra
         $this->loadLaravelMigrations();
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
-
-
-
-
 
     /**
      * Define the package providers for the test environment.
@@ -51,9 +44,6 @@ class TestCase extends Orchestra
      */
     public function getEnvironmentSetUp($app)
     {
-
-
-
 
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(config('spa.api_throttle', 60))->by($request->user()?->id ?: $request->ip());
