@@ -32,7 +32,7 @@
 
         <v-main class="bg-background" v-if="config">
             <router-view></router-view>
-            <GlobalSnackbar />
+            <its-notification />
         </v-main>
 
         <v-footer app>
@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import GlobalSnackbar from "@/pages/components/GlobalSnackbar.vue";
+import ItsNotification from "@/pages/components/ItsNotification.vue";
 </script>
 
 

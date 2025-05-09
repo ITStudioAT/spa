@@ -155,12 +155,12 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useAdminStore } from "@/stores/admin/AdminStore";
-import ItsButton from "@/pages/components/ItsButton.vue";
+import ItsMenuButton from "@/pages/components/ItsMenuButton.vue";
 import ItsGridBox from "@/pages/components/ItsGridBox.vue";
 
 export default {
 
-    components: { ItsButton, ItsGridBox },
+    components: { ItsMenuButton, ItsGridBox },
 
     async beforeMount() {
     },

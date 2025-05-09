@@ -2,7 +2,7 @@
     <v-container fluid class="ma-0 w-100 pa-2">
         <!-- Menüleiste oben -->
         <v-row class="d-flex flex-row ga-2 mb-2 mt-0 w-100" no-gutters>
-            <its-button subtitle="Benutzer" icon="mdi-arrow-left" color="secondary" to="/admin/users" />
+            <its-menu-button subtitle="Benutzer" icon="mdi-arrow-left" color="secondary" to="/admin/users" />
         </v-row>
 
         <!-- TABELLE -->
@@ -43,8 +43,8 @@
                             <v-btn prepend-icon="mdi-email-seal-outline" flat rounded="0" color="success"
                                 @click="sendVerificationEmail(selected_items)" v-if="selected_items.length > 0">V-E-Mail
                                 senden</v-btn>
-                            <v-btn prepend-icon="mdi-relation-one-to-many" flat rounded="0" color="success" @click=""
-                                v-if="selected_items.length > 0">Rollen zuordnen</v-btn>
+                            <v-btn prepend-icon="mdi-relation-one-to-many" flat rounded="0" color="success"
+                                @click="showRoles" v-if="selected_items.length > 0">Rollen zuordnen</v-btn>
                             <v-btn :prepend-icon="selected_items.length == 1 ? 'mdi-delete' : 'mdi-delete-sweep'" flat
                                 rounded="0" color="error" v-if="selected_items.length > 0"
                                 @click="destroyMultiple(selected_items)">Löschen</v-btn>
@@ -57,7 +57,7 @@
                         }}</v-col>
                         <v-col cols="12" lg="5">{{ item.email }}</v-col>
                         <v-col cols="12" lg="3" class="d-flex align-center justify-space-between">
-                            <v-icon :icon="item.is_active ? 'mdi-power-cycle' : 'mdi-lock'"
+                            <v-icon :icon="item.is_active ? 'mdi-lock-open-check' : 'mdi-lock'"
                                 :color="item.is_active ? 'success' : 'error'" />
                             <v-icon :icon="item.is_confirmed ? 'mdi-check' : 'mdi-gesture-tap'"
                                 :color="item.is_confirmed ? 'success' : 'error'" />
@@ -87,24 +87,66 @@
                 </its-table>
             </v-col>
         </v-row>
+        <its-overlay-box title="Rollen zuordnen" color="primary" v-if="is_show_roles">
+            <template #content>
+
+                <v-list>
+                    <v-list-item v-for="(role, i) in roles" v-if="userWithRoleStore">
+                        <v-row>
+                            <v-col cols=" 10">
+                                {{ role.name }}
+                            </v-col>
+                            <!-- Menü -->
+                            <v-col cols="2" class="d-flex justify-end">
+                                <v-btn flat rounded="0" @click="roleClick(role)"><v-icon :color="roleColor(role)"
+                                        :icon="roleIcon(role)" /></v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-list-item>
+                </v-list>
+
+                <v-row no-gutters class=" pt-2">
+                    <v-col cols="6">
+                        <v-btn append-icon="mdi-content-save" block color="success" slim flat rounded="0"
+                            @click="saveUserRoles(modelStore.selected_items, roles)">Speichern</v-btn>
+
+                    </v-col>
+                    <v-col cols="6">
+                        <v-btn append-icon="mdi-close" block color="error" slim flat rounded="0"
+                            @click="abortShowRoles">Abbruch</v-btn>
+                    </v-col>
+                </v-row>
+
+            </template>
+
+        </its-overlay-box>
 
     </v-container>
 </template>
 <script>
+import { useModelStore } from "@/stores/admin/ModelStore";
 import { useUserStore } from "@/stores/admin/UserStore";
-import ItsButton from "@/pages/components/ItsButton.vue";
+import { useUserWithRoleStore } from "@/stores/admin/UserWithRoleStore";
+import ItsOverlayBox from "@/pages/components/ItsOverlayBox.vue";
+import ItsMenuButton from "@/pages/components/ItsMenuButton.vue";
 import ItsTable from "@/pages/components/ItsTable.vue";
 import ItemShow from "./ItemShow.vue";
 
 export default {
-    components: { ItsButton, ItsTable, ItemShow },
+    components: { ItsMenuButton, ItsTable, ItemShow, ItsOverlayBox },
     async beforeMount() {
         this.userStore = useUserStore(); this.userStore.initialize(this.$router);
+        this.modelStore = useModelStore();
+        this.userWithRoleStore = useUserWithRoleStore();
+        await this.userWithRoleStore.loadRoles();
+        this.initRoles(this.userWithRoleStore.roles);
     },
 
     data() {
         return {
             userStore: null,
+            modelStore: null,
+            userWithRoleStore: null,
             model: 'users', // The used model
             multiple: true, // multi-selection of records (for deletion)
             title: 'Benutzer', // Title, if all records are shown
@@ -172,12 +214,65 @@ export default {
             data: {},
             data_multiple: [],
             event: null,
+            is_show_roles: false,
+            roles: [],
 
 
         };
     },
 
     methods: {
+
+
+        async saveUserRoles(users, roles) {
+            const user_ids = users.map(item => item.id);
+            const role_ids = roles
+                .filter(item => item.role_check === 1 || item.role_check === 2)
+                .map(item => ({ id: item.id, role_check: item.role_check }));
+
+            const answer = this.userStore.saveUserRoles(user_ids, role_ids);
+            this.is_show_roles = false;
+
+        },
+
+        roleColor(role) {
+            switch (role.role_check) {
+                case 0: return 'primary'; break;
+                case 1: return 'success'; break;
+                case 2: return 'error'; break;
+            }
+        },
+
+        roleIcon(role) {
+            switch (role.role_check) {
+                case 0: return 'mdi-dots-square'; break;
+                case 1: return 'mdi-check-bold'; break;
+                case 2: return 'mdi-close-thick'; break;
+            }
+        },
+
+        initRoles(roles) {
+            this.roles = roles.map(role => ({
+                ...role,
+                role_check: 0
+            }));
+
+        },
+
+        roleClick(role) {
+            role.role_check++;
+            if (role.role_check === 3) {
+                role.role_check = 0;
+            }
+        },
+
+        showRoles() {
+            this.initRoles(this.userWithRoleStore.roles);
+            this.is_show_roles = true;
+        },
+        abortShowRoles() {
+            this.is_show_roles = false;
+        },
 
         async sendVerificationEmail(items) {
             const ids = items.map(item => item.id);

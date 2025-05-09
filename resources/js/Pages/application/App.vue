@@ -5,7 +5,7 @@
         <v-layout v-if="is_loading == 0" class="bg-background">
             <v-main>
                 <router-view></router-view>
-                <GlobalSnackbar />
+                <ItsNotification />
             </v-main>
 
             <v-footer app>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import GlobalSnackbar from "@/pages/components/GlobalSnackbar.vue";
+import ItsNotification from "@/pages/components/ItsNotification.vue";
 </script>
 
 <script>

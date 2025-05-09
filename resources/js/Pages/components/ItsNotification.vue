@@ -1,4 +1,4 @@
-<!-- components/GlobalSnackbar.vue -->
+<!-- components/ItsNotification.vue -->
 <template>
     <v-snackbar :timer="notificationStore.type + '-lighten-4'" v-model="notificationStore.show"
         :timeout="notificationStore.timeout" :color="notificationStore.type" min-height="70">

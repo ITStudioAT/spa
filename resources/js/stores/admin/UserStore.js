@@ -185,6 +185,33 @@ export const useUserStore = defineStore("AdminUserStore", {
             } finally {
                 adminStore.is_loading--;
             }
-        }
+        },
+
+        async saveUserRoles(user_ids, role_ids) {
+            const notification = useNotificationStore();
+            const adminStore = useAdminStore();
+            adminStore.is_loading++;
+            try {
+                this.api_answer = (await axios.post("/api/admin/users/save_user_roles", { user_ids, role_ids })).data;
+
+                notification.notify({
+                    message: 'Den Benutzern wurden die neuen Rollen zugeordnet.',
+                    type: 'success',
+                    timeout: resourceStore.timeout,
+                });
+
+                return this.api_answer;
+            } catch (error) {
+                notification.notify({
+                    status: error.response.status,
+                    message: error.response.data.message || 'Fehler passiert.',
+                    type: 'error',
+                    timeout: this.config?.timeout,
+                });
+                return false;
+            } finally {
+                adminStore.is_loading--;
+            }
+        },
     },
 });

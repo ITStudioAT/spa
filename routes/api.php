@@ -42,7 +42,7 @@ Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
     Route::post('/admin/users/send_verification_email_initialized_from_user',  [UserController::class, 'sendVerificationEmailInitializedFromUser']);
     Route::post('/admin/users/email_verification',  [UserController::class, 'emailVerification']);
 
-    /* SANCTUM */
+    /* SANCTUM - admin */
     Route::middleware(['auth:sanctum', 'api-allowed:admin'])->group(function () {
         Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);
 
@@ -58,7 +58,7 @@ Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
         Route::post('/admin/users/save_password',  [UserController::class, 'savePassword']);
         Route::post('/admin/users/save_password_with_code',  [UserController::class, 'savePasswordWithCode']);
         Route::post('/admin/users/send_verification_email',  [UserController::class, 'sendVerificationEmail']);
-
+        Route::post('/admin/users/save_user_roles',  [UserController::class, 'saveUserRoles']);
 
 
         // roles

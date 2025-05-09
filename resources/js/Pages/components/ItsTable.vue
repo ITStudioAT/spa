@@ -31,11 +31,11 @@
                     @click:clear="onSearchInput"></v-text-field>
             </v-card-text>
 
-            <slot name="menu" :selected_items="selected_items" v-if="!!slots.menu" />
+            <slot name="menu" :selected_items="modelStore.selected_items" v-if="!!slots.menu" />
 
             <v-card-text>
                 <v-list density="compact" :select-strategy="multiple ? 'classic' : 'single-leaf'"
-                    style="overflow: visible;" v-model:selected="selected_items">
+                    style="overflow: visible;" v-model:selected="modelStore.selected_items">
                     <!-- Alle Einträge -->
                     <v-list-item density="compact" :value="item" v-for="(item, i) in items" class="align-center"
                         :class="i % 2 == 0 ? '' : 'bg-secondary-lighten-2'" color="success">
@@ -128,9 +128,11 @@ export default {
             search_model: {},
             modelStore: null,
             slots: null,
-            selected_items: [],
-
         };
+    },
+
+    computed: {
+        ...mapWritableState(useModelStore, ['selected_items']),
     },
 
     watch: {

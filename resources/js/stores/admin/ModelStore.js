@@ -13,6 +13,7 @@ export const useModelStore = defineStore("AdminModelStore", {
         model: null,
         search_model: null,
         page: null,
+        selected_items: [],
     }),
 
     actions: {

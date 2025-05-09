@@ -11,6 +11,7 @@ use Itstudioat\Spa\Http\Requests\Admin\EmailVerificationRequest;
 use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
 use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
 use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SaveUserRolesRequest;
 use Itstudioat\Spa\Http\Requests\Admin\SendVerificationEmailInitializedFromUserRequest;
 use Itstudioat\Spa\Http\Requests\Admin\SendVerificationMailRequest;
 use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
@@ -307,5 +308,19 @@ class UserController extends Controller
         $userService->sendVerificationEmail($user->id);
 
         return response()->json(VerificationResult::EMAIL_SENT, 200);
+    }
+
+    public function saveUserRoles(SaveUserRolesRequest $request)
+    {
+        if (! $user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
+
+        $validated = $request->validated();
+        $user_ids = $validated['user_ids'];
+        $role_ids = $validated['role_ids'];
+
+        $userService = new UserService();
+        $userService->setNewUserRoles($user_ids, $role_ids);
     }
 }

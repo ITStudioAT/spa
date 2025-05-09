@@ -2,7 +2,7 @@
 
 // config for Itstudioat/Spa
 return [
-    'version' => '0.1.12',
+    'version' => '0.1.13',
     'logo' => 'logo.png',
     'copyright' => '(c) 2025 ITStudio.at by Günther Kron',
     'title' => 'Spa',

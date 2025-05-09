@@ -8,8 +8,8 @@ use function Pest\Laravel\artisan;
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 
-it('can test', function () {
-
-    $response = getJson('/api/admin/config');
+it('can render the homepage /', function () {
+    $response = $this->get('/');
     $response->assertOk();
+    $response->assertSee('Spa Homepage');
 });

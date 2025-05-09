@@ -2,6 +2,7 @@
 
 namespace Itstudioat\Spa\Services;
 
+use App\Models\Role;
 use App\Models\User;
 
 class UserService
@@ -35,6 +36,33 @@ class UserService
         foreach ($ids as $id) {
             $user = User::findOrFail($id);
             $user->sendVerificationEmail();
+        }
+    }
+
+    public function setNewUserRoles($user_ids, $role_ids)
+    {
+        // set the role_names of each role
+        foreach ($role_ids as &$role_id) {
+            $role = Role::findOrFail($role_id['id']);
+            $role_id['name'] = $role->name;
+        }
+        unset($role_id);
+
+        // Run all users
+        foreach ($user_ids as $id) {
+            $user = User::findOrFail($id);
+
+            foreach ($role_ids as $role_id) {
+                if ($role_id['role_check'] == 1) {
+                    // role should be assigned
+                    $user->assignRole($role_id['name']);
+                }
+
+                if ($role_id['role_check'] == 2) {
+                    // role should be removed
+                    $user->removeRole($role_id['name']);
+                }
+            }
         }
     }
 }

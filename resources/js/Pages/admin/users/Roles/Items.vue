@@ -2,8 +2,8 @@
     <v-container fluid class="ma-0 w-100 pa-2">
         <!-- Menüleiste oben -->
         <v-row class="d-flex flex-row ga-2 mb-2 mt-0 w-100" no-gutters>
-            <its-button subtitle="Benutzer" icon="mdi-arrow-left" color="secondary" to="/admin/users" />
-            <its-button title="Benutzer" subtitle="mit Rollen" icon="mdi-relation-one-to-many" color="secondary"
+            <its-menu-button subtitle="Benutzer" icon="mdi-arrow-left" color="secondary" to="/admin/users" />
+            <its-menu-button title="Benutzer" subtitle="mit Rollen" icon="mdi-relation-one-to-many" color="secondary"
                 to="/admin/users/users_with_roles" />
         </v-row>
 
@@ -77,12 +77,12 @@
     </v-container>
 </template>
 <script>
-import ItsButton from "@/pages/components/ItsButton.vue";
+import ItsMenuButton from "@/pages/components/ItsMenuButton.vue";
 import ItsTable from "@/pages/components/ItsTable.vue";
 import ItemShow from "./ItemShow.vue";
 
 export default {
-    components: { ItsButton, ItsTable, ItemShow },
+    components: { ItsMenuButton, ItsTable, ItemShow },
 
     data() {
         return {
