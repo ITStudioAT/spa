@@ -71,7 +71,7 @@ php artisan spa:complete
     "autoload": {
         "psr-4": {
             ...
-            "Itstudioat\\Spa\\": "src/"
+            "Itstudioat\\Spa\\": "app/"
         }
     },
 ```
@@ -79,17 +79,6 @@ php artisan spa:complete
 **Change the config/cors.php file**
 ```bash
  'supports_credentials' => true,
-```
-
-
-**Add the HasRoleTrait to your Http/Controllers/Controller**
-```bash
-  namespace App\Http\Controllers;
-  use Itstudioat\Spa\Traits\HasRoleTrait;
-
-  abstract class Controller
-  {
-      use HasRoleTrait;
 ```
 
 

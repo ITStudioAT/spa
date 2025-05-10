@@ -34,20 +34,14 @@
     },
     "autoload": {
         "psr-4": {
-            "Tests\\": "tests/",
-            "Itstudioat\\Spa\\": "src/",
-            "App\\": "src/",
-            "Database\\Factories\\": "database/factories/"
+            "Itstudioat\\Spa\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Itstudioat\\Spa\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/",
-            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
-            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/",
-            "Itstudioat\\Spa\\": "src/",
-            "App\\": "src/"
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "scripts": {

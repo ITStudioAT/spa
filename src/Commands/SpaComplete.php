@@ -20,6 +20,18 @@ class SpaComplete extends Command
 
         // Publish all necessary
         $this->call('vendor:publish', [
+            '--tag' => 'spa-config',
+            '--force' => 'true',
+        ]);
+
+        // Publish all necessary
+        $this->call('vendor:publish', [
+            '--tag' => 'spa-views',
+            '--force' => 'true',
+        ]);
+
+        // Publish all necessary
+        $this->call('vendor:publish', [
             '--tag' => 'spa-all',
             '--force' => 'true',
         ]);
