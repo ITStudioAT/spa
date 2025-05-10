@@ -15,14 +15,12 @@ it('can register_step_1: /api/admin/register_step_1', function () {
         ],
     ];
 
-    $this->line('<fg=red>Diese E-Mail-Adresse existiert bereits!</>');
     $response = $this->postJson('/api/admin/register_step_1', $data)
         ->assertOk()
         ->assertJson([
             'step' => 'REGISTER_ENTER_TOKEN',
         ]);
 
-    $this->line('<fg=red>Diese E-Mail-Adresse existiert bereits!</>');
     $data['data']['email'] = $user->email;
     $response = $this->postJson('/api/admin/register_step_1', $data)
         ->assertStatus(401)
