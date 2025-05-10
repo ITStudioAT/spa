@@ -92,15 +92,6 @@ php artisan spa:complete
       use HasRoleTrait;
 ```
 
-**Comment the standard route out in routes/web.php**
-```bash
-/*
-Route::get('/', function () {
-    return view('welcome');
-});
-*/
-```
-
 
 ### You may inividualize your logo for mails
 ```bash

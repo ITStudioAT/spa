@@ -50,7 +50,6 @@ class SpaServiceProvider extends PackageServiceProvider
         $this->publishes([
             __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
             __DIR__ . '/../stubs/images' => storage_path('/app/public/images'),
-
             __DIR__ . '/../bootstrap/app.php' => base_path('/bootstrap/app.php'),
             __DIR__ . '/../config' => config_path(),
             __DIR__ . '/../database/factories' => base_path('/database/factories'),
