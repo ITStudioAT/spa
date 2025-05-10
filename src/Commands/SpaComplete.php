@@ -18,14 +18,9 @@ class SpaComplete extends Command
         $this->info('✅ Migrations executed.');
         $this->newLine();
 
-        // Second vendor:publish with --tag=spa-migrations
+        // Publish all necessary
         $this->call('vendor:publish', [
-            '--tag' => 'spa-once',
-            '--force' => 'true',
-        ]);
-
-        $this->call('vendor:publish', [
-            '--tag' => 'spa-multi',
+            '--tag' => 'spa-all',
             '--force' => 'true',
         ]);
 

@@ -21,8 +21,6 @@ class SpaServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('spa')
-            ->hasConfigFile()
-            ->hasViews()
             ->hasMigration('00001_update_users_table')
             ->hasCommands([
                 CreateUser::class,
@@ -51,20 +49,20 @@ class SpaServiceProvider extends PackageServiceProvider
         // One Time Publishing
         $this->publishes([
             __DIR__ . '/../stubs/vite.config.js' => base_path('vite.config.js'),
-            __DIR__ . '/../stubs/api.php' => base_path('/routes/api.php'),
+            __DIR__ . '/../stubs/images' => storage_path('/app/public/images'),
+
             __DIR__ . '/../bootstrap/app.php' => base_path('/bootstrap/app.php'),
+            __DIR__ . '/../config' => config_path(),
             __DIR__ . '/../database/factories' => base_path('/database/factories'),
+            __DIR__ . '/../resources' => resource_path(),
             __DIR__ . '/../routes' => base_path('/routes'),
+            __DIR__ . '/../src/Enums' => app_path('/Enums'),
+            __DIR__ . '/../src/Http' => app_path('/Http'),
             __DIR__ . '/../src/Models' => app_path('/Models'),
             __DIR__ . '/../src/Providers' => app_path('/Providers'),
             __DIR__ . '/../src/Services' => app_path('/Services'),
-            __DIR__ . '/../stubs/images' => storage_path('/app/public/images'),
-        ], 'spa-once');
 
-        // Multi Time Publishing with
-        $this->publishes([
-            __DIR__ . '/../resources' => resource_path(),
-        ], 'spa-multi');
+        ], 'spa-all');
     }
 
     public function bootingPackage()
