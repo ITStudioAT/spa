@@ -1,14 +1,11 @@
 <?php
 
-
 use App\Models\User;
-use function Pest\Laravel\actingAs;
 
 it('can register_step_1: /api/admin/register_step_1', function () {
 
-
     $user = User::factory()->create([
-        'email' => 'kron@naturwelt.at'
+        'email' => 'kron@naturwelt.at',
     ]);
 
     $data = [
@@ -24,7 +21,6 @@ it('can register_step_1: /api/admin/register_step_1', function () {
         ->assertJson([
             'step' => 'REGISTER_ENTER_TOKEN',
         ]);
-
 
     $this->line('<fg=red>Diese E-Mail-Adresse existiert bereits!</>');
     $data['data']['email'] = $user->email;

@@ -4,8 +4,8 @@ namespace Itstudioat\Spa\Services;
 
 use App\Models\Role;
 use App\Models\User;
-use Itstudioat\Spa\Enums\TwoFaResult;
 use Illuminate\Support\Facades\Notification;
+use Itstudioat\Spa\Enums\TwoFaResult;
 use Itstudioat\Spa\Notifications\StandardEmail;
 
 class UserService
@@ -71,21 +71,31 @@ class UserService
 
     public function check2Fa($user, $is_2fa, $email_2fa)
     {
-        if (! $is_2fa) return TwoFaResult::TWO_FA_DELETE; // No 2-FA wanted
+        if (! $is_2fa) {
+            return TwoFaResult::TWO_FA_DELETE;
+        } // No 2-FA wanted
 
         // ** 2-FA-WANTED ...
 
         // 2-FA-E-Mail is the same, as the user entered and is verified => everything ok
-        if ($email_2fa == $user->email) return TwoFaResult::TWO_FA_EMAIL_AND_2FA_EMAIL_MUST_NOT_BE_EQUAL;
+        if ($email_2fa == $user->email) {
+            return TwoFaResult::TWO_FA_EMAIL_AND_2FA_EMAIL_MUST_NOT_BE_EQUAL;
+        }
 
         // 2-FA-E-Mail is the same, as the user entered and is verified => everything ok
-        if ($user->email_2fa == $email_2fa && $user->email_2fa_verified_at) return TwoFaResult::TWO_FA_OK;
+        if ($user->email_2fa == $email_2fa && $user->email_2fa_verified_at) {
+            return TwoFaResult::TWO_FA_OK;
+        }
 
         // 2-FA-E-Mail is the same, as the user entered, but is not verified => 2FA-EMAIL must be verified
-        if ($user->email_2fa == $email_2fa  && !$user->email_2fa_verified_at) return TwoFaResult::TWO_FA_EMAIL_MUST_BE_VERIFIED;
+        if ($user->email_2fa == $email_2fa && ! $user->email_2fa_verified_at) {
+            return TwoFaResult::TWO_FA_EMAIL_MUST_BE_VERIFIED;
+        }
 
         // 2FA-Email doesnt exists
-        if (!$email_2fa) return TwoFaResult::TWO_FA_ERROR;
+        if (! $email_2fa) {
+            return TwoFaResult::TWO_FA_ERROR;
+        }
 
         // 2-FA-E-Mail is new and sure not verified, because it is new ;)
         return TwoFaResult::TWO_FA_EMAIL_IS_NEW;
@@ -100,27 +110,30 @@ class UserService
                 $user->email_2fa = null;
                 $user->email_2fa_verified_at = null;
                 $user->save();
+
                 break;
 
             case TwoFaResult::TWO_FA_OK:
                 // 2-FA: yes, email exists and is verified
                 $user->is_2fa = true;
                 $user->save();
+
                 break;
 
             case TwoFaResult::TWO_FA_EMAIL_MUST_BE_VERIFIED:
                 // 2-FA: yes, email exists and is not verified
                 $this->send2FaCode($user, $email_2fa);
+
                 break;
 
             case TwoFaResult::TWO_FA_EMAIL_IS_NEW:
                 // 2-FA: yes, email is new and must be verified
 
                 $this->send2FaCode($user, $email_2fa);
+
                 break;
         }
     }
-
 
     public function update2Fa($user, $email_2fa)
     {
@@ -131,7 +144,6 @@ class UserService
 
         return TwoFaResult::TWO_FA_SET;
     }
-
 
     private function send2FaCode($user, $email_2fa)
     {
