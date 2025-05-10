@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-
-
+use App\Http\Controllers\Controller;
 use App\Models\Role;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Itstudioat\Spa\Traits\PaginationTrait;
-use Itstudioat\Spa\Http\Resources\Admin\RoleResource;
 use Itstudioat\Spa\Http\Requests\Admin\IndexRoleRequest;
 use Itstudioat\Spa\Http\Requests\Admin\StoreRoleRequest;
 use Itstudioat\Spa\Http\Requests\Admin\UpdateRoleRequest;
+use Itstudioat\Spa\Http\Resources\Admin\RoleResource;
+use Itstudioat\Spa\Traits\PaginationTrait;
 
 class RoleController extends Controller
 {

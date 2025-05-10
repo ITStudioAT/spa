@@ -2,21 +2,19 @@
 
 namespace Itstudioat\Spa\Tests;
 
-use Illuminate\Http\Request;
-use Itstudioat\Spa\SpaServiceProvider;
-
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Support\Facades\RateLimiter;
-use Itstudioat\Spa\Http\Middleware\WebAllowed;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Database\Eloquent\Factories\Factory;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Schema;
+use Itstudioat\Spa\Http\Middleware\WebAllowed;
+use Itstudioat\Spa\SpaServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
-
-
     /**
      * Set up the environment before each test.
      */
