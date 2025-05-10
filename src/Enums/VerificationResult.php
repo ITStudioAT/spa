@@ -2,7 +2,7 @@
 
 namespace Itstudioat\Spa\Enums;
 
-enum VerificationResult: string
+enum TwoFaResult: string
 {
     case VERIFICATION_SUCCESS = 'VERIFICATION_SUCCESS'; // E-Mail wurde erfolgreich verifiziert
     case EMAIL_SENT = 'EMAIL_SENT'; // E-Mail zur Verifikation wurde versandt

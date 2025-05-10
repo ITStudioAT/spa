@@ -32,6 +32,11 @@
     <env name="DB_USERNAME" value="root"/>
     <env name="DB_HOST" value="127.0.0.1"/>
     <env name="DB_PORT" value="3306"/>
+
+    <env name="MAIL_USERNAME" value="hallo@itstudio.at"/>
+    <env name="MAIL_FROM_ADDRESS" value="hallo@itstudio.at"/>
+    <env name="MAIL_FROM_NAME" value="ITStudioAT"/>
+    
     </php>
     <source>
         <include>

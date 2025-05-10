@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace Itstudioat\Spa\Http\Controllers\Admin;
 
 
 

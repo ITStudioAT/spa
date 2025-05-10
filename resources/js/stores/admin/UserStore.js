@@ -22,7 +22,7 @@ export const useUserStore = defineStore("AdminUserStore", {
                 if (response.data.answer) {
                     this.api_answer = response.data;
                 } else {
-                    this.user = response.data;
+                    this.item = response.data;
                     notification.notify({
                         message: 'Das Profil wurde erfolreich gespeichert.',
                         type: 'success',
@@ -49,7 +49,7 @@ export const useUserStore = defineStore("AdminUserStore", {
             adminStore.is_loading++;
             try {
                 const response = await axios.post('/api/admin/users/update_with_code/', data);
-                this.user = response.data;
+                this.item = response.data;
                 notification.notify({
                     message: 'Die Profil mit geänderter E-Mail wurde erfolreich gespeichert.',
                     type: 'success',
@@ -112,6 +112,58 @@ export const useUserStore = defineStore("AdminUserStore", {
                     message: error.response.data.message || 'Fehler passiert.',
                     type: 'error',
                     timeout: adminStore.config?.timeout,
+                });
+                return false;
+            } finally {
+                adminStore.is_loading--;
+            }
+        },
+
+
+        async save2Fa(data) {
+            const notification = useNotificationStore();
+            const adminStore = useAdminStore();
+            adminStore.is_loading++;
+            this.api_answer = null;
+            try {
+                const response = await axios.post('/api/admin/users/save_2fa/', data);
+                await this.show(data.id);
+                if (response.data.result) {
+                    return response.data.result;
+                }
+                return true;
+            } catch (error) {
+                notification.notify({
+                    status: error.response.status,
+                    message: error.response.data.message || 'Fehler passiert.',
+                    type: 'error',
+                    timeout: this.adminStore?.timeout,
+                });
+                return false;
+            } finally {
+                adminStore.is_loading--;
+            }
+        },
+
+        async save2FaWithCode(data) {
+            console.log(data);
+            const notification = useNotificationStore();
+            const adminStore = useAdminStore();
+            adminStore.is_loading++;
+            this.api_answer = null;
+            try {
+                const response = await axios.post('/api/admin/users/save_2fa_with_code/', data);
+                await this.show(data.id);
+                if (response.data.result) {
+                    return response.data.result;
+                }
+                return true;
+            } catch (error) {
+                notification.notify({
+                    status: error.response.status,
+                    message: error.response.data.message || 'Fehler passiert.',
+                    type: 'error',
+                    timeout: this.adminStore?.timeout,
                 });
                 return false;
             } finally {

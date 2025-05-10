@@ -2,26 +2,29 @@
 
 namespace Itstudioat\Spa\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Itstudioat\Spa\Enums\VerificationResult;
-use Itstudioat\Spa\Http\Requests\Admin\EmailVerificationRequest;
-use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SaveUserRolesRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SendVerificationEmailInitializedFromUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SendVerificationMailRequest;
-use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
-use Itstudioat\Spa\Http\Resources\Admin\UserResource;
-use Itstudioat\Spa\Services\AdminService;
+use Itstudioat\Spa\Enums\TwoFaResult;
 use Itstudioat\Spa\Services\UserService;
+use Itstudioat\Spa\Services\AdminService;
 use Itstudioat\Spa\Traits\PaginationTrait;
+use Itstudioat\Spa\Enums\VerificationResult;
+use Itstudioat\Spa\Http\Resources\Admin\UserResource;
+use Itstudioat\Spa\Http\Requests\Admin\Save2FaRequest;
+use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SaveUserRolesRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
+use Itstudioat\Spa\Http\Requests\Admin\Save2FaWithCodeRequest;
+use Itstudioat\Spa\Http\Requests\Admin\EmailVerificationRequest;
+use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SendVerificationMailRequest;
+use Itstudioat\Spa\Http\Requests\Admin\SendVerificationEmailInitializedFromUserRequest;
 
 class UserController extends Controller
 {
@@ -265,6 +268,58 @@ class UserController extends Controller
         );
     }
 
+    public function save2Fa(Save2FaRequest $request)
+    {
+        if (! $user = $this->userHasRole(['admin']))   abort(403, 'Sie haben keine Berechtigung');
+
+        $validated = $request->validated();
+        $validated['email_2fa'] = $validated['email_2fa'] ?? null;
+
+
+        if ($user->id != $validated['id'])  abort(403, 'Sie haben keine Berechtigung');
+
+        $userService = new UserService();
+
+        $result = $userService->check2Fa($user, $validated['is_2fa'], $validated['email_2fa']);
+
+        if ($result == TwoFaResult::TWO_FA_EMAIL_AND_2FA_EMAIL_MUST_NOT_BE_EQUAL) abort(422, 'Die E-Mail und die E-Mail für die 2-Faktoren-Authentifizierung dürfen nicht gleich sein');
+        if ($result == TwoFaResult::TWO_FA_ERROR) abort(422, 'Fehler bei der 2-Faktoren-Authentifizierung');
+
+        $userService->check2FaStep2($result, $user, $validated['email_2fa']);
+
+        $data = ['result' =>  $result];
+
+        return response()->json($data, 200);
+    }
+
+    public function save2FaWithCode(Save2FaWithCodeRequest $request)
+    {
+        if (! $user = $this->userHasRole(['admin']))   abort(403, 'Sie haben keine Berechtigung');
+
+        $validated = $request->validated();
+        $validated['email_2fa'] = $validated['email_2fa'] ?? null;
+
+        if ($user->id != $validated['id'])  abort(403, 'Sie haben keine Berechtigung');
+
+        $userService = new UserService();
+
+        $result = $userService->check2Fa($user, $validated['is_2fa'], $validated['email_2fa']);
+
+        if ($result == TwoFaResult::TWO_FA_EMAIL_AND_2FA_EMAIL_MUST_NOT_BE_EQUAL) abort(422, 'Die E-Mail und die E-Mail für die 2-Faktoren-Authentifizierung dürfen nicht gleich sein');
+        if ($result == TwoFaResult::TWO_FA_ERROR) abort(422, 'Fehler bei der 2-Faktoren-Authentifizierung');
+
+        if (! $user->checkToken2Fa($validated['token_2fa'])) {
+            abort(401, 'Der Code ist falsch oder abgelaufen');
+        }
+
+        $userService->update2Fa($user, $validated['email_2fa']);
+
+        $data = ['result' =>  TwoFaResult::TWO_FA_SET];
+
+        return response()->json($data, 200);
+    }
+
+
     public function sendVerificationEmail(SendVerificationMailRequest $request)
     {
         if (! $user = $this->userHasRole(['admin'])) {
@@ -322,5 +377,6 @@ class UserController extends Controller
 
         $userService = new UserService();
         $userService->setNewUserRoles($user_ids, $role_ids);
+        return response()->noContent();
     }
 }

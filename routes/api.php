@@ -59,6 +59,8 @@ Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
         Route::post('/admin/users/save_password_with_code',  [UserController::class, 'savePasswordWithCode']);
         Route::post('/admin/users/send_verification_email',  [UserController::class, 'sendVerificationEmail']);
         Route::post('/admin/users/save_user_roles',  [UserController::class, 'saveUserRoles']);
+        Route::post('/admin/users/save_2fa',  [UserController::class, 'save2Fa']);
+        Route::post('/admin/users/save_2fa_with_code',  [UserController::class, 'save2FaWithCode']);
 
 
         // roles

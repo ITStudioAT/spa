@@ -28,7 +28,11 @@
                             :rules="[required(), mail(), maxLength(255)]" />
 
                         <v-switch true-icon="mdi-check" v-model="data.is_2fa" label="2-Faktoren-Authentifizierung"
-                            hide-details color="success" :base-color="is_edit ? 'error' : ''" :disabled="!is_edit" />
+                            hide-details color="success" :base-color="is_edit ? 'error' : ''" disabled />
+
+                        <v-text-field flat rounded="0" v-model="data.email_2fa"
+                            label="E-Mail 2-Faktoren-Authentifizierung" :rules="[required(), mail(), maxLength(255)]"
+                            v-if="data.is_2fa" disabled />
 
                     </v-form>
                     <div v-if="!is_edit">
@@ -126,10 +130,91 @@
                     </v-row>
                 </its-grid-box>
 
+                <!-- 2FA ÄNDERN-->
+                <its-grid-box color="primary" title="2-Faktoren-Authentifizierung"
+                    :subtitle="config.user.last_name + ' ' + config.user.first_name" icon="mdi-account"
+                    v-if="step == 'CHANGE_2FA'">
+                    <v-form ref="form" @submit.prevent="save2Fa(data)" v-model="is_valid">
+                        <v-switch true-icon="mdi-check" v-model="data.is_2fa" label="2-Faktoren-Authentifizierung"
+                            hide-details color="success" :base-color="is_edit ? 'error' : ''" />
+
+                        <v-text-field flat rounded="0" v-model="data.email_2fa"
+                            label="E-Mail 2-Faktoren-Authentifizierung" :rules="[required(), mail(), maxLength(255)]"
+                            v-if="data.is_2fa" />
+                    </v-form>
+
+                    <v-row no-gutters>
+                        <v-col cols=12 sm=6>
+                            <v-btn block color="success" slim flat rounded="0" @click="save2Fa(data)"
+                                type="submit">Speichern</v-btn>
+                        </v-col>
+                        <v-col cols=12 sm=6>
+                            <v-btn block color="error" slim flat rounded="0" @click="abort2Fa">Abbruch</v-btn>
+                        </v-col>
+                    </v-row>
+                </its-grid-box>
+
+                <!-- 2FA abgeschaltet-->
+                <its-grid-box color="primary" title="2-Faktoren-Authentifizierung"
+                    :subtitle="config.user.last_name + ' ' + config.user.first_name" icon="mdi-account"
+                    v-if="step == 'TWO_FA_DELETE'">
+
+                    <v-alert color="success" type="info" text="Die Zwei-Faktoren-Authentifizierung wurde ausgeschaltet!"
+                        class="mb-2" />
+                    <v-row no-gutters>
+                        <v-col cols=12 sm=6>
+
+                        </v-col>
+                        <v-col cols=12 sm=6>
+                            <v-btn block color="error" slim flat rounded="0" @click="abort2Fa">Fertig</v-btn>
+                        </v-col>
+                    </v-row>
+                </its-grid-box>
+
+
+                <!-- 2FA eingeschlatet, neue E-Mail: CODE ERFASSEN-->
+                <its-grid-box color="primary" title="2-Faktoren-Authentifizierung"
+                    :subtitle="config.user.last_name + ' ' + config.user.first_name" icon="mdi-account"
+                    v-if="step == 'TWO_FA_EMAIL_IS_NEW' || step == 'TWO_FA_EMAIL_MUST_BE_VERIFIED'">
+
+                    <v-form ref="form" v-model="is_valid" @submit.prevent="" class="mb-4">
+                        <v-alert closable color="success" type="info"
+                            :text="'Bitte prüfen Sie Ihre E-Mails: ' + data.email_2fa" />
+                        <div class="text-caption text-text">Bitte den Code laut E-Mail eingeben</div>
+                        <v-otp-input autofocus v-model="data.token_2fa" />
+                    </v-form>
+
+                    <v-row no-gutters>
+                        <v-col cols=12 sm=6>
+                            <v-btn block color="success" slim flat rounded="0"
+                                @click="save2FaWithCode(data)">Weiter</v-btn>
+                        </v-col>
+                        <v-col cols=12 sm=6>
+                            <v-btn block color="error" slim flat rounded="0" @click="abort2Fa">Abbruch</v-btn>
+                        </v-col>
+                    </v-row>
+                </its-grid-box>
+
+                <!-- 2FA set-->
+                <its-grid-box color="primary" title="2-Faktoren-Authentifizierung"
+                    :subtitle="config.user.last_name + ' ' + config.user.first_name" icon="mdi-account"
+                    v-if="step == 'TWO_FA_SET' || step == 'TWO_FA_OK'">
+
+                    <v-alert color="success" type="info" text="Die Zwei-Faktoren-Authentifizierung wurde eingeschaltet!"
+                        class="mb-2" />
+                    <v-row no-gutters>
+                        <v-col cols=12 sm=6>
+
+                        </v-col>
+                        <v-col cols=12 sm=6>
+                            <v-btn block color="error" slim flat rounded="0" @click="abort2Fa">Fertig</v-btn>
+                        </v-col>
+                    </v-row>
+                </its-grid-box>
+
 
             </v-col>
         </v-row>
-
     </v-container>
 
 
@@ -158,7 +243,7 @@ export default {
         await this.navigationStore.loadMenu('profile_menu');
 
         await this.userStore.show(this.config.user.id);
-        if (this.user) this.data = JSON.parse(JSON.stringify(this.user));
+        if (this.item) this.data = JSON.parse(JSON.stringify(this.item));
 
     },
 
@@ -181,7 +266,7 @@ export default {
 
     computed: {
         ...mapWritableState(useAdminStore, ['config', 'is_loading', 'show_navigation_drawer', 'load_config']),
-        ...mapWritableState(useUserStore, ['user', 'api_answer']),
+        ...mapWritableState(useUserStore, ['item', 'api_answer']),
     },
 
     methods: {
@@ -189,13 +274,23 @@ export default {
         abort() {
             this.is_edit = false;
             this.step = '';
-            this.data = JSON.parse(JSON.stringify(this.user));
+            this.data = JSON.parse(JSON.stringify(this.item));
+        },
+
+        abort2Fa() {
+            this.step = '';
+            this.data = JSON.parse(JSON.stringify(this.item));
         },
 
         wantToChangePassword() {
             this.abort();
             this.data = {};
             this.step = 'CHANGE_PASSWORD'
+        },
+
+        wantToChange2Fa() {
+            this.abort();
+            this.step = 'CHANGE_2FA'
         },
 
 
@@ -208,9 +303,24 @@ export default {
             if (this.api_answer?.answer == 'INPUT_CODE') {
                 this.step = 'INPUT_CODE';
             } else {
-                this.data = JSON.parse(JSON.stringify(this.user));
+                this.data = JSON.parse(JSON.stringify(this.item));
                 await this.adminStore.loadConfig();
                 this.abort();
+            }
+        },
+        async save2Fa(data) {
+            await this.$refs.form.validate(); if (!this.is_valid) return;
+            const result = await this.userStore.save2Fa(data);
+            if (result) {
+                this.step = result;
+            }
+        },
+
+        async save2FaWithCode(data) {
+            await this.$refs.form.validate(); if (!this.is_valid) return;
+            const result = await this.userStore.save2FaWithCode(data);
+            if (result) {
+                this.step = result;
             }
         },
 
