@@ -24,11 +24,10 @@ class TestCase extends Orchestra
 
         // $this->loadLaravelMigrations();
         // $this->artisan('migrate');
-        /*
+
         Factory::guessFactoryNamesUsing(function (string $modelName) {
-            return 'Database\\Factories\\' . class_basename($modelName) . 'Factory';
+            return 'Database\\Factories\\Spa' . class_basename($modelName) . 'Factory';
         });
-        */
     }
 
     /**
