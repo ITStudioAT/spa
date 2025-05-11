@@ -22,7 +22,6 @@ it('can register with new email: /api/admin/register_step_1', function () {
         ]);
 });
 
-
 it('can not register with existing email: /api/admin/register_step_1', function () {
     $user = User::factory()->create([
         'email' => 'kron@naturwelt.at',
