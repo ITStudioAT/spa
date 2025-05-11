@@ -4,8 +4,6 @@
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/itstudioat/spa/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/itstudioat/spa/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/itstudioat/spa.svg?style=flat-square)](https://packagist.org/packages/itstudioat/spa)
 
-Latest Version on Packagist | GitHub Tests Action Status | GitHub Code Style Action Status | Total Downloads
-
 
 ## What is Laravel-Spa
 Laravel-Spa installs all necessary items for a fresh Laravel Single Page Application.
