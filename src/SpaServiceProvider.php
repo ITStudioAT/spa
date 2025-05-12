@@ -55,6 +55,7 @@ class SpaServiceProvider extends PackageServiceProvider
             __DIR__ . '/../stubs/images' => storage_path('/app/public/images'),
             __DIR__ . '/../bootstrap/app.php' => base_path('/bootstrap/app.php'),
             __DIR__ . '/Models' => app_path('/Models'),
+            __DIR__ . '/Http' => app_path('/Http'),
             __DIR__ . '/Providers/AppServiceProvider.php' => app_path('/Providers/AppServiceProvider.php'),
             __DIR__ . '/../resources' => resource_path(),
             __DIR__ . '/../routes' => base_path('/routes'),
