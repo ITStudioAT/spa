@@ -31,10 +31,10 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_DATABASE: pest_test
         options: >-
-            --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
-            --health-interval=10s
-            --health-timeout=5s
-            --health-retries=30
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=30
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -64,4 +64,25 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+
+      - name: Copy test environment file
+        run: cp .env.testing .env
+
+      - name: Debug - Show PHP extensions
+        run: php -m
+
+      - name: Debug - Show Laravel DB config
+        run: php -r "require 'vendor/autoload.php'; (new \Illuminate\Foundation\Application)->useEnvironmentPath(__DIR__); (new \Dotenv\Dotenv(__DIR__))->load(); print_r(config('database.connections.mysql'));"
+
+      - name: Run migrations
+        run: php artisan migrate --force
+
+      - name: List Installed Dependencies
+        run: composer show -D
+
+      - name: Execute tests
+        env:
+          APP_ENV: testing
+        run: vendor/bin/pest --ci
