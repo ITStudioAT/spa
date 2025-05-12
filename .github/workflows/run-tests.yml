@@ -34,7 +34,7 @@ jobs:
             --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
             --health-interval=10s
             --health-timeout=5s
-            --health-retries=30  # Erhöhe die Anzahl der Versuche
+            --health-retries=30
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
