@@ -94,6 +94,9 @@ jobs:
         run: composer show -D
 
       - name: Execute tests
-        env:
-          APP_ENV: testing
         run: vendor/bin/pest --ci
+        env:
+          DB_USERNAME: root
+          DB_PASSWORD:
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+        
