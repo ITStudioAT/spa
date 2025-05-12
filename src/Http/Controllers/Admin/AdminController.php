@@ -221,6 +221,6 @@ class AdminController extends Controller
         //$request->session()->invalidate();
         //$request->session()->regenerateToken();
 
-        return response()->noContent();
+        return response()->json(['message' => 'Logout successful'], 200);
     }
 }
