@@ -30,10 +30,9 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_USER: user
+          MYSQL_USER: root
           MYSQL_DATABASE: pest_test
-          MYSQL_PASSWORD: secret
-          MYSQL_ROOT_PASSWORD: secretroot
+          MYSQL_PASSWORD: 
         ports: 
           - 3306
         options: >-
