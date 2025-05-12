@@ -34,6 +34,7 @@ jobs:
           MYSQL_PASSWORD: secret
           MYSQL_DATABASE: pest_test
           MYSQL_ROOT_PASSWORD: secretroot
+          MYSQL_ROOT_HOST: '%'
         ports: 
           - 3306:3306                  
         options: >-
@@ -47,7 +48,7 @@ jobs:
         run: |
           mysql --version
           sudo apt-get install -y mysql-client
-          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uroot -psecret -e "SHOW DATABASES"
+          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uroot -psecretroot -e "SHOW DATABASES"
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -73,5 +74,5 @@ jobs:
         run: vendor/bin/pest
         env:
           DB_USERNAME: root
-          DB_PASSWORD: secret
+          DB_PASSWORD: secretroot
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
