@@ -30,7 +30,7 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
           MYSQL_DATABASE: pest_test
           MYSQL_PASSWORD: ""
           MYSQL_ROOT_PASSWORD: ""
