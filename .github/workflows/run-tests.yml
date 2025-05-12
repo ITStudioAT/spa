@@ -32,7 +32,8 @@ jobs:
         env:
           MYSQL_USER: root
           MYSQL_DATABASE: pest_test
-          MYSQL_PASSWORD: 
+          MYSQL_PASSWORD:
+          MYSQL_RANDOM_ROOT_PASSWORD: yes  
         ports: 
           - 3306
         options: >-
