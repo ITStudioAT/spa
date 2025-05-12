@@ -24,21 +24,32 @@ jobs:
           - laravel: 11.*
             testbench: 9.*
 
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+
     services:
       mysql:
         image: mysql:8.0
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_DATABASE: pest_test
+          MYSQL_USER: root
+          MYSQL_PASSWORD: ""
+          MYSQL_ROOT_PASSWORD: ""
+        ports: 
+          - 3306
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-cmd="mysqladmin ping"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=30
-
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+          --health-retries=10
 
     steps:
+      - name: Verify MySQL connection
+        run: |
+          mysql --version
+          sudo apt-get install -y mysql-client
+          mysql --host 127.0.0.1 --port 3306 -u root -p"" -e "SHOW DATABASES"
+
       - name: Checkout code
         uses: actions/checkout@v4
 
