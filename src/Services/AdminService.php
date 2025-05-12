@@ -56,8 +56,10 @@ class AdminService
     {
         if ($user = User::where('email', $data['email'])->first()) {
             if (! $user->register_started_at) {
-                abort(401, 'Registrieren funktioniert mit dieser E-Mail-Adresse nicht');
+                abort(401, 'Registrieren funktioniert mit dieser E-Mail-Adresse nicht.');
             }
+        } else {
+            abort(401, 'Registrierung kann nicht fortgesetzt werden.');
         }
 
         if ($data['step'] == 'REGISTER_ENTER_TOKEN') {
@@ -114,18 +116,18 @@ class AdminService
     public function checkUserLogin($data): User
     {
         if (! $user = User::where('email', $data['email'])->first()) {
-            abort(401, 'Login funktioniert mit dieser E-Mail-Adresse nicht');
+            abort(401, 'Login funktioniert mit dieser E-Mail-Adresse nicht.');
         }
         if (! $user->confirmed_at) {
-            abort(423, 'Benutzer ist noch nicht bestätigt');
+            abort(423, 'Benutzer ist noch nicht bestätigt.');
         }
         if (! $user->is_active) {
-            abort(423, 'Benutzer ist gesperrt');
+            abort(423, 'Benutzer ist gesperrt.');
         }
 
         if ($data['step'] == 'LOGIN_ENTER_PASSWORD') {
             if (! Hash::check($data['password'], $user->password)) {
-                abort(401, 'Login funktioniert mit diesem Kennwort nicht');
+                abort(401, 'Login funktioniert mit diesem Kennwort nicht.');
             }
         }
 

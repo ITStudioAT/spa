@@ -182,7 +182,7 @@ class AdminController extends Controller
         } else {
             // Keine 2-Faktoren-Authentifizierung ==> Login fertig
             Auth::login($user);
-            $request->session()->regenerate();
+            // $request->session()->regenerate();
             $data = [
                 'step' => 'LOGIN_SUCCESS',
                 'auth' => true,
@@ -200,7 +200,7 @@ class AdminController extends Controller
         $validated = $request->validated();
         $user = $adminService->checkUserLogin($validated['data']);
         auth()->login($user);
-        $request->session()->regenerate();
+        //$request->session()->regenerate();
 
         $data = [
             'step' => 'LOGIN_SUCCESS',
@@ -218,8 +218,8 @@ class AdminController extends Controller
             abort(400, 'Sie sind gar nicht eingeloggt.');
         }
         auth('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        //$request->session()->invalidate();
+        //$request->session()->regenerateToken();
 
         return response()->noContent();
     }

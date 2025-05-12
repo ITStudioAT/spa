@@ -2,16 +2,18 @@
 
 namespace Itstudioat\Spa\Tests;
 
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Database\Eloquent\Factories\Factory;
-
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\RateLimiter;
+
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
-use Itstudioat\Spa\Http\Middleware\WebAllowed;
 use Itstudioat\Spa\SpaServiceProvider;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+use Itstudioat\Spa\Http\Middleware\WebAllowed;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TestCase extends Orchestra
 {
@@ -22,12 +24,15 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
-        // $this->loadLaravelMigrations();
-        // $this->artisan('migrate');
-
         Factory::guessFactoryNamesUsing(function (string $modelName) {
             return 'Database\\Factories\\Spa' . class_basename($modelName) . 'Factory';
         });
+
+        $this->user = User::factory()->create([
+            'email' => 'kron@naturwelt.at',
+            'password' => Hash::make('password123'),
+            'confirmed_at' => now(),
+        ]);
     }
 
     /**
