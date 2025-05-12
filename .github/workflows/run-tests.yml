@@ -33,7 +33,6 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_PASSWORD: 
           MYSQL_DATABASE: pest_test
-          MYSQL_ROOT_PASSWORD: rootsecret
         ports: 
           - 3306
         options: >-
