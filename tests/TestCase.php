@@ -30,6 +30,7 @@ class TestCase extends Orchestra
         $this->user = User::factory()->create([
             'email' => 'kron@naturwelt.at',
             'password' => Hash::make('password123'),
+            'is_active' => true,
             'confirmed_at' => now(),
         ]);
     }
