@@ -66,7 +66,7 @@ jobs:
           sed -i 's/DB_PORT=.*/DB_PORT=3306/' .env
           sed -i 's/DB_DATABASE=.*/DB_DATABASE=pest_test/' .env
           sed -i 's/DB_USERNAME=.*/DB_USERNAME=root/' .env
-          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=root/' .env
+          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=/' .env
 
       - name: Wait for MySQL to be ready
         run: |
