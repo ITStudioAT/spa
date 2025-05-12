@@ -1,9 +1,6 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Session\Middleware\StartSession;
-
 
 it('can login: /api/admin/login_step_1', function () {
     $data = [
@@ -35,7 +32,6 @@ it('cant login, wrong email: /api/admin/login_step_1', function () {
             'message' => 'Login funktioniert mit dieser E-Mail-Adresse nicht.',
         ]);
 });
-
 
 it('cant login, not confirmed: /api/admin/login_step_1', function () {
 
