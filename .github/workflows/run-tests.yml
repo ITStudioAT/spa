@@ -23,16 +23,17 @@ jobs:
             testbench: 10.*
           - laravel: 11.*
             testbench: 9.*
-  
+
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     services:
-     mysql:
+      mysql:
         image: mysql:8.0
-        ports:
-          - 3306:3306
+        ports: 
+          - 3306:3306        
         env:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_PASSWORD: 
           MYSQL_DATABASE: pest_test
         options: >-
           --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
@@ -41,32 +42,26 @@ jobs:
           --health-retries=5
 
     steps:
+      - name: Verify MySQL connection
+        run: |
+          mysql --version
+          sudo apt-get install -y mysql-client
+          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uroot -p"" -e "SHOW DATABASES"
+
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up PHP
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
-          extensions: mbstring, bcmath, pdo, pdo_mysql
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_mysql, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
           coverage: none
 
-      - name: Install Composer dependencies
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
-
-      - name: Copy .env and generate key
+      - name: Setup problem matchers
         run: |
-          cp .env.example .env
-          php artisan key:generate
-
-      - name: Configure database
-        run: |
-          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env
-          sed -i 's/DB_HOST=.*/DB_HOST=127.0.0.1/' .env
-          sed -i 's/DB_PORT=.*/DB_PORT=3306/' .env
-          sed -i 's/DB_DATABASE=.*/DB_DATABASE=pest_test/' .env
-          sed -i 's/DB_USERNAME=.*/DB_USERNAME=root/' .env
-          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=/' .env
+          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Wait for MySQL to be ready
         run: |
@@ -79,8 +74,31 @@ jobs:
             sleep 2
           done
 
+
+
+      - name: Install dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+
+      - name: Copy test environment file
+        run: cp .env.testing .env
+
+      - name: Debug - Show PHP extensions
+        run: php -m
+
+      - name: Debug - Show Laravel DB config
+        run: php -r "require 'vendor/autoload.php'; (new \Illuminate\Foundation\Application)->useEnvironmentPath(__DIR__); (new \Dotenv\Dotenv(__DIR__))->load(); print_r(config('database.connections.mysql'));"
+
       - name: Run migrations
         run: php artisan migrate --force
 
-      - name: Run Pest tests
-        run: ./vendor/bin/pest
+      - name: List Installed Dependencies
+        run: composer show -D
+
+      - name: Execute tests
+        run: vendor/bin/pest --ci
+        env:
+          DB_USERNAME: root
+          DB_PASSWORD:
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
