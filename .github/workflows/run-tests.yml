@@ -71,6 +71,10 @@ jobs:
             sleep 30
           done
 
+      # Show MySQL container logs
+      - name: Show MySQL container logs
+        run: docker logs ${{ job.services.mysql.id }}
+
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
@@ -97,4 +101,3 @@ jobs:
           DB_USERNAME: root
           DB_PASSWORD:
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
-        
