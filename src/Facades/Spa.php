@@ -1,16 +1,16 @@
 <?php
 
-namespace Itstudioat\Spa\Facades;
+namespace App\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Itstudioat\Spa\Spa
+ * @see \App\Spa
  */
 class Spa extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Itstudioat\Spa\Spa::class;
+        return \App\Spa::class;
     }
 }

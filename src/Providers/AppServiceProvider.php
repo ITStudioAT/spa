@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
-use Itstudioat\Spa\Http\Middleware\ApiAllowed;
+use App\Http\Middleware\ApiAllowed;
 
 class AppServiceProvider extends ServiceProvider
 {

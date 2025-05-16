@@ -1,6 +1,6 @@
 <?php
 
-namespace Itstudioat\Spa\Services;
+namespace App\Services;
 
 use Spatie\Permission\Models\Role;
 

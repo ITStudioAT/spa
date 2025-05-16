@@ -1,24 +1,24 @@
 <?php
 
-namespace Itstudioat\Spa\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Itstudioat\Spa\Http\Requests\Admin\IndexUserWithRoleRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SaveUserRoleRequest;
-use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
-use Itstudioat\Spa\Http\Resources\Admin\RoleResource;
-use Itstudioat\Spa\Http\Resources\Admin\UserWithRoleResource;
-use Itstudioat\Spa\Services\AdminService;
-use Itstudioat\Spa\Traits\PaginationTrait;
+use App\Http\Requests\Admin\IndexUserWithRoleRequest;
+use App\Http\Requests\Admin\SavePasswordRequest;
+use App\Http\Requests\Admin\SavePasswordWithCodeRequest;
+use App\Http\Requests\Admin\SaveUserRoleRequest;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateProfileRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Requests\Admin\UpdateUserWithCodeRequest;
+use App\Http\Resources\Admin\RoleResource;
+use App\Http\Resources\Admin\UserWithRoleResource;
+use App\Services\AdminService;
+use App\Traits\PaginationTrait;
 
 class UserWithRoleController extends Controller
 {

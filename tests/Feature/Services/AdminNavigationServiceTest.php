@@ -1,6 +1,6 @@
 <?php
 
-use Itstudioat\Spa\Services\AdminNavigationService;
+use App\Services\AdminNavigationService;
 
 it('can AdminNavigationService::dashboardMenu /', function () {
     $service = new AdminNavigationService();

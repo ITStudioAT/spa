@@ -1,12 +1,12 @@
 <?php
 
-namespace Itstudioat\Spa\Services;
+namespace App\Services;
 
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Notification;
-use Itstudioat\Spa\Enums\TwoFaResult;
-use Itstudioat\Spa\Notifications\StandardEmail;
+use App\Enums\TwoFaResult;
+use App\Notifications\StandardEmail;
 
 class UserService
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Itstudioat\Spa\Http\Controllers\Spa;
+namespace App\Http\Controllers\Spa;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Itstudioat\Spa\Enums\RouteResult;
-use Itstudioat\Spa\Http\Requests\Spa\RouteAllowedRequest;
-use Itstudioat\Spa\Services\RouteService;
+use App\Enums\RouteResult;
+use App\Http\Requests\Spa\RouteAllowedRequest;
+use App\Services\RouteService;
 
 class RouteController extends Controller
 {
@@ -16,15 +16,13 @@ class RouteController extends Controller
         // Checking, if the user is permitted to go the route
         // return ok, or abort
 
-        $user = auth()->user();
 
         $data = $request->validated()['data'];
-
+        $fullPath = $data['to'];
+        $user = auth()->user();
+        
         $routeService = new RouteService();
-
-        $route_roles = require base_path('routes/meta/web/' . $data['route'] . '.php');
-
-        $result = $routeService->checkWebRoles($user, $data, $route_roles);
+        $result = $routeService->checkWebRoles($user, $fullPath);
 
         if ($result == RouteResult::ALLOWED) {
             return response()->json(['message' => 'Success'], 200);

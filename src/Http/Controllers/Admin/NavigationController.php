@@ -1,9 +1,9 @@
 <?php
 
-namespace Itstudioat\Spa\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Itstudioat\Spa\Services\AdminNavigationService;
+use App\Services\AdminNavigationService;
 
 class NavigationController extends Controller
 {

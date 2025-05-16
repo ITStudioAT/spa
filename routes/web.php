@@ -4,16 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 // Alles wird gethrottlet
 
-
 Route::middleware(['throttle:global', 'throttle:web', 'web-allowed'])->group(function () {
-
-
-
-
-
-    Route::get('/homepage/{any?}', function () {
-        return view('spa::homepage');
-    })->where('any', '.*');
 
     /***** ADMIN ROUTES *****/
     /* auth-routes */
@@ -45,10 +36,11 @@ Route::middleware(['throttle:global', 'throttle:web', 'web-allowed'])->group(fun
         return view('spa::application');
     })->where('any', '.*');
 
-    /* HOMEPAGE ROUTES */
+    /* HOMEPAGE ROUTES 
     Route::get('/', function () {
         return view('spa::homepage');
     });
+    */
 
     /* WRONG ROUTES */
     Route::get('/{any?}', function () {

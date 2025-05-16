@@ -1,11 +1,11 @@
 <?php
 
-namespace Itstudioat\Spa\Services;
+namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
-use Itstudioat\Spa\Notifications\StandardEmail;
+use App\Notifications\StandardEmail;
 
 class AdminService
 {

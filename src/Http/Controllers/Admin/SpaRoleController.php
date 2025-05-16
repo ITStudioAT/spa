@@ -1,17 +1,17 @@
 <?php
 
-namespace Itstudioat\Spa\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use Illuminate\Http\Request;
-use Itstudioat\Spa\Http\Requests\Admin\IndexRoleRequest;
-use Itstudioat\Spa\Http\Requests\Admin\StoreRoleRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateRoleRequest;
-use Itstudioat\Spa\Http\Resources\Admin\RoleResource;
-use Itstudioat\Spa\Traits\PaginationTrait;
+use App\Http\Requests\Admin\IndexRoleRequest;
+use App\Http\Requests\Admin\StoreRoleRequest;
+use App\Http\Requests\Admin\UpdateRoleRequest;
+use App\Http\Resources\Admin\RoleResource;
+use App\Traits\PaginationTrait;
 
-class RoleController extends Controller
+class SpaRoleController extends Controller
 {
     use PaginationTrait;
 

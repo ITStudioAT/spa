@@ -1,9 +1,9 @@
 <?php
 
-namespace Itstudioat\Spa\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
-use Itstudioat\Spa\Traits\HasRoleTrait;
+use App\Traits\HasRoleTrait;
 
 class Controller extends BaseController
 {

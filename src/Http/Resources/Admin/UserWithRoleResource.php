@@ -1,6 +1,6 @@
 <?php
 
-namespace Itstudioat\Spa\Http\Resources\Admin;
+namespace App\Http\Resources\Admin;
 
 use Carbon\Carbon;
 
@@ -29,7 +29,7 @@ class UserWithRoleResource extends JsonResource
             'email_verified_at' => Carbon::parse($this->email_verified_at)->format('d.m.Y'),
             'login_at' => $this->login_at ? Carbon::parse($this->login_at)->format('d.m.Y  H:i') : null,
             'login_ip' => $this->login_ip ? $this->login_ip : null,
-            'roles' => $this->roles->pluck('name')->filter(fn ($role) => $role !== 'super_admin')->values(),
+            'roles' => $this->roles->pluck('name')->filter(fn($role) => $role !== 'super_admin')->values(),
         ];
     }
 }

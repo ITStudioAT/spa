@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Foundation\Application;
-use Itstudioat\Spa\Http\Middleware\ApiAllowed;
-use Itstudioat\Spa\Http\Middleware\WebAllowed;
+use App\Http\Middleware\ApiAllowed;
+use App\Http\Middleware\WebAllowed;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;

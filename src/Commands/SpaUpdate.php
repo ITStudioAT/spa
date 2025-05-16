@@ -4,7 +4,7 @@ namespace Itstudioat\Spa\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
-use Itstudioat\Spa\Http\Controllers\Spa\InstallUpdateController;
+use App\Http\Controllers\Spa\InstallUpdateController;
 
 class SpaUpdate extends Command
 {

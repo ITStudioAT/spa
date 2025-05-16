@@ -84,7 +84,7 @@ php artisan spa:complete
 **Add the HasRoleTrait to your Http/Controllers/Controller**
 ```bash
   namespace App\Http\Controllers;
-  use Itstudioat\Spa\Traits\HasRoleTrait;
+  use App\Traits\HasRoleTrait;
 
   abstract class Controller
   {

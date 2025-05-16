@@ -1,6 +1,6 @@
 <?php
 
-namespace Itstudioat\Spa\Enums;
+namespace App\Enums;
 
 enum RouteResult: string
 {

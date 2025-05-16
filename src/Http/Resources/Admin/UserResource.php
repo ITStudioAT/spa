@@ -1,6 +1,6 @@
 <?php
 
-namespace Itstudioat\Spa\Http\Resources\Admin;
+namespace App\Http\Resources\Admin;
 
 use Carbon\Carbon;
 

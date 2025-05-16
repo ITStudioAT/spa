@@ -1,11 +1,11 @@
 <?php
 
-namespace Itstudioat\Spa\Http\Controllers\Spa;
+namespace App\Http\Controllers\Spa;
 
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Itstudioat\Spa\Services\InstallUpdateService;
+use App\Services\InstallUpdateService;
 
 class InstallUpdateController extends Controller
 {

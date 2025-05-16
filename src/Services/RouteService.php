@@ -1,52 +1,54 @@
 <?php
 
-namespace Itstudioat\Spa\Services;
+namespace App\Services;
 
-use Itstudioat\Spa\Enums\RouteResult;
+use App\Enums\RouteResult;
 
 class RouteService
 {
-    public function checkWebRoles($user, $data, $route_roles): RouteResult
+    public function checkWebRoles($user, $fullPath): RouteResult
     {
 
-        $toPath = $data['to'] ?? null; // actual route like /admin/test_route/7
-        if (! $toPath) {
-            return RouteResult::NOT_FOUND;
+
+
+        // Lade Route-Metadaten basierend auf erster URI-Sektion
+        $routeGroup = explode('/', trim($fullPath, '/'))[0] ?? 'homepage';
+        if ($routeGroup == "") $routeGroup = "homepage";
+
+        info($routeGroup);
+        $routeFile = base_path('routes/meta/web/' . $routeGroup . '.php');
+        $route_roles = file_exists($routeFile) ? include $routeFile : [];
+
+        $roles = $this->matchRouteRoles($fullPath, $route_roles['roles'] ?? []);
+
+
+        if (is_null($roles)) return RouteResult::NOT_FOUND;
+        if (empty($roles)) return RouteResult::ALLOWED;
+        if ($user && $user->hasAnyRole($roles)) return RouteResult::ALLOWED;
+        if ($user) return RouteResult::NOT_ALLOWED;
+
+        return RouteResult::NOT_EXISTS;
+    }
+
+    protected function matchRouteRoles(string $path, array $roleMap): ?array
+    {
+        // 1. Exakter Match
+        if (array_key_exists($path, $roleMap)) {
+            return $roleMap[$path];
         }
 
-        $rolesMap = $route_roles['roles'] ?? [];
-
-        $matchedKey = null;
-
-        foreach ($rolesMap as $pattern => $roles) {
-            if (self::matchesPath($pattern, $toPath)) {
-                $matchedKey = $pattern;
-
-                break;
+        // 2. Wildcard-Match (z. B. '/admin/*' deckt auch '/admin' ab)
+        foreach ($roleMap as $pattern => $roles) {
+            if (str_ends_with($pattern, '/*')) {
+                $prefix = substr($pattern, 0, -2); // Entfernt nur das '/*' am Ende
+                if ($path === $prefix || str_starts_with($path, $prefix . '/')) {
+                    return $roles;
+                }
             }
         }
 
-        if (! $matchedKey) {
-            return RouteResult::NOT_EXISTS;
-        }
-
-        $requiredRoles = $rolesMap[$matchedKey];
-
-        if (empty($requiredRoles)) {
-            return RouteResult::ALLOWED;
-        }
-
-        if (! $user) {
-            return RouteResult::NOT_ALLOWED;
-        }
-
-        $requiredRoles[] = 'super_admin';
-
-        if ($user->hasAnyRole($requiredRoles)) {
-            return RouteResult::ALLOWED;
-        }
-
-        return RouteResult::NOT_ALLOWED;
+        // 3. Kein Match gefunden
+        return null;
     }
 
     public function checkApiRoles($user, $data, $route_roles): RouteResult

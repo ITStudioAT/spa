@@ -81,7 +81,7 @@ class SyncRoutes extends Command
             // Save updated PHP file
             $phpOutput = "<?php\n\nreturn [\n    'roles' => [\n";
             foreach ($existingRoles as $path => $roles) {
-                $rolesArray = '[' . implode(', ', array_map(fn ($r) => "'$r'", $roles)) . ']';
+                $rolesArray = '[' . implode(', ', array_map(fn($r) => "'$r'", $roles)) . ']';
                 $phpOutput .= "        '$path' => $rolesArray,\n";
             }
             $phpOutput .= "    ]\n];\n";

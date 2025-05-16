@@ -1,7 +1,5 @@
 <?php
 
-namespace Itstudioat\Spa;
+namespace App;
 
-class Spa
-{
-}
+class Spa {}

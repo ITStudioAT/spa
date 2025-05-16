@@ -9,8 +9,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
-use Itstudioat\Spa\Notifications\StandardEmail;
-use Itstudioat\Spa\Traits\UserTrait;
+use App\Notifications\StandardEmail;
+use App\Traits\UserTrait;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 

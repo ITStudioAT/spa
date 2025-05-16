@@ -1,6 +1,6 @@
 <?php
 
-namespace Itstudioat\Spa\Tests;
+namespace App\Tests;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -9,13 +9,13 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
-use Itstudioat\Spa\SpaServiceProvider;
+use App\SpaServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Sanctum\SanctumServiceProvider;
-use Itstudioat\Spa\Http\Middleware\ApiAllowed;
-use Itstudioat\Spa\Http\Middleware\WebAllowed;
+use App\Http\Middleware\ApiAllowed;
+use App\Http\Middleware\WebAllowed;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\Permission\PermissionServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;

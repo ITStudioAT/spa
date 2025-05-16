@@ -1,6 +1,6 @@
 <?php
 
-namespace Itstudioat\Spa\Traits;
+namespace App\Traits;
 
 trait HasRoleTrait
 {

@@ -2,13 +2,13 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Itstudioat\Spa\Http\Controllers\Spa\RouteController;
-use Itstudioat\Spa\Http\Controllers\Admin\RoleController;
-use Itstudioat\Spa\Http\Controllers\Admin\UserController;
-use Itstudioat\Spa\Http\Controllers\Admin\AdminController;
-use Itstudioat\Spa\Http\Controllers\Admin\NavigationController;
-use Itstudioat\Spa\Http\Controllers\Admin\UserWithRoleController;
-use Itstudioat\Spa\Http\Controllers\Homepage\HomepageController;
+use App\Http\Controllers\Spa\RouteController;
+use App\Http\Controllers\Admin\SpaRoleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\NavigationController;
+use App\Http\Controllers\Admin\UserWithRoleController;
+use App\Http\Controllers\Homepage\HomepageController;
 
 // Globales Throttle
 Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
@@ -64,8 +64,8 @@ Route::middleware(['throttle:global', 'throttle:api'])->group(function () {
 
 
         // roles
-        Route::apiResource('/admin/roles', RoleController::class);
-        Route::post('/admin/roles/destroy_multiple',  [RoleController::class, 'destroyMultiple']);
+        Route::apiResource('/admin/roles', SpaRoleController::class);
+        Route::post('/admin/roles/destroy_multiple',  [SpaRoleController::class, 'destroyMultiple']);
 
         // users_with_roles
         Route::get('/admin/users_with_roles/roles',  [UserWithRoleController::class, 'roles']);

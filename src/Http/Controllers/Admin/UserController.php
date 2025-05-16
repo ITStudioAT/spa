@@ -1,30 +1,30 @@
 <?php
 
-namespace Itstudioat\Spa\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Itstudioat\Spa\Enums\TwoFaResult;
-use Itstudioat\Spa\Enums\VerificationResult;
-use Itstudioat\Spa\Http\Requests\Admin\EmailVerificationRequest;
-use Itstudioat\Spa\Http\Requests\Admin\IndexUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\Save2FaRequest;
-use Itstudioat\Spa\Http\Requests\Admin\Save2FaWithCodeRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SavePasswordWithCodeRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SaveUserRolesRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SendVerificationEmailInitializedFromUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\SendVerificationMailRequest;
-use Itstudioat\Spa\Http\Requests\Admin\StoreUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateProfileRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserRequest;
-use Itstudioat\Spa\Http\Requests\Admin\UpdateUserWithCodeRequest;
-use Itstudioat\Spa\Http\Resources\Admin\UserResource;
-use Itstudioat\Spa\Services\AdminService;
-use Itstudioat\Spa\Services\UserService;
-use Itstudioat\Spa\Traits\PaginationTrait;
+use App\Enums\TwoFaResult;
+use App\Enums\VerificationResult;
+use App\Http\Requests\Admin\EmailVerificationRequest;
+use App\Http\Requests\Admin\IndexUserRequest;
+use App\Http\Requests\Admin\Save2FaRequest;
+use App\Http\Requests\Admin\Save2FaWithCodeRequest;
+use App\Http\Requests\Admin\SavePasswordRequest;
+use App\Http\Requests\Admin\SavePasswordWithCodeRequest;
+use App\Http\Requests\Admin\SaveUserRolesRequest;
+use App\Http\Requests\Admin\SendVerificationEmailInitializedFromUserRequest;
+use App\Http\Requests\Admin\SendVerificationMailRequest;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateProfileRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Requests\Admin\UpdateUserWithCodeRequest;
+use App\Http\Resources\Admin\UserResource;
+use App\Services\AdminService;
+use App\Services\UserService;
+use App\Traits\PaginationTrait;
 
 class UserController extends Controller
 {

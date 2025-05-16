@@ -1,9 +1,9 @@
 <?php
 
-namespace Itstudioat\Spa\Services;
+namespace App\Services;
 
 use App\Models\User;
-use Itstudioat\Spa\Traits\HasRoleTrait;
+use App\Traits\HasRoleTrait;
 
 class AdminNavigationService
 {

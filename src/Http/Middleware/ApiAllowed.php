@@ -1,10 +1,10 @@
 <?php
 
-namespace Itstudioat\Spa\Http\Middleware;
+namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Itstudioat\Spa\Traits\HasRoleTrait;
+use App\Traits\HasRoleTrait;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiAllowed
