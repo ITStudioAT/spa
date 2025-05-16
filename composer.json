@@ -42,7 +42,8 @@
             "Itstudioat\\Spa\\Tests\\": "tests/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "App\\": "src/"
+            "App\\": "src/",
+            "Tests\\": "tests/"
         }
     },
     "scripts": {

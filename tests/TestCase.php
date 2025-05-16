@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Tests;
+namespace Tests;
 
 use App\Models\User;
 use Illuminate\Http\Request;
 
 use Spatie\Permission\Models\Role;
+use App\Http\Middleware\ApiAllowed;
+use App\Http\Middleware\WebAllowed;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
-use App\SpaServiceProvider;
+use Itstudioat\Spa\SpaServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Sanctum\SanctumServiceProvider;
-use App\Http\Middleware\ApiAllowed;
-use App\Http\Middleware\WebAllowed;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\Permission\PermissionServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
