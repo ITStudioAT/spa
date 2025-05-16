@@ -9,11 +9,11 @@ class RouteService
     public function checkWebRoles($user, $fullPath): RouteResult
     {
 
-
-
         // Lade Route-Metadaten basierend auf erster URI-Sektion
         $routeGroup = explode('/', trim($fullPath, '/'))[0] ?? 'homepage';
-        if ($routeGroup == "") $routeGroup = "homepage";
+        if ($routeGroup == '') {
+            $routeGroup = 'homepage';
+        }
 
         info($routeGroup);
         $routeFile = base_path('routes/meta/web/' . $routeGroup . '.php');
@@ -21,11 +21,18 @@ class RouteService
 
         $roles = $this->matchRouteRoles($fullPath, $route_roles['roles'] ?? []);
 
-
-        if (is_null($roles)) return RouteResult::NOT_FOUND;
-        if (empty($roles)) return RouteResult::ALLOWED;
-        if ($user && $user->hasAnyRole($roles)) return RouteResult::ALLOWED;
-        if ($user) return RouteResult::NOT_ALLOWED;
+        if (is_null($roles)) {
+            return RouteResult::NOT_FOUND;
+        }
+        if (empty($roles)) {
+            return RouteResult::ALLOWED;
+        }
+        if ($user && $user->hasAnyRole($roles)) {
+            return RouteResult::ALLOWED;
+        }
+        if ($user) {
+            return RouteResult::NOT_ALLOWED;
+        }
 
         return RouteResult::NOT_EXISTS;
     }

@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
+use App\Enums\TwoFaResult;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Support\Facades\Notification;
-use App\Enums\TwoFaResult;
 use App\Notifications\StandardEmail;
+use Illuminate\Support\Facades\Notification;
 
 class UserService
 {

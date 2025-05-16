@@ -2,10 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Composer\InstalledVersions;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Admin\LoginStep1Request;
 use App\Http\Requests\Admin\LoginStep2Request;
 use App\Http\Requests\Admin\LoginStep3Request;
@@ -19,6 +15,10 @@ use App\Http\Requests\Admin\RegisterStep3Request;
 use App\Http\Resources\Admin\UserResource;
 use App\Services\AdminNavigationService;
 use App\Services\AdminService;
+use Composer\InstalledVersions;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {

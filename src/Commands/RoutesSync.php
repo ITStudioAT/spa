@@ -18,7 +18,7 @@ class RoutesSync extends Command
         $excludePrefixes = ['/api', '/sanctum', '/storage', '/up'];
 
         $metaPath = base_path('routes/meta/web');
-        if (!File::exists($metaPath)) {
+        if (! File::exists($metaPath)) {
             File::makeDirectory($metaPath, 0755, true);
             $this->info("📁 Created folder: $metaPath");
         }
@@ -29,8 +29,7 @@ class RoutesSync extends Command
         foreach ($routes as $route) {
             $uri = '/' . ltrim($route->uri(), '/');
 
-
-            if (collect($excludePrefixes)->contains(fn($prefix) => str_starts_with($uri, $prefix))) {
+            if (collect($excludePrefixes)->contains(fn ($prefix) => str_starts_with($uri, $prefix))) {
                 continue;
             }
 
@@ -46,7 +45,7 @@ class RoutesSync extends Command
                 $key = ($first === '' || $first === '*') ? '/homepage' : '/' . preg_replace('/[^a-zA-Z0-9_\-]/', '_', $first);
             }
 
-            if (!isset($grouped[$key])) {
+            if (! isset($grouped[$key])) {
                 $grouped[$key] = [];
             }
 
@@ -85,6 +84,7 @@ class RoutesSync extends Command
         if (str_starts_with($uri, '/admin')) {
             return ['admin'];
         }
+
         return [];
     }
 
@@ -100,7 +100,7 @@ class RoutesSync extends Command
 
     protected function exportRoutesFormatted(array $routes, array $original = []): string
     {
-        $lines = ["<?php", "", "return [", "    'roles' => ["];
+        $lines = ['<?php', '', 'return [', "    'roles' => ["];
 
         // Bestehende Einträge
         foreach ($original as $path => $roles) {
@@ -110,19 +110,19 @@ class RoutesSync extends Command
 
         // Neue Einträge (falls vorhanden)
         $newOnly = array_diff_key($routes, $original);
-        if (!empty($newOnly)) {
-            if (!empty($original)) {
-                $lines[] = ""; // Leerzeile zur Trennung
+        if (! empty($newOnly)) {
+            if (! empty($original)) {
+                $lines[] = ''; // Leerzeile zur Trennung
             }
-            $lines[] = "        // new entries detected";
+            $lines[] = '        // new entries detected';
             foreach ($newOnly as $path => $roles) {
                 $rolesArray = empty($roles) ? '[]' : "['" . implode("', '", $roles) . "']";
                 $lines[] = "        '$path' => $rolesArray,";
             }
         }
 
-        $lines[] = "    ]";
-        $lines[] = "];";
+        $lines[] = '    ]';
+        $lines[] = '];';
 
         return implode("\n", $lines) . "\n";
     }

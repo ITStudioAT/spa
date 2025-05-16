@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Spa;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use App\Enums\RouteResult;
 use App\Http\Requests\Spa\RouteAllowedRequest;
 use App\Services\RouteService;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
 class RouteController extends Controller
 {
@@ -16,11 +16,10 @@ class RouteController extends Controller
         // Checking, if the user is permitted to go the route
         // return ok, or abort
 
-
         $data = $request->validated()['data'];
         $fullPath = $data['to'];
         $user = auth()->user();
-        
+
         $routeService = new RouteService();
         $result = $routeService->checkWebRoles($user, $fullPath);
 

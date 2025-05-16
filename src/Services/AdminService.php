@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Notifications\StandardEmail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\StandardEmail;
 
 class AdminService
 {

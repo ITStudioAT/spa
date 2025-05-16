@@ -2,4 +2,6 @@
 
 namespace App;
 
-class Spa {}
+class Spa
+{
+}

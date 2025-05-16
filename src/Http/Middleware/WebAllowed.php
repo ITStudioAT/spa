@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\RouteResult;
+use App\Services\RouteService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use App\Enums\RouteResult;
-use App\Services\RouteService;
 use Symfony\Component\HttpFoundation\Response;
 
 class WebAllowed
@@ -29,11 +29,6 @@ class WebAllowed
         $routeService = new RouteService();
         $result = $routeService->checkWebRoles($user, $fullPath);
 
-
-
-
-
-
         switch ($result) {
             case RouteResult::ALLOWED:
                 return $next($request);
@@ -41,16 +36,19 @@ class WebAllowed
             case RouteResult::NOT_ALLOWED:
                 $status = 403;
                 $message = 'Sie können auf diese Seite nicht zugreifen';
+
                 break;
 
             case RouteResult::NOT_EXISTS:
                 $status = 404;
                 $message = 'Die Seite konnte nicht gefunden werden';
+
                 break;
 
             case RouteResult::NOT_FOUND:
                 $status = 404;
                 $message = 'Die Seite konnte nicht gefunden werden';
+
                 break;
 
             default:
@@ -64,7 +62,4 @@ class WebAllowed
             'type' => 'error',
         ]));
     }
-
-
-   
 }

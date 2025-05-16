@@ -2,9 +2,9 @@
 
 namespace Itstudioat\Spa\Commands;
 
+use App\Http\Controllers\Spa\InstallUpdateController;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Spa\InstallUpdateController;
 
 class SpaUpdate extends Command
 {

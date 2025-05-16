@@ -2,24 +2,22 @@
 
 namespace Tests;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-
-use Spatie\Permission\Models\Role;
 use App\Http\Middleware\ApiAllowed;
 use App\Http\Middleware\WebAllowed;
-use Illuminate\Support\Facades\Hash;
+
+use App\Models\User;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Schema;
 use Itstudioat\Spa\SpaServiceProvider;
-use Illuminate\Cache\RateLimiting\Limit;
-use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Facades\RateLimiter;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use Laravel\Sanctum\SanctumServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\Permission\PermissionServiceProvider;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 class TestCase extends Orchestra
 {
@@ -30,11 +28,8 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
-
-
         //$this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadMigrationsFrom(__DIR__ . '/../vendor/spatie/laravel-permission/database/migrations');
-
 
         Factory::guessFactoryNamesUsing(function (string $modelName) {
             return 'Database\\Factories\\Spa' . class_basename($modelName) . 'Factory';
@@ -81,7 +76,6 @@ class TestCase extends Orchestra
         $migration = include __DIR__ . '/../vendor/spatie/laravel-permission/database/migrations/create_permission_tables.php.stub';
         $migration->up();
 
-
         $app->register(SanctumServiceProvider::class);
 
         // Register the sanctum guard in the test environment
@@ -96,7 +90,6 @@ class TestCase extends Orchestra
         $app['config']->set('permission.column_names.role_pivot_key', 'role_id');
         $app['config']->set('permission.column_names.permission_pivot_key', 'permission_id');
 
-
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(config('spa.api_throttle', 60))->by($request->user()?->id ?: $request->ip());
         });
@@ -108,8 +101,6 @@ class TestCase extends Orchestra
         RateLimiter::for('global', function (Request $request) {
             return Limit::perMinute(config('spa.global_throttle', 1000));
         });
-
-
 
         $app['router']->aliasMiddleware('web-allowed', WebAllowed::class);
         $app['router']->aliasMiddleware('api-allowed', ApiAllowed::class);

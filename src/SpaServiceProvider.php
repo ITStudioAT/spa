@@ -3,18 +3,18 @@
 namespace Itstudioat\Spa;
 
 use App\Models\User;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
-use Itstudioat\Spa\Commands\SpaUpdate;
 use Itstudioat\Spa\Commands\CreateUser;
+use Itstudioat\Spa\Commands\Fake\UserFake;
 use Itstudioat\Spa\Commands\RoutesSync;
-use Itstudioat\Spa\Commands\SyncRoutes;
-use Spatie\LaravelPackageTools\Package;
 use Itstudioat\Spa\Commands\SpaComplete;
 use Itstudioat\Spa\Commands\SpaPackages;
-use Itstudioat\Spa\Commands\Fake\UserFake;
-use Illuminate\Session\Middleware\StartSession;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Itstudioat\Spa\Commands\SpaUpdate;
+use Itstudioat\Spa\Commands\SyncRoutes;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class SpaServiceProvider extends PackageServiceProvider
 {
@@ -69,8 +69,6 @@ class SpaServiceProvider extends PackageServiceProvider
             __DIR__ . '/../routes/api.php' => base_path('/routes/api.php'),
         ], 'spa-all');
     }
-
-
 
     public function bootingPackage()
     {

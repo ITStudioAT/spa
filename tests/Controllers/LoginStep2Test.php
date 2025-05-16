@@ -68,7 +68,8 @@ it('cant login, wrong email: /api/admin/login_step_2', function () {
         ->assertStatus(401)
         ->assertJson([
             'message' => 'Login funktioniert mit dieser E-Mail-Adresse nicht.',
-        ]);;
+        ]);
+    ;
 });
 
 it('cant login, not confirmed: /api/admin/login_step_2', function () {
@@ -91,7 +92,8 @@ it('cant login, not confirmed: /api/admin/login_step_2', function () {
         ->assertStatus(423)
         ->assertJson([
             'message' => 'Benutzer ist noch nicht bestätigt.',
-        ]);;
+        ]);
+    ;
 });
 
 it('cant login, not active: /api/admin/login_step_2', function () {
@@ -114,7 +116,8 @@ it('cant login, not active: /api/admin/login_step_2', function () {
         ->assertStatus(423)
         ->assertJson([
             'message' => 'Benutzer ist gesperrt.',
-        ]);;
+        ]);
+    ;
 });
 
 it('must be 2_fa_login: /api/admin/login_step_2', function () {
@@ -137,5 +140,6 @@ it('must be 2_fa_login: /api/admin/login_step_2', function () {
         ->assertOk()
         ->assertJson([
             'step' => 'LOGIN_ENTER_TOKEN',
-        ]);;
+        ]);
+    ;
 });

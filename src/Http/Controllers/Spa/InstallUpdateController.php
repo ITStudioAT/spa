@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Spa;
 
 use App\Models\User;
+use App\Services\InstallUpdateService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Services\InstallUpdateService;
 
 class InstallUpdateController extends Controller
 {

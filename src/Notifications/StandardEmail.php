@@ -14,7 +14,9 @@ class StandardEmail extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct(public array $data) {}
+    public function __construct(public array $data)
+    {
+    }
 
     /**
      * Get the notification's delivery channels.

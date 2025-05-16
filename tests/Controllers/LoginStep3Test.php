@@ -22,8 +22,8 @@ it('can login: /api/admin/login_step_3', function () {
         ->assertOk()
         ->assertJson([
             'step' => 'LOGIN_ENTER_TOKEN',
-        ]);;
-
+        ]);
+    ;
 
     $user = User::find(1);
     $token_2fa = $user->token_2fa;
@@ -43,7 +43,6 @@ it('can login: /api/admin/login_step_3', function () {
             'step' => 'LOGIN_SUCCESS',
         ]);
 });
-
 
 it('cant login, wrong token: /api/admin/login_step_3', function () {
 
@@ -65,8 +64,8 @@ it('cant login, wrong token: /api/admin/login_step_3', function () {
         ->assertOk()
         ->assertJson([
             'step' => 'LOGIN_ENTER_TOKEN',
-        ]);;
-
+        ]);
+    ;
 
     $user = User::find(1);
     $token_2fa = $user->token_2fa;

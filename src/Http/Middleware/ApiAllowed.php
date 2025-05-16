@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Traits\HasRoleTrait;
 use Closure;
 use Illuminate\Http\Request;
-use App\Traits\HasRoleTrait;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiAllowed

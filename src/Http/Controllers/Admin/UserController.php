@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use App\Enums\TwoFaResult;
 use App\Enums\VerificationResult;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\EmailVerificationRequest;
 use App\Http\Requests\Admin\IndexUserRequest;
 use App\Http\Requests\Admin\Save2FaRequest;
@@ -22,9 +19,12 @@ use App\Http\Requests\Admin\UpdateProfileRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Http\Requests\Admin\UpdateUserWithCodeRequest;
 use App\Http\Resources\Admin\UserResource;
+use App\Models\User;
 use App\Services\AdminService;
 use App\Services\UserService;
 use App\Traits\PaginationTrait;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
