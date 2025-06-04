@@ -18,7 +18,8 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'resources/js'),  // Resolves the @ to resources/js
-        }
+        },
+        dedupe: ['vuetify'],
     },
 
     plugins: [
@@ -40,7 +41,9 @@ export default defineConfig({
                 },
             },
         }),
-        vuetify(),
+        vuetify({
+            autoImport: true, // ✅ Das verhindert die Fehlerhaften Importe wie vuetify/components/VDialog
+        }),
     ],
 
     build: {

@@ -167,9 +167,6 @@ class UserController extends Controller
             abort(403, 'Sie haben keine Berechtigung');
         }
 
-        info($user->id);
-        info($auth_user->id);
-
         if ($user->id == $auth_user->id) {
             abort(403, 'Man kann sich selbst nicht löschen');
         }

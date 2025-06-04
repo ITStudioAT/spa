@@ -15,7 +15,6 @@ class RouteService
         $routeGroup = explode('/', trim($fullPath, '/'))[0] ?? 'homepage';
         if ($routeGroup == "") $routeGroup = "homepage";
 
-        info($routeGroup);
         $routeFile = base_path('routes/meta/web/' . $routeGroup . '.php');
         $route_roles = file_exists($routeFile) ? include $routeFile : [];
 
