@@ -20,10 +20,12 @@ class RouteService
 
         $roles = $this->matchRouteRoles($fullPath, $route_roles['roles'] ?? []);
 
+        // super_admin zu den erlaubten Rollen hinzufügen
+        $roles[] = 'super_admin';
 
         if (is_null($roles)) return RouteResult::NOT_FOUND;
         if (empty($roles)) return RouteResult::ALLOWED;
-        if ($user && ($user->hasAnyRole($roles) || $user->hasRole('super_admin'))) return RouteResult::ALLOWED;
+        if ($user && ($user->hasAnyRole($roles))) return RouteResult::ALLOWED;
         if ($user) return RouteResult::NOT_ALLOWED;
 
         return RouteResult::NOT_EXISTS;
