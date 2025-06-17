@@ -55,7 +55,7 @@ class WebAllowed
 
             default:
                 $status = 500;
-                $message = 'Fehler in WebAllowed Middleware';
+                $message = 'Fehl WebAllowed Middleware';
         }
 
         return Redirect::to('/application/error?' . http_build_query([

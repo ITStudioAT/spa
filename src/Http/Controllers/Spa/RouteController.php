@@ -20,7 +20,7 @@ class RouteController extends Controller
         $data = $request->validated()['data'];
         $fullPath = $data['to'];
         $user = auth()->user();
-        
+
         $routeService = new RouteService();
         $result = $routeService->checkWebRoles($user, $fullPath);
 
