@@ -82,9 +82,11 @@ class RoutesSync extends Command
 
     protected function guessRoles(string $uri): array
     {
+        /*
         if (str_starts_with($uri, '/admin')) {
             return ['admin'];
         }
+            */
         return [];
     }
 
