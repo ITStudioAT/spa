@@ -54,7 +54,7 @@
                     <!-- Show item (=one line) -->
                     <template v-slot:content="{ item }">
                         <v-col cols="12" lg="4">{{ item.last_name + ' ' + (item.first_name || '')
-                        }}</v-col>
+                            }}</v-col>
                         <v-col cols="12" lg="5">{{ item.email }}</v-col>
                         <v-col cols="12" lg="3" class="d-flex align-center justify-space-between">
                             <v-icon :icon="item.is_active ? 'mdi-lock-open-check' : 'mdi-lock'"
@@ -137,6 +137,7 @@ export default {
     async beforeMount() {
         this.userStore = useUserStore(); this.userStore.initialize(this.$router);
         this.modelStore = useModelStore();
+        this.modelStore.selected_items = [];
         this.userWithRoleStore = useUserWithRoleStore();
         await this.userWithRoleStore.loadRoles();
         this.initRoles(this.userWithRoleStore.roles);

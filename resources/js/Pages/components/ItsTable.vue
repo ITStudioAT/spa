@@ -177,9 +177,9 @@ export default {
         select_all: {
             handler(newVal, oldVal) {
                 if (newVal) {
-                    this.selected_items = this.items;
+                    this.modelStore.selected_items = this.items;
                 } else {
-                    this.selected_items = [];
+                    this.modelStore.selected_items = [];
                 }
             },
             deep: true

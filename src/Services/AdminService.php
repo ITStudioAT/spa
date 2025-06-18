@@ -59,7 +59,7 @@ class AdminService
                 abort(401, 'Registrieren funktioniert mit dieser E-Mail-Adresse nicht.');
             }
         } else {
-            abort(401, 'Registrierung kann nicht fortgesetzt werden.');
+            return null;
         }
 
         if ($data['step'] == 'REGISTER_ENTER_TOKEN') {
