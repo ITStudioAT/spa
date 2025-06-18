@@ -74,6 +74,11 @@ php artisan spa:complete
     },
 ```
 
+**Run composer dump-autoload**
+```bash
+composer dump-autoload
+```
+
 **Change the config/cors.php file**
 ```bash
  'supports_credentials' => true,
@@ -106,13 +111,6 @@ composer require symfony/http-client
 ```
 
 
-## Usage
-```bash
-   php artisan serve
-   npm run dev
-   php artisan queue:work
-```
-
 ## Permissions for routes ##
 ### Web-Routes ###
 Under routes/meta/web there is for each route.js-file a php-file.
@@ -132,6 +130,13 @@ In this example all users with the role admin may pass the apis
 ```bash
     Route::middleware(['auth:sanctum', 'api-allowed:admin'])->group(function () {
         ...
+```
+
+## Usage
+```bash
+   php artisan serve
+   npm run dev
+   php artisan queue:work
 ```
 
 
