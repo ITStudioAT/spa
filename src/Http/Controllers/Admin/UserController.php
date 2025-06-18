@@ -2,29 +2,30 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use App\Enums\TwoFaResult;
-use App\Enums\VerificationResult;
-use App\Http\Requests\Admin\EmailVerificationRequest;
-use App\Http\Requests\Admin\IndexUserRequest;
-use App\Http\Requests\Admin\Save2FaRequest;
-use App\Http\Requests\Admin\Save2FaWithCodeRequest;
-use App\Http\Requests\Admin\SavePasswordRequest;
-use App\Http\Requests\Admin\SavePasswordWithCodeRequest;
-use App\Http\Requests\Admin\SaveUserRolesRequest;
-use App\Http\Requests\Admin\SendVerificationEmailInitializedFromUserRequest;
-use App\Http\Requests\Admin\SendVerificationMailRequest;
-use App\Http\Requests\Admin\StoreUserRequest;
-use App\Http\Requests\Admin\UpdateProfileRequest;
-use App\Http\Requests\Admin\UpdateUserRequest;
-use App\Http\Requests\Admin\UpdateUserWithCodeRequest;
-use App\Http\Resources\Admin\UserResource;
-use App\Services\AdminService;
+use Illuminate\Http\Request;
 use App\Services\UserService;
+use App\Services\AdminService;
 use App\Traits\PaginationTrait;
+use App\Enums\VerificationResult;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\Admin\UserResource;
+use App\Http\Requests\Admin\ConfirmRequest;
+use App\Http\Requests\Admin\Save2FaRequest;
+use App\Http\Requests\Admin\IndexUserRequest;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Requests\Admin\SavePasswordRequest;
+use App\Http\Requests\Admin\SaveUserRolesRequest;
+use App\Http\Requests\Admin\UpdateProfileRequest;
+use App\Http\Requests\Admin\Save2FaWithCodeRequest;
+use App\Http\Requests\Admin\EmailVerificationRequest;
+use App\Http\Requests\Admin\UpdateUserWithCodeRequest;
+use App\Http\Requests\Admin\SavePasswordWithCodeRequest;
+use App\Http\Requests\Admin\SendVerificationMailRequest;
+use App\Http\Requests\Admin\SendVerificationEmailInitializedFromUserRequest;
 
 class UserController extends Controller
 {
@@ -329,6 +330,19 @@ class UserController extends Controller
         $data = ['result' => TwoFaResult::TWO_FA_SET];
 
         return response()->json($data, 200);
+    }
+
+    public function confirm(ConfirmRequest $request)
+    {
+        if (! $user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
+        $validated = $request->validated();
+
+        $userService = new UserService();
+        $userService->confirm($validated['ids']);
+        //XXXXXXX
+        return response()->json(VerificationResult::EMAIL_SENT, 200);
     }
 
     public function sendVerificationEmail(SendVerificationMailRequest $request)

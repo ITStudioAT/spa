@@ -44,6 +44,19 @@ class UserService
         }
     }
 
+
+    public function confirm($par_ids)
+    // $par_ids ist ein Array von User_IDs oder eine einzelne User-ID
+    // alle diese User sind auf confirmed zu setzen und darüber per E-Mail zu verständigen
+    {
+        //XXXXXXXXXXXXX
+        $ids = is_array($par_ids) ? $par_ids : [$par_ids];
+        foreach ($ids as $id) {
+            $user = User::findOrFail($id);
+            $user->sendVerificationEmail();
+        }
+    }
+
     public function setNewUserRoles($user_ids, $role_ids)
     {
         // set the role_names of each role

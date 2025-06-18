@@ -171,6 +171,33 @@ export const useUserStore = defineStore("AdminUserStore", {
             }
         },
 
+        async confirm(ids) {
+            const notification = useNotificationStore();
+            const adminStore = useAdminStore();
+            adminStore.is_loading++;
+            this.api_response = null;
+            try {
+                this.api_answer = await axios.post("/api/admin/users/confirm", { ids });
+
+                notification.notify({
+                    message: 'Die Benutzer wurden bestätigt.',
+                    type: 'success',
+                    timeout: resourceStore.timeout,
+                });
+                return this.api_answer;
+            } catch (error) {
+                notification.notify({
+                    status: error.response.status,
+                    message: error.response.data.message || 'Fehler passiert.',
+                    type: 'error',
+                    timeout: this.config?.timeout,
+                });
+                return false;
+            } finally {
+                adminStore.is_loading--;
+            }
+        },
+
         async sendVerificationEmail(ids) {
             const notification = useNotificationStore();
             const adminStore = useAdminStore();

@@ -40,6 +40,8 @@
                         <v-card-text class="d-flex flex-row flex-wrap  align-center ga-2">
                             <v-checkbox hide-details v-model="select_all"></v-checkbox>
                             <v-btn prepend-icon="mdi-plus" flat rounded="0" color="success" @click="add">Neu</v-btn>
+                            <v-btn prepend-icon="mdi-gesture-tap" flat rounded="0" color="success"
+                                @click="confirm(selected_items)" v-if="selected_items.length > 0">Bestätigen</v-btn>
                             <v-btn prepend-icon="mdi-email-seal-outline" flat rounded="0" color="success"
                                 @click="sendVerificationEmail(selected_items)" v-if="selected_items.length > 0">V-E-Mail
                                 senden</v-btn>
@@ -54,7 +56,7 @@
                     <!-- Show item (=one line) -->
                     <template v-slot:content="{ item }">
                         <v-col cols="12" lg="4">{{ item.last_name + ' ' + (item.first_name || '')
-                            }}</v-col>
+                        }}</v-col>
                         <v-col cols="12" lg="5">{{ item.email }}</v-col>
                         <v-col cols="12" lg="3" class="d-flex align-center justify-space-between">
                             <v-icon :icon="item.is_active ? 'mdi-lock-open-check' : 'mdi-lock'"
@@ -150,7 +152,7 @@ export default {
             userWithRoleStore: null,
             model: 'users', // The used model
             multiple: true, // multi-selection of records (for deletion)
-            title: 'Benutzer', // Title, if all records are shown
+            title: 'Alle Benutzer', // Title, if all records are shown
             title_new: 'Neuer Benutzer', // Title for a new record
             icon: 'mdi-account-group', // Icon shown directly before the title
             show_search_field: true, // Searach field should be shown
@@ -273,6 +275,12 @@ export default {
         },
         abortShowRoles() {
             this.is_show_roles = false;
+        },
+
+        async confirm(items) {
+            const ids = items.map(item => item.id);
+            await this.userStore.confirm(ids);
+
         },
 
         async sendVerificationEmail(items) {
