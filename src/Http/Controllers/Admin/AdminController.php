@@ -66,6 +66,8 @@ class AdminController extends Controller
 
         $user = $adminService->checkRegister($validated['data']);
 
+        if (!$user) abort(401, 'Registrieren funktioniert mit dieser E-Mail-Adresse nicht.');
+
         // E-Mail ist somit verifiziert!
         $user->email_verified_at = now();
         $user->save();

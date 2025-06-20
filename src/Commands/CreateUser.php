@@ -37,6 +37,6 @@ class CreateUser extends Command
             'confirmed_at' => now(),
         ]);
 
-        $this->info("✅ Benutzer {$user->first_name} {$user->last_name} erfolgreich erstellt.");
+        $this->info("Benutzer {$user->first_name} {$user->last_name} erfolgreich erstellt.");
     }
 }

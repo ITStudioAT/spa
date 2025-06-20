@@ -12,6 +12,7 @@ class SyncRoutes extends Command
 
     public function handle()
     {
+
         $jsDir = resource_path('routes');
         $phpDir = base_path('routes/meta/web');
 

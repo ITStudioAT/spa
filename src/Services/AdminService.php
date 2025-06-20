@@ -74,7 +74,7 @@ class AdminService
             }
 
             if (! $data['last_name']) {
-                abort(401, 'Kennwort zurücksetzen funktioniert nicht. Nachname darf nicht leer sein.');
+                abort(401, 'Registrieren funktioniert nicht. Nachname darf nicht leer sein.');
             }
 
             if ($data['password'] != $data['password_repeat']) {
