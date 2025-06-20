@@ -40,7 +40,7 @@ trait UserTrait
     public function checkToken2Fa_2($token_2fa_2): string
     {
         // Check if the token matches and is still valid
-        if ($this->token_2fa_2 == $token_2fa_2 && now()->isBefore($this->token_2fa_expires_at)) {
+        if ($this->token_2fa_2 == $token_2fa_2 && now()->isBefore($this->token_2fa_2_expires_at)) {
             return true; // Token is valid and not expired
         }
 
