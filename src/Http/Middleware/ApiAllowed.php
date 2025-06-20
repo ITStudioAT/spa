@@ -27,14 +27,14 @@ class ApiAllowed
     {
 
         if (! auth()->check()) {
-            return error(401, 'Nicht authorisiert');
+            abort(401, 'Nicht authorisiert');
         }
         if (! $user = auth()->user()) {
-            return error(401, 'Nicht authorisiert');
+            abort(401, 'Nicht authorisiert');
         }
 
         if (! $this->userHasRole($allowed_roles)) {
-            return error(403, 'Unzulässig');
+            abort(403, 'Unzulässig');
         }
 
         return $next($request);
