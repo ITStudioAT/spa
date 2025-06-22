@@ -17,6 +17,7 @@ class SpaRoleController extends Controller
 
     public function index(IndexRoleRequest $request)
     {
+
         if (! $auth_user = $this->userHasRole(['super_admin'])) {
             abort(403, 'Sie haben keine Berechtigung');
         }
@@ -33,7 +34,6 @@ class SpaRoleController extends Controller
         }
 
         $pagination = RoleResource::collection($query->paginate(config('spa.pagination')));
-
         return response()->json($this->makePagination($pagination), 200);
     }
 
@@ -78,7 +78,7 @@ class SpaRoleController extends Controller
         }
 
         if (! $role->shouldDelete()) {
-            abort(403, 'Bei Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.');
+            abort(403, 'Beim Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.');
         }
 
         return response()->noContent();
@@ -86,14 +86,14 @@ class SpaRoleController extends Controller
 
     public function destroyMultiple(Request $request)
     {
-        if (! $auth_user = $this->userHasRole(['admin'])) {
+        if (! $auth_user = $this->userHasRole(['super_admin'])) {
             abort(403, 'Sie haben keine Berechtigung');
         }
         $ids = $request->all();
 
         Role::whereIn('id', $ids)->each(function ($item) {
             if (! $item->shouldDelete()) {
-                abort(403, 'Bei Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.');
+                abort(403, 'Beim Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.');
             }
         });
 

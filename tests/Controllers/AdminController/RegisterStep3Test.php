@@ -120,7 +120,7 @@ it('cant register_step_3 - last_name empty: /api/admin/register_step_3', functio
 });
 
 
-it('cant register_step_3 - repeat_password not the samed: /api/admin/register_step_3', function () {
+it('cant register_step_3 - repeat_password not the same: /api/admin/register_step_3', function () {
 
     $email = 'new@naturwelt.at';
 

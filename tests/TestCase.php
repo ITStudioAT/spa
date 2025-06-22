@@ -4,26 +4,27 @@ namespace Tests;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-use Laravel\Sanctum\SanctumServiceProvider;
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
-
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\PermissionServiceProvider;
-
 use App\Http\Middleware\ApiAllowed;
 use App\Http\Middleware\WebAllowed;
-
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
 use Itstudioat\Spa\SpaServiceProvider;
+
+use Illuminate\Cache\RateLimiting\Limit;
+use Spatie\Permission\Models\Permission;
+
+use Illuminate\Support\Facades\RateLimiter;
+use Laravel\Sanctum\SanctumServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+
+use Spatie\Permission\PermissionServiceProvider;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 class TestCase extends Orchestra
 {
@@ -37,6 +38,9 @@ class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
+
+
+
 
         /*
         // Lade Migrationen, z.B. nur die von Spatie (deine eigenen auskommentiert)
@@ -98,6 +102,8 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app): void
     {
 
+
+
         // Wichtig: Datenbanktabellen löschen (Vorsicht! Nur in Testumgebung)
         Schema::dropAllTables();
 
@@ -112,9 +118,6 @@ class TestCase extends Orchestra
             $migration = include $migrationFile;
             $migration->up();
         }
-
-
-
 
 
         // Laravel Sanctum Service Provider registrieren

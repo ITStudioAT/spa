@@ -25,6 +25,7 @@
     </logging>
     <php>
     
+     <env name="APP_KEY" value="base64:Vq4Hf+L6P6rN5wG9kLRQXNfJx4joXoZhjK8LqmSgLJk="/>
     <env name="DB_CONNECTION" value="mysql"/>
     <env name="DB_USERNAME" value="root"/>
     <env name="DB_DATABASE" value="pest_test"/>
@@ -34,6 +35,8 @@
     <env name="MAIL_USERNAME" value="hallo@itstudio.at"/>
     <env name="MAIL_FROM_ADDRESS" value="hallo@itstudio.at"/>
     <env name="MAIL_FROM_NAME" value="ITStudioAT"/>
+
+    
     
     </php>
     <source>
