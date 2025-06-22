@@ -25,8 +25,7 @@
     </logging>
     <php>
     
-     <env name="APP_KEY" value="base64:Vq4Hf+L6P6rN5wG9kLRQXNfJx4joXoZhjK8LqmSgLJk="/>
-    <env name="DB_CONNECTION" value="mysql"/>
+         <env name="DB_CONNECTION" value="mysql"/>
     <env name="DB_USERNAME" value="root"/>
     <env name="DB_DATABASE" value="pest_test"/>
     <env name="DB_HOST" value="127.0.0.1"/>

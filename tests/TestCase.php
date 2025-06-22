@@ -40,7 +40,7 @@ class TestCase extends Orchestra
         parent::setUp();
 
 
-
+        config(['app.key' => 'base64:' . base64_encode(random_bytes(32))]);
 
         /*
         // Lade Migrationen, z.B. nur die von Spatie (deine eigenen auskommentiert)
