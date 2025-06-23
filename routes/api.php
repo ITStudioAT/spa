@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\UserWithRoleController;
 use App\Http\Controllers\Homepage\HomepageController;
 
 // Globales Throttle
-Route::middleware(['web', 'throttle:global', 'throttle:api'])->group(function () {
+Route::middleware(['api', 'throttle:global', 'throttle:api'])->group(function () {
 
 
     /***** OTHER ROUTES *****/
