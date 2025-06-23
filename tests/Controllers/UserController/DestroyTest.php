@@ -68,19 +68,6 @@ it('cant test destroy, cant delete yourself: DELETE /api/admin/users/{user}', fu
     $admin->assignRole('admin');
     Sanctum::actingAs($admin);
 
-    $user = [
-        'last_name' => 'Mustermann',
-        'first_name' => 'Max',
-        'email' => 'max@mustermann.at',
-        'is_active' => 1,
-        'is_confirmed' => 1,
-        'is_verified' => 1,
-        'is_2fa' => 0,
-    ];
-
-    $response = $this->postJson('/api/admin/users', $user)->assertOk();
-    $user_id = $response->json('id');
-
     $response = $this->deleteJson('/api/admin/users/' . $admin->id)
         ->assertStatus(403)
         ->assertJson([

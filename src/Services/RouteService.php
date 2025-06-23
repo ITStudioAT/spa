@@ -8,9 +8,6 @@ class RouteService
 {
     public function checkWebRoles($user, $fullPath): RouteResult
     {
-
-
-
         // Lade Route-Metadaten basierend auf erster URI-Sektion
         $routeGroup = explode('/', trim($fullPath, '/'))[0] ?? 'homepage';
         if ($routeGroup == "") $routeGroup = "homepage";

@@ -92,7 +92,9 @@ class AdminService
                 'email' => $data['email'],
                 'password' => Hash::make(now()),
                 'register_started_at' => now(),
+                'register_as' => 'admin',
                 'is_active' => false,
+
             ]
         );
 

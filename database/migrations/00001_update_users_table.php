@@ -34,6 +34,7 @@ return new class extends Migration
             $table->timestamp('email_2fa_verified_at')->nullable();
             $table->boolean('is_active')->nullable()->default(1);
             $table->timestamp('register_started_at')->nullable();
+            $table->string('register_as')->nullable();
             $table->timestamp('confirmed_at')->nullable();
             $table->string('uuid')->nullable();
             $table->timestamp('uuid_at')->nullable();

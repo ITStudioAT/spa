@@ -132,6 +132,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+
         if (! $auth_user = $this->userHasRole(['admin'])) {
             abort(403, 'Sie haben keine Berechtigung');
         }

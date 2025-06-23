@@ -74,7 +74,7 @@ class SpaServiceProvider extends PackageServiceProvider
 
     public function bootingPackage()
     {
-        $this->app['router']->pushMiddlewareToGroup('web', StartSession::class);
+        // $this->app['router']->pushMiddlewareToGroup('web', StartSession::class);
 
         // Routen werden beim Booten des Pakets geladen
         Route::model('user', User::class);
