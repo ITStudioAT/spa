@@ -58,7 +58,7 @@ class User extends Authenticatable
     public function shouldDelete(): bool
     {
 
-        if (count($this->roles) > 0) abort(500, "Benutzer kann nicht gelöscht werden, da er noch Rollen inne hat.");
+        if (count($this->roles) > 0) abort(403, "Benutzer kann nicht gelöscht werden, da er noch Rollen inne hat.");
         $this->delete();
         return true;
     }

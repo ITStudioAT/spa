@@ -109,7 +109,7 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        if (! $auth_user = $this->userHasRole(['super_admin'])) {
+        if (! $auth_user = $this->userHasRole(['admin'])) {
             abort(403, 'Sie haben keine Berechtigung');
         }
 
@@ -126,6 +126,40 @@ class UserController extends Controller
         $user->update($validated);
 
         return response()->json(new UserResource($user), 200);
+    }
+
+
+
+    public function destroy(User $user)
+    {
+        if (! $auth_user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
+
+        if ($user->id == $auth_user->id) {
+            abort(403, 'Man kann sich selbst nicht löschen');
+        }
+
+        $user->shouldDelete();
+
+        return response()->noContent();
+    }
+
+    public function destroyMultiple(Request $request)
+    {
+        if (! $auth_user = $this->userHasRole(['admin'])) {
+            abort(403, 'Sie haben keine Berechtigung');
+        }
+        $ids = $request->all();
+
+        User::whereIn('id', $ids)->each(function ($user) use ($auth_user) {
+            if ($user->id == $auth_user->id) {
+                abort(403, 'Man kann sich selbst nicht löschen');
+            }
+            $user->shouldDelete();
+        });
+
+        return response()->noContent();
     }
 
     private function convertConfirmedVerified($validated, $user = null)
@@ -160,41 +194,6 @@ class UserController extends Controller
         unset($validated['is_verified']);
 
         return $validated;
-    }
-
-    public function destroy(User $user)
-    {
-        if (! $auth_user = $this->userHasRole(['admin'])) {
-            abort(403, 'Sie haben keine Berechtigung');
-        }
-
-        if ($user->id == $auth_user->id) {
-            abort(403, 'Man kann sich selbst nicht löschen');
-        }
-        if (! $user->shouldDelete()) {
-            abort(403, 'Bei Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.');
-        }
-
-        return response()->noContent();
-    }
-
-    public function destroyMultiple(Request $request)
-    {
-        if (! $auth_user = $this->userHasRole(['admin'])) {
-            abort(403, 'Sie haben keine Berechtigung');
-        }
-        $ids = $request->all();
-
-        User::whereIn('id', $ids)->each(function ($user) use ($auth_user) {
-            if ($user->id == $auth_user->id) {
-                abort(403, 'Man kann sich selbst nicht löschen');
-            }
-            if (! $user->shouldDelete()) {
-                abort(403, 'Bei Löschen ist ein Fehler aufgetreten. Möglicherweise gibt es abhängige Daten.');
-            }
-        });
-
-        return response()->noContent();
     }
 
     public function updateProfile(UpdateProfileRequest $request, User $user)

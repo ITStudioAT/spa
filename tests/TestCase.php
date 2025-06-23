@@ -42,23 +42,7 @@ class TestCase extends Orchestra
 
         config(['app.key' => 'base64:' . base64_encode(random_bytes(32))]);
 
-        /*
-        // Lade Migrationen, z.B. nur die von Spatie (deine eigenen auskommentiert)
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->loadMigrationsFrom(__DIR__ . '/../vendor/spatie/laravel-permission/database/migrations');
 
-        dump(scandir(__DIR__ . '/../database/migrations'));
-        dump(scandir(__DIR__ . '/../vendor/spatie/laravel-permission/database/migrations'));
-
-        $this->artisan('migrate')->run();
-*/
-
-        /*
-        $this->loadMigrationsFrom([
-            __DIR__ . '/../database/migrations',
-            __DIR__ . '/../vendor/spatie/laravel-permission/database/migrations',
-        ]);
-*/
         // Factory-Namenskonventionen für deine Modelle
         Factory::guessFactoryNamesUsing(fn(string $modelName) => 'Database\\Factories\\Spa' . class_basename($modelName) . 'Factory');
 
