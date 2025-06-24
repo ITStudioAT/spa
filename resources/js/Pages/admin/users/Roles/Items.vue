@@ -58,7 +58,7 @@
                     <!-- You can comment out any of these actions or the whole template-->
                     <!-- You can add more actions, the selected item is in the var item -->
                     <template v-slot:actions="{ item }">
-                        <v-btn icon="mdi-details" color="success" @click="show(item)"></v-btn>
+                        <v-btn icon="mdi-dots-horizontal" color="success" @click="show(item)"></v-btn>
                         <v-btn flat icon="mdi-delete" color="error" @click="destroy(item)"></v-btn>
                         <v-btn icon="mdi-close" color="warning"></v-btn>
                     </template>

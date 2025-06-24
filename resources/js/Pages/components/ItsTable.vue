@@ -61,8 +61,9 @@
                     </v-list-item>
                 </v-list>
             </v-card-text>
-            <v-card-text v-if="modelStore.pagination" class="mt-0 pt-0">
 
+            <!-- PAGINATION -->
+            <v-card-text v-if="modelStore.pagination" class="mt-0 pt-0">
                 <div class="d-flex flex-row align-center justify-space-between text-body-2 mb-2">
                     <div>{{ 'Gesamt: ' + modelStore.pagination.total }}</div>
                     <div>Seite {{ modelStore.pagination.current_page + ' von ' + modelStore.pagination.last_page }}

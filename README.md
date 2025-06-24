@@ -62,8 +62,10 @@ php artisan spa:install
 php artisan spa:complete
 ```
 
-### Make important entries in some files
+Here you can enter your super_admin User.
 
+### Make important entries in some files
+<!--
 **Put this line in composer.json**
 ```bash
     "autoload": {
@@ -78,6 +80,7 @@ php artisan spa:complete
 ```bash
 composer dump-autoload
 ```
+-->
 
 **Change the config/cors.php file**
 ```bash
