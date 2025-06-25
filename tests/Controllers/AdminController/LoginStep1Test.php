@@ -1,11 +1,19 @@
 <?php
 
 use App\Models\User;
+use Spatie\Permission\Models\Role;
+
+beforeEach(function () {
+
+    // Ensure roles exist
+    Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
+    Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+    Role::firstOrCreate(['name' => 'user', 'guard_name' => 'web']);
+});
 
 it('can login: /api/admin/login_step_1', function () {
 
     $users = User::factory()->count(1)->create();
-
     $user = $users[0];
     $user->assignRole('admin');
 
@@ -27,7 +35,6 @@ it('can login: /api/admin/login_step_1', function () {
 it('cant login, no correct role: /api/admin/login_step_1', function () {
 
     $users = User::factory()->count(1)->create();
-
     $user = $users[0];
 
     $data = [
@@ -46,10 +53,14 @@ it('cant login, no correct role: /api/admin/login_step_1', function () {
 
 it('cant login, wrong email: /api/admin/login_step_1', function () {
 
+    $users = User::factory()->count(1)->create();
+    $user = $users[0];
+    $user->assignRole('admin');
+
     $data = [
         'data' => [
             'step' => 'LOGIN_ENTER_EMAIL',
-            'email' => 'wrong@naturwelt.at',
+            'email' => 'wrong@email.at',
         ],
     ];
 
@@ -62,14 +73,16 @@ it('cant login, wrong email: /api/admin/login_step_1', function () {
 
 it('cant login, not confirmed: /api/admin/login_step_1', function () {
 
-    $user = User::find(1);
+    $users = User::factory()->count(1)->create();
+    $user = $users[0];
+    $user->assignRole('admin');
     $user->confirmed_at = null;
     $user->save();
 
     $data = [
         'data' => [
             'step' => 'LOGIN_ENTER_EMAIL',
-            'email' => 'kron@naturwelt.at',
+            'email' => $user->email,
         ],
     ];
 
@@ -85,14 +98,17 @@ it('cant login, not confirmed: /api/admin/login_step_1', function () {
 
 it('cant login, not active: /api/admin/login_step_1', function () {
 
-    $user = User::find(1);
+    $users = User::factory()->count(1)->create();
+    $user = $users[0];
+    $user->assignRole('admin');
     $user->is_active = false;
     $user->save();
+
 
     $data = [
         'data' => [
             'step' => 'LOGIN_ENTER_EMAIL',
-            'email' => 'kron@naturwelt.at',
+            'email' => $user->email,
         ],
     ];
 

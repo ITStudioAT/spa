@@ -127,7 +127,7 @@ class AdminService
             abort(423, 'Benutzer ist gesperrt.');
         }
 
-        if (! $user->hasAnyRole(['admin', 'user'])) {
+        if (! $user->hasAnyRole(['super_admin', 'admin', 'user'])) {
             // Benutzer hat keine der angegebenen Rollen
             abort(423, 'Login aufgrund der Berechtigungen nicht möglich.');
         }
