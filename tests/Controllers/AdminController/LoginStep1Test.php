@@ -3,10 +3,16 @@
 use App\Models\User;
 
 it('can login: /api/admin/login_step_1', function () {
+
+    $users = User::factory()->count(1)->create();
+
+    $user = $users[0];
+    $user->assignRole('admin');
+
     $data = [
         'data' => [
             'step' => 'LOGIN_ENTER_EMAIL',
-            'email' => 'kron@naturwelt.at',
+            'email' => $user->email,
         ],
     ];
 
@@ -14,6 +20,27 @@ it('can login: /api/admin/login_step_1', function () {
         ->assertOk()
         ->assertJson([
             'step' => 'LOGIN_ENTER_PASSWORD',
+        ]);
+});
+
+
+it('cant login, no correct role: /api/admin/login_step_1', function () {
+
+    $users = User::factory()->count(1)->create();
+
+    $user = $users[0];
+
+    $data = [
+        'data' => [
+            'step' => 'LOGIN_ENTER_EMAIL',
+            'email' => $user->email,
+        ],
+    ];
+
+    $response = $this->postJson('/api/admin/login_step_1', $data)
+        ->assertStatus(423)
+        ->assertJson([
+            'message' => 'Login aufgrund der Berechtigungen nicht möglich.',
         ]);
 });
 

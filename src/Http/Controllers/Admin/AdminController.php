@@ -220,8 +220,8 @@ class AdminController extends Controller
             abort(400, 'Sie sind gar nicht eingeloggt.');
         }
         auth('web')->logout();
-        //$request->session()->invalidate();
-        //$request->session()->regenerateToken();
+        // $request->session()->invalidate();
+        // $request->session()->regenerateToken();
 
         return response()->json(['message' => 'Logout successful'], 200);
     }

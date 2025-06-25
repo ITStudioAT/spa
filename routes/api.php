@@ -42,6 +42,11 @@ Route::middleware(['api', 'throttle:global', 'throttle:api'])->group(function ()
     Route::post('/admin/users/send_verification_email_initialized_from_user',  [UserController::class, 'sendVerificationEmailInitializedFromUser']);
     Route::post('/admin/users/email_verification',  [UserController::class, 'emailVerification']);
 
+    /* SANCTUM - user */
+    Route::middleware(['auth:sanctum', 'api-allowed:user, admin'])->group(function () {
+        Route::put('/admin/users/update_profile/{user}',  [UserController::class, 'updateProfile']);
+    });
+
     /* SANCTUM - admin */
     Route::middleware(['auth:sanctum', 'api-allowed:admin'])->group(function () {
         Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);
@@ -52,7 +57,6 @@ Route::middleware(['api', 'throttle:global', 'throttle:api'])->group(function ()
 
         // users
         Route::apiResource('/admin/users', UserController::class);
-        Route::put('/admin/users/update_profile/{user}',  [UserController::class, 'updateProfile']);
         Route::post('/admin/users/destroy_multiple',  [UserController::class, 'destroyMultiple']);
         Route::post('/admin/users/update_with_code',  [UserController::class, 'updateWithCode']);
         Route::post('/admin/users/save_password',  [UserController::class, 'savePassword']);
@@ -71,7 +75,6 @@ Route::middleware(['api', 'throttle:global', 'throttle:api'])->group(function ()
         // users_with_roles
         Route::get('/admin/users_with_roles/roles',  [UserWithRoleController::class, 'roles']);
         Route::post('/admin/users_with_roles/roles',  [UserWithRoleController::class, 'saveUserRoles']);
-        Route::apiResource('/admin/users_with_roles', UserWithRoleController::class);
         Route::apiResource('/admin/users_with_roles', UserWithRoleController::class);
     });
 });

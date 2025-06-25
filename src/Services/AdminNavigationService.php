@@ -26,9 +26,12 @@ class AdminNavigationService
             $menu[] = ['title' => 'Dashboard', 'icon' => 'mdi-view-dashboard', 'to' => '/admin/dashboard'];
         }
 
-        // BENUTZER
-        if ($this->userHasRole(['admin'])) {
+        // BENUTZER ALS super_admin
+        if ($this->userHasRole(['super_admin'])) {
             $menu[] = ['title' => 'Benutzer/Rollen', 'icon' => 'mdi-account-multiple', 'to' => '/admin/users'];
+        } elseif ($this->userHasRole(['admin'])) {
+            // BENUTZER ALS admin
+            $menu[] = ['title' => 'Benutzer', 'icon' => 'mdi-account-multiple', 'to' => '/admin/users'];
         }
 
         // PROFILE

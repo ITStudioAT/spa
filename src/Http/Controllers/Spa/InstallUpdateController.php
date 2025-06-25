@@ -19,7 +19,7 @@ class InstallUpdateController extends Controller
         }
 
         /* Rollen erzeugen */
-        $roles = ['super_admin', 'admin'];
+        $roles = ['super_admin', 'admin', 'user'];
         $installUpdateService->createRoles($roles);
 
         /* 1. User super_admin zuweisen */

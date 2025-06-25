@@ -26,7 +26,10 @@ class UserWithRoleController extends Controller
 
     public function roles(Request $request)
     {
+        info("roles");
+
         if (! $auth_user = $this->userHasRole(['super_admin'])) {
+            return response()->json(['roles' => []], 200);
             abort(403, 'Sie haben keine Berechtigung');
         }
 
@@ -42,9 +45,13 @@ class UserWithRoleController extends Controller
 
     public function saveUserRoles(SaveUserRoleRequest $request)
     {
+        info("saveUserRoles");
+
         if (! $auth_user = $this->userHasRole(['super_admin'])) {
             abort(403, 'Sie haben keine Berechtigung');
         }
+
+        info("saveUserRoles 2");
 
         $validated = $request->validated();
 
@@ -88,6 +95,8 @@ class UserWithRoleController extends Controller
     public function store(StoreUserRequest $request)
     {
 
+        info("store");
+
         if (! $auth_user = $this->userHasRole(['admin'])) {
             abort(403, 'Sie haben keine Berechtigung');
         }
@@ -112,6 +121,7 @@ class UserWithRoleController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
+        info("update");
         $auth_user = $this->userHasRole(['admin']);
         $validated = $request->validated();
 

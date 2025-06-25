@@ -127,6 +127,12 @@ class AdminService
             abort(423, 'Benutzer ist gesperrt.');
         }
 
+        if (! $user->hasAnyRole(['admin', 'user'])) {
+            // Benutzer hat keine der angegebenen Rollen
+            abort(423, 'Login aufgrund der Berechtigungen nicht möglich.');
+        }
+
+
         if ($data['step'] == 'LOGIN_ENTER_PASSWORD') {
             if (! Hash::check($data['password'], $user->password)) {
                 abort(401, 'Login funktioniert mit diesem Kennwort nicht.');
