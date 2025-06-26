@@ -45,11 +45,12 @@ Route::middleware(['api', 'throttle:global', 'throttle:api'])->group(function ()
     /* SANCTUM - user */
     Route::middleware(['auth:sanctum', 'api-allowed:user, admin'])->group(function () {
         Route::put('/admin/users/update_profile/{user}',  [UserController::class, 'updateProfile']);
+        Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);
     });
 
     /* SANCTUM - admin */
     Route::middleware(['auth:sanctum', 'api-allowed:admin'])->group(function () {
-        Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);
+
 
         // navigation, menus
         Route::get('/admin/navigation/profile_menu',  [NavigationController::class, 'profileMenu']);

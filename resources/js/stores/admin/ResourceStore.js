@@ -113,12 +113,6 @@ export function createResourceStore(modelName) {
                     }
                 },
 
-                redirect(status, message, type) {
-                    const redirectUrl = '/application/error?status=' + status + '&message=' + encodeURIComponent(message) + '&type=' + type;
-                    window.location.href = redirectUrl; // This is a real redirect
-                },
-
-
             };
         }
     };

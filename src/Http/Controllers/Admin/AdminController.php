@@ -26,6 +26,9 @@ class AdminController extends Controller
     {
         $navigationService = new AdminNavigationService();
 
+        info("config");
+        info("config - auth->check: " .  auth()->check());
+
         $data = [
             'logo' => config('spa.logo', ''),
             'copyright' => config('spa.copyright', ''),
@@ -38,6 +41,11 @@ class AdminController extends Controller
             'user' => auth()->check() ? new UserResource(auth()->user()) : null,
             'menu' => $navigationService->dashboardMenu(),
         ];
+
+
+
+
+
 
         return response()->json($data, 200);
     }
@@ -183,8 +191,8 @@ class AdminController extends Controller
             return response()->json($data, 200);
         } else {
             // Keine 2-Faktoren-Authentifizierung ==> Login fertig
-            Auth::login($user);
-            // $request->session()->regenerate();
+            auth('web')->login($user);
+            $request->session()->regenerate();
             $data = [
                 'step' => 'LOGIN_SUCCESS',
                 'auth' => true,
@@ -202,6 +210,8 @@ class AdminController extends Controller
         $validated = $request->validated();
         $user = $adminService->checkUserLogin($validated['data']);
         auth()->login($user);
+
+        info("step3, auth: " . auth()->check());
         //$request->session()->regenerate();
 
         $data = [
@@ -220,8 +230,8 @@ class AdminController extends Controller
             abort(400, 'Sie sind gar nicht eingeloggt.');
         }
         auth('web')->logout();
-        // $request->session()->invalidate();
-        // $request->session()->regenerateToken();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return response()->json(['message' => 'Logout successful'], 200);
     }

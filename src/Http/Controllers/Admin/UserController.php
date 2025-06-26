@@ -33,7 +33,7 @@ class UserController extends Controller
 
     public function index(IndexUserRequest $request)
     {
-        if (! $auth_user = $this->userHasRole(['admin'])) {
+        if (! $auth_user = $this->userHasRole(['admin', 'user'])) {
             abort(403, 'Sie haben keine Berechtigung');
         }
         $validated = $request->validated();

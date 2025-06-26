@@ -54,6 +54,7 @@
                 <v-btn block color="warning" slim flat rounded="0" variant="text" @click="restartLogin">Zurück</v-btn>
             </v-card-text>
 
+            {{ config }}
         </v-card>
 
     </v-container>
@@ -132,14 +133,15 @@ export default {
             if (await this.adminStore.loginStep2(data)) {
                 if (this.api_response.data.step == 'LOGIN_SUCCESS') {
                     this.step = "LOGIN_SUCCESS";
+
+                    console.log("login erfolreich");
                     const notification = useNotificationStore();
                     notification.notify({
                         message: 'Sie haben sich erfolreich angemeldet',
                         type: 'success',
                         timeout: this.adminStore.config?.timeout,
                     });
-
-
+                    console.log("login erfolreich - loadConfig");
                     await this.adminStore.loadConfig();
                     this.$router.push('/admin/');
                 } else {
@@ -159,7 +161,6 @@ export default {
                 type: 'success',
                 timeout: this.adminStore.config?.timeout,
             });
-
             await this.adminStore.loadConfig();
             this.$router.push('/admin/');
         },

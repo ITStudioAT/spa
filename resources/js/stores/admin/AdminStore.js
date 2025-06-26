@@ -20,13 +20,24 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         ...resourceStore.actions(),
 
         async loadConfig() {
+            const notification = useNotificationStore();
+            console.log("loadConfig");
             this.is_loading++; this.api_response = null;
             try {
+                await axios.get('/sanctum/csrf-cookie');
                 this.api_response = await axios.get("/api/admin/config", {});
                 this.config = this.api_response.data;
+                console.log("api_response");
+                console.log(this.config.is_auth);
+
                 return this.api_response.data;
             } catch (error) {
-                this.redirect(error.response.status, error.response.data.message, 'error');
+                notification.notify({
+                    status: error.response.status,
+                    message: error.response.data.message || 'Fehler passiert.',
+                    type: 'error',
+                    timeout: this.config?.timeout,
+                });
                 return false;
             } finally {
                 this.is_loading--;
@@ -34,6 +45,7 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async registerStep1(data) {
+
             const notification = useNotificationStore();
             this.is_loading++; this.api_response = null;
             try {
@@ -53,6 +65,7 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async registerStep2(data) {
+
             const notification = useNotificationStore();
             this.is_loading++; this.api_response = null;
             try {
@@ -167,9 +180,11 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async loginStep1(data) {
+
             const notification = useNotificationStore();
             this.is_loading++; this.api_response = null;
             try {
+                await axios.get('/sanctum/csrf-cookie');
                 this.api_response = await axios.post("/api/admin/login_step_1", { data });
                 return true;
 
@@ -187,10 +202,14 @@ export const useAdminStore = defineStore("AdminAdminStore", {
         },
 
         async loginStep2(data) {
+
             const notification = useNotificationStore();
             this.is_loading++; this.api_response = null;
             try {
+                await axios.get('/sanctum/csrf-cookie');
                 this.api_response = await axios.post("/api/admin/login_step_2", { data });
+                console.log("loginStep2");
+                console.log(this.api_response);
                 return true;
             } catch (error) {
                 notification.notify({
@@ -207,9 +226,11 @@ export const useAdminStore = defineStore("AdminAdminStore", {
 
 
         async loginStep3(data) {
+
             const notification = useNotificationStore();
             this.is_loading++; this.api_response = null;
             try {
+                await axios.get('/sanctum/csrf-cookie');
                 this.api_response = await axios.post("/api/admin/login_step_3", { data });
                 return true;
             } catch (error) {
@@ -227,6 +248,7 @@ export const useAdminStore = defineStore("AdminAdminStore", {
 
 
         async executeLogout() {
+            await axios.get('/sanctum/csrf-cookie');
             const notification = useNotificationStore();
             this.is_loading++; this.api_response = null;
             try {
@@ -245,7 +267,7 @@ export const useAdminStore = defineStore("AdminAdminStore", {
             }
         },
 
- 
+
 
 
 

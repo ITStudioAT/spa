@@ -23,18 +23,28 @@ class SpaPackages extends Command
 
         $devDeps = [
             'axios',
-            'laravel-vite-plugin',
-            'vite',
+            'laravel-vite-plugin@^1.3.0',
+            'vite@^6.0.0',
         ];
 
         foreach ($deps as $pkg) {
-            $this->info("📦 Installing latest {$pkg} ...");
-            exec("npm install {$pkg}@latest");
+            if (strpos($pkg, '@') !== false && !str_ends_with($pkg, '@latest')) {
+                $this->info("📦 Installing fixed {$pkg} ...");
+                exec("npm install {$pkg}");
+            } else {
+                $this->info("📦 Installing latest {$pkg} ...");
+                exec("npm install {$pkg}@latest");
+            }
         }
 
         foreach ($devDeps as $pkg) {
-            $this->info("📦 Installing latest dev {$pkg} ...");
-            exec("npm install --save-dev {$pkg}@latest");
+            if (strpos($pkg, '@') !== false && !str_ends_with($pkg, '@latest')) {
+                $this->info("📦 Installing fixed dev version {$pkg} ...");
+                exec("npm install --save-dev {$pkg}");
+            } else {
+                $this->info("📦 Installing latest dev {$pkg} ...");
+                exec("npm install --save-dev {$pkg}@latest");
+            }
         }
 
         $this->info('✅ Alle Pakete installiert.');

@@ -117,16 +117,24 @@ class AdminService
 
     public function checkUserLogin($data): User
     {
+        info("user first: " . User::where('email', $data['email'])->first());
         if (! $user = User::where('email', $data['email'])->first()) {
             abort(401, 'Login funktioniert mit dieser E-Mail-Adresse nicht.');
         }
+
+        info("user confirmed_at: " . $user->confirmed_at);
         if (! $user->confirmed_at) {
             abort(423, 'Benutzer ist noch nicht bestätigt.');
         }
+
+
+        info("user is_active: " . $user->is_active);
         if (! $user->is_active) {
             abort(423, 'Benutzer ist gesperrt.');
         }
 
+
+        info("user hasAnyRole: " . $user->hasAnyRole(['super_admin', 'admin', 'user']));
         if (! $user->hasAnyRole(['super_admin', 'admin', 'user'])) {
             // Benutzer hat keine der angegebenen Rollen
             abort(423, 'Login aufgrund der Berechtigungen nicht möglich.');
