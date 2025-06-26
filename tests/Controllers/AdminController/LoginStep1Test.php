@@ -13,7 +13,10 @@ beforeEach(function () {
 
 it('can login: /api/admin/login_step_1', function () {
 
-    $users = User::factory()->count(1)->create();
+    $users = User::factory()->count(1)->create([
+        'confirmed_at' => now()->addHour(),
+        'is_active' => 1,
+    ]);
     $user = $users[0];
     $user->assignRole('admin');
 
@@ -34,8 +37,12 @@ it('can login: /api/admin/login_step_1', function () {
 
 it('cant login, no correct role: /api/admin/login_step_1', function () {
 
-    $users = User::factory()->count(1)->create();
+    $users = User::factory()->count(1)->create([
+        'confirmed_at' => now()->addHour(),
+        'is_active' => 1,
+    ]);
     $user = $users[0];
+    $user->syncRoles();
 
     $data = [
         'data' => [
@@ -53,7 +60,10 @@ it('cant login, no correct role: /api/admin/login_step_1', function () {
 
 it('cant login, wrong email: /api/admin/login_step_1', function () {
 
-    $users = User::factory()->count(1)->create();
+    $users = User::factory()->count(1)->create([
+        'confirmed_at' => now()->addHour(),
+        'is_active' => 1,
+    ]);
     $user = $users[0];
     $user->assignRole('admin');
 
@@ -73,10 +83,13 @@ it('cant login, wrong email: /api/admin/login_step_1', function () {
 
 it('cant login, not confirmed: /api/admin/login_step_1', function () {
 
-    $users = User::factory()->count(1)->create();
+    $users = User::factory()->count(1)->create([
+        'confirmed_at' => null,
+        'is_active' => 1,
+    ]);
     $user = $users[0];
     $user->assignRole('admin');
-    $user->confirmed_at = null;
+
     $user->save();
 
     $data = [
@@ -98,7 +111,10 @@ it('cant login, not confirmed: /api/admin/login_step_1', function () {
 
 it('cant login, not active: /api/admin/login_step_1', function () {
 
-    $users = User::factory()->count(1)->create();
+    $users = User::factory()->count(1)->create([
+        'confirmed_at' => now()->addHour(),
+        'is_active' => 0,
+    ]);
     $user = $users[0];
     $user->assignRole('admin');
     $user->is_active = false;

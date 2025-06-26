@@ -11,6 +11,15 @@ beforeEach(function () {
     Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
     Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
     Role::firstOrCreate(['name' => 'moderator', 'guard_name' => 'web']);
+
+    $this->user = User::factory()->create(
+        [
+            'is_active' => 1,
+            'confirmed_at' => now()->addHour(),
+            'email_verified_at' => now()->addHour(),
+            'is_2fa' => 0,
+        ]
+    );
 });
 
 it('can test destroy: DELETE /api/admin/users/{user}', function () {
@@ -19,20 +28,8 @@ it('can test destroy: DELETE /api/admin/users/{user}', function () {
     $admin->assignRole('admin');
     Sanctum::actingAs($admin);
 
-    $user = [
-        'last_name' => 'Mustermann',
-        'first_name' => 'Max',
-        'email' => 'max@mustermann.at',
-        'is_active' => 1,
-        'is_confirmed' => 1,
-        'is_verified' => 1,
-        'is_2fa' => 0,
-    ];
 
-    $response = $this->postJson('/api/admin/users', $user)->assertOk();
-    $user_id = $response->json('id');
-
-    $response = $this->deleteJson('/api/admin/users/' . $user_id)
+    $response = $this->deleteJson('/api/admin/users/' . $this->user->id)
         ->assertNoContent();
 });
 
@@ -43,22 +40,9 @@ it('cant test destroy, wrong role: DELETE /api/admin/users/{user}', function () 
     $admin->assignRole('admin');
     Sanctum::actingAs($admin);
 
-    $user = [
-        'last_name' => 'Mustermann',
-        'first_name' => 'Max',
-        'email' => 'max@mustermann.at',
-        'is_active' => 1,
-        'is_confirmed' => 1,
-        'is_verified' => 1,
-        'is_2fa' => 0,
-    ];
-
-    $response = $this->postJson('/api/admin/users', $user)->assertOk();
-    $user_id = $response->json('id');
-
     $admin->syncRoles(['moderator']);
 
-    $response = $this->deleteJson('/api/admin/users/' . $user_id)
+    $response = $this->deleteJson('/api/admin/users/' . $this->user->id)
         ->assertForbidden();
 });
 
@@ -81,22 +65,9 @@ it('cant test destroy, cant delete users with roles: DELETE /api/admin/users/{us
     $admin->assignRole('admin');
     Sanctum::actingAs($admin);
 
-    $user = [
-        'last_name' => 'Mustermann',
-        'first_name' => 'Max',
-        'email' => 'max@mustermann.at',
-        'is_active' => 1,
-        'is_confirmed' => 1,
-        'is_verified' => 1,
-        'is_2fa' => 0,
-    ];
+    $this->user->assignRole('admin');
 
-    $response = $this->postJson('/api/admin/users', $user)->assertOk();
-    $user_id = $response->json('id');
-    $user = User::find($user_id);
-    $user->assignRole('admin');
-
-    $response = $this->deleteJson('/api/admin/users/' . $user->id)
+    $response = $this->deleteJson('/api/admin/users/' . $this->user->id)
         ->assertStatus(403)
         ->assertJson([
             'message' => 'Benutzer kann nicht gelöscht werden, da er noch Rollen inne hat.',
