@@ -2,20 +2,35 @@
 
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
+use Spatie\Permission\Models\Role;
+
+beforeEach(function () {
+    // Ensure roles exist
+    Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
+    Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+    Role::firstOrCreate(['name' => 'moderator', 'guard_name' => 'web']);
+
+    $this->user = User::factory()->create(
+        [
+            'is_active' => 1,
+            'confirmed_at' => now()->addHour(),
+            'email_verified_at' => now()->addHour(),
+            'is_2fa' => 0,
+        ]
+    );
+});
 
 
 it('can logout: /api/admin/execute_logout', function () {
 
-    $user = User::find(1);
-    $user->assignRole('admin');
+    $admin = $this->user;
+    $admin->assignRole('admin');
 
-
-    Sanctum::actingAs($user);
-    $response = $this->postJson('/api/admin/execute_logout')
+    $this->withMiddleware('web')
+        ->actingAs($admin, 'web')
+        ->postJson('/api/admin/execute_logout')
         ->assertOk()
-        ->assertJson([
-            'message' => 'Logout successful',
-        ]);
+        ->assertJson(['message' => 'Logout successful']);
 });
 
 

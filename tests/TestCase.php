@@ -86,7 +86,12 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app): void
     {
 
-
+        $app['config']->set('sanctum.stateful', [
+            'localhost',
+            '127.0.0.1',
+            'localhost:8000',
+            '127.0.0.1:8000',
+        ]);
 
         // Wichtig: Datenbanktabellen löschen (Vorsicht! Nur in Testumgebung)
         Schema::dropAllTables();

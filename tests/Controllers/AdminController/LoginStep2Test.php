@@ -20,8 +20,9 @@ it('can login: /api/admin/login_step_2', function () {
     $user->assignRole('user');
     $user->is_2fa = false;
     $user->is_active = true;
-    $user->confirmed_at = now();
+    $user->confirmed_at = now()->addHour();
     $user->save();
+
 
     $data = [
         'data' => [
@@ -31,11 +32,11 @@ it('can login: /api/admin/login_step_2', function () {
         ],
     ];
 
-    $response = $this->postJson('/api/admin/login_step_2', $data)
+    $this->withMiddleware('web')
+        ->startSession()
+        ->postJson('/api/admin/login_step_2', $data)
         ->assertOk()
-        ->assertJson([
-            'step' => 'LOGIN_SUCCESS',
-        ]);
+        ->assertJson(['step' => 'LOGIN_SUCCESS']);
 });
 
 it('cant login, wrong password: /api/admin/login_step_2', function () {

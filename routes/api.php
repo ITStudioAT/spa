@@ -42,8 +42,10 @@ Route::middleware(['api', 'throttle:global', 'throttle:api'])->group(function ()
     Route::post('/admin/users/send_verification_email_initialized_from_user',  [UserController::class, 'sendVerificationEmailInitializedFromUser']);
     Route::post('/admin/users/email_verification',  [UserController::class, 'emailVerification']);
 
+
+
     /* SANCTUM - user */
-    Route::middleware(['auth:sanctum', 'api-allowed:user, admin'])->group(function () {
+    Route::middleware(['auth:sanctum', 'api-allowed:user,admin'])->group(function () {
         Route::put('/admin/users/update_profile/{user}',  [UserController::class, 'updateProfile']);
         Route::post('/admin/execute_logout',  [AdminController::class, 'executeLogout']);
     });

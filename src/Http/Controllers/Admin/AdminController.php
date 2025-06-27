@@ -26,8 +26,6 @@ class AdminController extends Controller
     {
         $navigationService = new AdminNavigationService();
 
-        info("config");
-        info("config - auth->check: " .  auth()->check());
 
         $data = [
             'logo' => config('spa.logo', ''),
@@ -192,7 +190,7 @@ class AdminController extends Controller
         } else {
             // Keine 2-Faktoren-Authentifizierung ==> Login fertig
             auth('web')->login($user);
-            $request->session()->regenerate();
+            session()->regenerate();
             $data = [
                 'step' => 'LOGIN_SUCCESS',
                 'auth' => true,
@@ -211,8 +209,7 @@ class AdminController extends Controller
         $user = $adminService->checkUserLogin($validated['data']);
         auth()->login($user);
 
-        info("step3, auth: " . auth()->check());
-        //$request->session()->regenerate();
+        session()->regenerate();
 
         $data = [
             'step' => 'LOGIN_SUCCESS',
@@ -226,12 +223,14 @@ class AdminController extends Controller
 
     public function executeLogout(Request $request)
     {
+
         if (! auth()->check()) {
             abort(400, 'Sie sind gar nicht eingeloggt.');
         }
+
         auth('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        session()->invalidate();
+        session()->regenerateToken();
 
         return response()->json(['message' => 'Logout successful'], 200);
     }
