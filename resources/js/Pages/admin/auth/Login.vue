@@ -54,7 +54,6 @@
                 <v-btn block color="warning" slim flat rounded="0" variant="text" @click="restartLogin">Zurück</v-btn>
             </v-card-text>
 
-            {{ config }}
         </v-card>
 
     </v-container>

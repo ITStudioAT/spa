@@ -31,6 +31,8 @@ class UserResource extends JsonResource
             'email_2fa_verified_at' => $this->email_2fa_verified_at ? Carbon::parse($this->email_2fa_verified_at)->format('d.m.Y') : null,
             'login_at' => $this->login_at ? Carbon::parse($this->login_at)->format('d.m.Y  H:i') : null,
             'login_ip' => $this->login_ip,
+            'roles' => $this->roles->sortBy('name')->pluck('name')->values(),
+
         ];
     }
 }

@@ -21,12 +21,12 @@ class UserService
         $users_is_email_verified_count = User::whereNotNull('email_verified_at')->count();
 
         $data = [
-            ['title' => 'Benutzer gesamt', 'content' => $users_count],
-            ['title' => 'Aktive Benutzer', 'content' => $users_is_active_count],
-            ['title' => 'Benutzer mit 2-FA-Authentifizierung', 'content' => $users_is_2fa_count],
-            ['title' => 'Benutzer mit bestätigter E-Mail', 'content' => $users_is_email_verified_count],
-            ['title' => 'Bestätigte Benutzer', 'content' => $users_is_confirmed_count],
-            ['title' => 'Nicht bestätigte Benutzer', 'content' => $users_is_not_confirmed_count],
+            ['title' => 'Gesamt', 'content' => $users_count],
+            ['title' => 'Aktiv', 'content' => $users_is_active_count],
+            ['title' => 'Mit 2-FA-Authentifizierung', 'content' => $users_is_2fa_count],
+            ['title' => 'Mit bestätigter E-Mail', 'content' => $users_is_email_verified_count],
+            ['title' => 'Bestätigte', 'content' => $users_is_confirmed_count],
+            ['title' => 'Nicht bestätigte', 'content' => $users_is_not_confirmed_count],
         ];
 
         return $data;
@@ -63,14 +63,17 @@ class UserService
         foreach ($role_ids as &$role_id) {
             $role = Role::findOrFail($role_id['id']);
             $role_id['name'] = $role->name;
+            info($role_id['name']);
         }
         unset($role_id);
+
 
         // Run all users
         foreach ($user_ids as $id) {
             $user = User::findOrFail($id);
 
             foreach ($role_ids as $role_id) {
+
                 if ($role_id['role_check'] == 1) {
                     // role should be assigned
                     $user->assignRole($role_id['name']);

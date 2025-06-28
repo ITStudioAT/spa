@@ -9,7 +9,7 @@
             </v-card-title>
             <v-card-text :class="'bg-' + color + '-lighten-4'" class="pt-2">
                 <v-list density="compact">
-                    <v-list-item :class="'border-b border-' + color + '-lighten-4'" v-for="(info, i) in infos">
+                    <v-list-item :class="i % 2 == 0 ? '' : 'bg-secondary-lighten-2'" v-for="(info, i) in infos">
                         <template v-slot:prepend>
                             {{ info.title }}
                         </template>
@@ -19,6 +19,7 @@
                     </v-list-item>
                 </v-list>
             </v-card-text>
+
             <v-card-actions class="justify-end">
                 <v-btn slim flat rounded="0" :to="url" append-icon="mdi-arrow-right">Mehr</v-btn>
             </v-card-actions>

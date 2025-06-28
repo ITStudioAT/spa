@@ -17,7 +17,6 @@ class SpaRoleController extends Controller
 
     public function index(IndexRoleRequest $request)
     {
-
         if (! $auth_user = $this->userHasRole(['super_admin'])) {
             abort(403, 'Sie haben keine Berechtigung');
         }

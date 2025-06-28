@@ -9,6 +9,7 @@ class AdminNavigationService
 {
     use HasRoleTrait;
 
+    /* MENÜ AUF DER LINKEN SEITE */
     public function dashboardMenu(): array
     {
         $menu = [];
@@ -26,12 +27,9 @@ class AdminNavigationService
             $menu[] = ['title' => 'Dashboard', 'icon' => 'mdi-view-dashboard', 'to' => '/admin/dashboard'];
         }
 
-        // BENUTZER ALS super_admin
-        if ($this->userHasRole(['super_admin'])) {
+        // BENUTZER ALS admin
+        if ($this->userHasRole(['admin'])) {
             $menu[] = ['title' => 'Benutzer/Rollen', 'icon' => 'mdi-account-multiple', 'to' => '/admin/users'];
-        } elseif ($this->userHasRole(['admin'])) {
-            // BENUTZER ALS admin
-            $menu[] = ['title' => 'Benutzer', 'icon' => 'mdi-account-multiple', 'to' => '/admin/users'];
         }
 
         // PROFILE
@@ -43,10 +41,11 @@ class AdminNavigationService
         return $menu;
     }
 
+    /* MENÜ PROFILE */
     public function profileMenu(): array
     {
         $menu = [];
-        if ($this->userHasRole(['admin'])) {
+        if ($this->userHasRole(['admin', 'user'])) {
             $menu[] = ['title' => '', 'subtitle' => 'Home', 'icon' => 'mdi-home', 'color' => 'secondary',  'to' => '/admin'];
             $menu[] = ['title' => '', 'subtitle' => 'Kennwort ändern', 'icon' => 'mdi-form-textbox-password', 'color' => 'secondary',  'action' => 'wantToChangePassword'];
             $menu[] = ['title' => '', 'subtitle' => '2-FA-Authentifizierung', 'icon' => 'mdi-two-factor-authentication', 'color' => 'secondary',  'action' => 'wantToChange2Fa'];
@@ -56,6 +55,7 @@ class AdminNavigationService
     }
 
     public function userMenu(): array
+    /* BENUTZER/ROLLEN: Menü ganz oben */
     {
         $menu = [];
         $menu[] = ['title' => '', 'subtitle' => 'Home', 'icon' => 'mdi-home', 'color' => 'secondary',  'to' => '/admin'];
@@ -66,6 +66,7 @@ class AdminNavigationService
         return $menu;
     }
 
+    /* BENUTZER/ROLLEN: Informationsblöcke */
     public function userSelection(): array
     {
         $userService = new UserService();

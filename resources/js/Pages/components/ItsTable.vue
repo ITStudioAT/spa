@@ -41,7 +41,7 @@
                         :class="i % 2 == 0 ? '' : 'bg-secondary-lighten-2'" color="success">
                         <v-row dense class="align-center">
                             <v-col cols="10" class="py-0">
-                                <v-row>
+                                <v-row dense no-gutters class="mt-1">
                                     <slot name="content" :item="item" />
                                 </v-row>
                             </v-col>

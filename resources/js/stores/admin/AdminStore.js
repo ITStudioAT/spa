@@ -21,15 +21,11 @@ export const useAdminStore = defineStore("AdminAdminStore", {
 
         async loadConfig() {
             const notification = useNotificationStore();
-            console.log("loadConfig");
             this.is_loading++; this.api_response = null;
             try {
                 await axios.get('/sanctum/csrf-cookie');
                 this.api_response = await axios.get("/api/admin/config", {});
                 this.config = this.api_response.data;
-                console.log("api_response");
-                console.log(this.config.is_auth);
-
                 return this.api_response.data;
             } catch (error) {
                 notification.notify({

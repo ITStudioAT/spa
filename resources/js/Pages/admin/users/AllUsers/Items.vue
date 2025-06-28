@@ -19,7 +19,7 @@
                 * save_action, destroy_action, destroy_multiple_action, select_all : "events" to run the action in the component (dont change here)
                 * show_search_field: indicates if the search_field is displayed
                 * If you dont want any search option, set search_options : [],
-                *
+                * reload : model will be reloaded if reload is increased
                 * EVENTS you may listen
                 * @updated
                 * @stored
@@ -31,7 +31,7 @@
                     :search_options="search_options" :model="this.model" :multiple="this.multiple" :data="data"
                     :data_multiple="data_multiple" :save_action="save_action" :destroy_action="destroy_action"
                     :destroy_multiple_action="destroy_multiple_action" :select_all="select_all"
-                    :show_search_field="show_search_field">
+                    :show_search_field="show_search_field" :reload="reload_table">
 
                     <!-- Menu on the top -->
                     <!-- You can comment out any of these actions  or the whole template-->
@@ -39,6 +39,12 @@
                     <template v-slot:menu="{ selected_items }">
                         <v-card-text class="d-flex flex-row flex-wrap  align-center ga-2">
                             <v-checkbox hide-details v-model="select_all"></v-checkbox>
+
+
+                            <v-btn prepend-icon="mdi-eye" flat tile class="text-caption"
+                                :color="show_user_roles ? 'accent' : 'secondary'"
+                                @click="show_user_roles = !show_user_roles" v-if="hasRole(['admin'])">Rollen</v-btn>
+
                             <v-btn prepend-icon="mdi-plus" flat rounded="0" color="success" @click="add">Neu</v-btn>
                             <v-btn prepend-icon="mdi-gesture-tap" flat rounded="0" color="success"
                                 @click="confirm(selected_items)" v-if="selected_items.length > 0">Bestätigen</v-btn>
@@ -46,7 +52,8 @@
                                 @click="sendVerificationEmail(selected_items)" v-if="selected_items.length > 0">V-E-Mail
                                 senden</v-btn>
                             <v-btn prepend-icon="mdi-relation-one-to-many" flat rounded="0" color="success"
-                                @click="showRoles" v-if="selected_items.length > 0">Rollen zuordnen</v-btn>
+                                @click="showRoles" v-if="selected_items.length > 0 && hasRole(['admin'])">Rollen
+                                zuordnen</v-btn>
                             <v-btn :prepend-icon="selected_items.length == 1 ? 'mdi-delete' : 'mdi-delete-sweep'" flat
                                 rounded="0" color="error" v-if="selected_items.length > 0"
                                 @click="destroyMultiple(selected_items)">Löschen</v-btn>
@@ -67,6 +74,12 @@
                                 :color="item.is_verified ? 'success' : 'error'" />
                             <v-icon :icon="item.is_2fa ? 'mdi-two-factor-authentication' : 'mdi-form-textbox-password'"
                                 :color="item.is_2fa ? 'success' : 'warning'" />
+                        </v-col>
+                        <v-col cols="12" class="d-flex flex-row flex-wrap ga-2" v-if="show_user_roles">
+                            <v-icon color="primary" icon="mdi-badge-account-horizontal-outline" size="small" />
+                            <div class="text-caption" v-for="(role, i) in item.roles" v-if="item.roles.length > 0">{{
+                                role }}</div>
+                            <div v-if="item.roles.length == 0">--</div>
                         </v-col>
                     </template>
 
@@ -89,6 +102,7 @@
                 </its-table>
             </v-col>
         </v-row>
+        <!-- ROLLEN ZUORDNEN-->
         <its-overlay-box title="Rollen zuordnen" color="primary" v-if="is_show_roles">
             <template #content>
 
@@ -123,11 +137,14 @@
 
         </its-overlay-box>
 
+        {{ adminStore.config.user }}
+
     </v-container>
 </template>
 <script>
 import { useModelStore } from "@/stores/admin/ModelStore";
 import { useUserStore } from "@/stores/admin/UserStore";
+import { useAdminStore } from "@/stores/admin/AdminStore";
 import { useUserWithRoleStore } from "@/stores/admin/UserWithRoleStore";
 import ItsOverlayBox from "@/pages/components/ItsOverlayBox.vue";
 import ItsMenuButton from "@/pages/components/ItsMenuButton.vue";
@@ -138,6 +155,7 @@ export default {
     components: { ItsMenuButton, ItsTable, ItemShow, ItsOverlayBox },
     async beforeMount() {
         this.userStore = useUserStore(); this.userStore.initialize(this.$router);
+        this.adminStore = useAdminStore();
         this.modelStore = useModelStore();
         this.modelStore.selected_items = [];
         this.userWithRoleStore = useUserWithRoleStore();
@@ -148,6 +166,7 @@ export default {
     data() {
         return {
             userStore: null,
+            adminStore: null,
             modelStore: null,
             userWithRoleStore: null,
             model: 'users', // The used model
@@ -207,6 +226,7 @@ export default {
                         { 'name': 'Ohne 2-Faktoren', 'value': 2 }
                     ]
                 },
+
             ],
             save_action: 0,
             destroy_action: 0,
@@ -219,12 +239,23 @@ export default {
             event: null,
             is_show_roles: false,
             roles: [],
+            show_user_roles: false,
+            reload_table: 0,
+
 
 
         };
     },
 
     methods: {
+
+        hasRole(p_roles) {
+            const roles = Array.isArray(p_roles) ? p_roles : [p_roles];
+            const userRoles = this.adminStore?.config?.user?.roles || [];
+            if (!roles.includes('super_admin')) { roles.push('super_admin'); }
+
+            return roles.some(role => userRoles.includes(role));
+        },
 
 
         async saveUserRoles(users, roles) {
@@ -234,6 +265,7 @@ export default {
                 .map(item => ({ id: item.id, role_check: item.role_check }));
 
             const answer = this.userStore.saveUserRoles(user_ids, role_ids);
+            this.reload_table++;
             this.is_show_roles = false;
 
         },
@@ -280,7 +312,6 @@ export default {
         async confirm(items) {
             const ids = items.map(item => item.id);
             await this.userStore.confirm(ids);
-
         },
 
         async sendVerificationEmail(items) {
