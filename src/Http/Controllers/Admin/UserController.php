@@ -167,7 +167,7 @@ class UserController extends Controller
     {
 
         // Benutzer is_confirmed?
-        if ($validated['is_confirmed']) {
+        if (isset($validated['is_confirmed']) &&  $validated['is_confirmed']) {
             if ($user) {
                 if (! $user->confirmed_at) {
                     $validated['confirmed_at'] = now();
@@ -181,7 +181,7 @@ class UserController extends Controller
         unset($validated['is_confirmed']);
 
         // E-Mail is_validated
-        if ($validated['is_verified']) {
+        if (isset($validated['is_verified']) && $validated['is_verified']) {
             if ($user) {
                 if (! $user->email_verified_at) {
                     $validated['email_verified_at'] = now();
@@ -199,7 +199,8 @@ class UserController extends Controller
 
     public function updateProfile(UpdateProfileRequest $request, User $user)
     {
-        if (! $auth_user = $this->userHasRole(['admin'])) {
+
+        if (! $auth_user = $this->userHasAtLeastOneRole()) {
             abort(403, 'Sie haben keine Berechtigung');
         }
         $validated = $request->validated();
@@ -219,14 +220,15 @@ class UserController extends Controller
 
     public function updateWithCode(UpdateUserWithCodeRequest $request)
     {
-        if (! $user = $this->userHasRole(['admin'])) {
+        if (! $user = $this->userHasAtLeastOneRole()) {
             abort(403, 'Sie haben keine Berechtigung');
         }
         $validated = $request->validated();
+
         if (! $user->checkToken2Fa($validated['token_2fa'])) {
             abort(401, 'Der Code ist falsch oder abgelaufen');
         }
-        $validated['email_verified_at'] = now();
+
         $user->update($validated);
 
         return response()->json(new UserResource($user), 200);
@@ -234,7 +236,7 @@ class UserController extends Controller
 
     public function savePassword(SavePasswordRequest $request)
     {
-        if (! $user = $this->userHasRole(['admin'])) {
+        if (! $user = $this->userHasAtLeastOneRole()) {
             abort(403, 'Sie haben keine Berechtigung');
         }
         $validated = $request->validated();
@@ -250,7 +252,7 @@ class UserController extends Controller
 
     public function savePasswordWithCode(SavePasswordWithCodeRequest $request)
     {
-        if (! $user = $this->userHasRole(['admin'])) {
+        if (! $user = $this->userHasAtLeastOneRole()) {
             abort(403, 'Sie haben keine Berechtigung');
         }
         $validated = $request->validated();
@@ -264,6 +266,8 @@ class UserController extends Controller
                 'password' => Hash::make($validated['password']),
             ]
         );
+
+        return response()->noContent();
     }
 
     public function save2Fa(Save2FaRequest $request)
@@ -337,6 +341,7 @@ class UserController extends Controller
         if (! $user = $this->userHasRole(['admin'])) {
             abort(403, 'Sie haben keine Berechtigung');
         }
+        info("da");
         $validated = $request->validated();
 
         $userService = new UserService();

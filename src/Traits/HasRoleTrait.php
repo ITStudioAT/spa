@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Models\User;
+
 trait HasRoleTrait
 {
     public function userHasRole($par_roles)
@@ -25,6 +27,27 @@ trait HasRoleTrait
         if (! $user->hasAnyRole($roles)) {
             return false;
         }
+
+
+        $user = User::find($user->id);
+        return $user;
+    }
+
+    public function userHasAtLeastOneRole()
+    {
+
+        if (! auth()->check()) {
+            return false;
+        }
+        if (! $user = auth()->user()) {
+            return false;
+        }
+
+        if (! $user->roles()->exists()) {
+            return false;
+        }
+
+        $user = User::find($user->id);
 
         return $user;
     }

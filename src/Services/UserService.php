@@ -51,6 +51,14 @@ class UserService
     {
         //XXXXXXXXXXXXX
         $ids = is_array($par_ids) ? $par_ids : [$par_ids];
+
+
+        // Check, how many users are not confirmed
+        $count = User::whereIn('id', $ids)
+            ->whereNull('confirmed_at')
+            ->count();
+        if ($count == 0) abort(422, "Alle Benutzer sind bereits bestätigt!");
+
         foreach ($ids as $id) {
             $user = User::findOrFail($id);
             $user->sendVerificationEmail();
