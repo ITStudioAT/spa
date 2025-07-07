@@ -49,9 +49,7 @@ class UserService
     // $par_ids ist ein Array von User_IDs oder eine einzelne User-ID
     // alle diese User sind auf confirmed zu setzen und darüber per E-Mail zu verständigen
     {
-        //XXXXXXXXXXXXX
         $ids = is_array($par_ids) ? $par_ids : [$par_ids];
-
 
         // Check, how many users are not confirmed
         $count = User::whereIn('id', $ids)
@@ -61,7 +59,9 @@ class UserService
 
         foreach ($ids as $id) {
             $user = User::findOrFail($id);
-            $user->sendVerificationEmail();
+            $user->confirmed_at = now();
+            $user->save();
+            $user->sendConfirmationEmail();
         }
     }
 
@@ -103,6 +103,11 @@ class UserService
 
         // ** 2-FA-WANTED ...
 
+        // 2FA-Email doesnt exists
+        if (! $email_2fa || $email_2fa == '') {
+            return TwoFaResult::TWO_FA_ERROR;
+        }
+
         // 2-FA-E-Mail is the same, as the user entered and is verified => everything ok
         if ($email_2fa == $user->email) {
             return TwoFaResult::TWO_FA_EMAIL_AND_2FA_EMAIL_MUST_NOT_BE_EQUAL;
@@ -118,10 +123,7 @@ class UserService
             return TwoFaResult::TWO_FA_EMAIL_MUST_BE_VERIFIED;
         }
 
-        // 2FA-Email doesnt exists
-        if (! $email_2fa) {
-            return TwoFaResult::TWO_FA_ERROR;
-        }
+
 
         // 2-FA-E-Mail is new and sure not verified, because it is new ;)
         return TwoFaResult::TWO_FA_EMAIL_IS_NEW;

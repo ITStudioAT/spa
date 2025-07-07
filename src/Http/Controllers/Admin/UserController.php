@@ -272,7 +272,7 @@ class UserController extends Controller
 
     public function save2Fa(Save2FaRequest $request)
     {
-        if (! $user = $this->userHasRole(['admin'])) {
+        if (! $user = $this->userHasAtLeastOneRole()) {
             abort(403, 'Sie haben keine Berechtigung');
         }
 
@@ -303,7 +303,7 @@ class UserController extends Controller
 
     public function save2FaWithCode(Save2FaWithCodeRequest $request)
     {
-        if (! $user = $this->userHasRole(['admin'])) {
+        if (! $user = $this->userHasAtLeastOneRole()) {
             abort(403, 'Sie haben keine Berechtigung');
         }
 
@@ -318,9 +318,20 @@ class UserController extends Controller
 
         $result = $userService->check2Fa($user, $validated['is_2fa'], $validated['email_2fa']);
 
+        // return response()->json(['message' => $result->value . " - " . $user->email_2fa . " - " . $validated['email_2fa']], 500);
+
+        if ($result == TwoFaResult::TWO_FA_DELETE) {
+            abort(422, 'Keine 2-Faktoren-Authentifizierung gewünscht');
+        }
+
         if ($result == TwoFaResult::TWO_FA_EMAIL_AND_2FA_EMAIL_MUST_NOT_BE_EQUAL) {
             abort(422, 'Die E-Mail und die E-Mail für die 2-Faktoren-Authentifizierung dürfen nicht gleich sein');
         }
+
+        if ($result == TwoFaResult::TWO_FA_EMAIL_MUST_BE_VERIFIED) {
+            abort(422, 'Die E-Mail für die 2-Faktoren-Authentifizierung ist nicht verifiziert');
+        }
+
         if ($result == TwoFaResult::TWO_FA_ERROR) {
             abort(422, 'Fehler bei der 2-Faktoren-Authentifizierung');
         }
@@ -341,13 +352,14 @@ class UserController extends Controller
         if (! $user = $this->userHasRole(['admin'])) {
             abort(403, 'Sie haben keine Berechtigung');
         }
-        info("da");
+
         $validated = $request->validated();
 
         $userService = new UserService();
         $userService->confirm($validated['ids']);
-        //XXXXXXX
-        return response()->json(VerificationResult::EMAIL_SENT, 200);
+        return response()->json([
+            'result' => VerificationResult::EMAIL_SENT->value,
+        ], 200);
     }
 
     public function sendVerificationEmail(SendVerificationMailRequest $request)
@@ -360,7 +372,9 @@ class UserController extends Controller
         $userService = new UserService();
         $userService->sendVerificationEmail($validated['ids']);
 
-        return response()->json(VerificationResult::EMAIL_SENT, 200);
+        return response()->json([
+            'result' => VerificationResult::EMAIL_SENT->value,
+        ], 200);
     }
 
     public function emailVerification(EmailVerificationRequest $request)
@@ -369,19 +383,29 @@ class UserController extends Controller
 
         $user = User::where('email', $validated['email'])->first();
 
-        if ($user->email_verified_at) {
-            $user->emailVerified();
-
-            return response()->json(VerificationResult::ALREADY_VERIFIED, 200);
+        if (!$user) {
+            abort(404, 'Benutzer nicht gefunden');
         }
 
-        if (! $user->checkUuid($validated['uuid'])) {
+        if ($user->email_verified_at) {
+            $user->emailVerified();
+            return response()->json([
+                'result' => VerificationResult::ALREADY_VERIFIED->value,
+            ], 200);
+        }
+
+        $validUuid = $user->checkUuid($validated['uuid']);
+
+        if (! $validUuid) {
             abort(403, 'Die E-Mail-Verifikation hat nicht geklappt. Vermutlich ist die Zeit abgelaufen.');
         }
 
         $user->emailVerified();
 
-        return response()->json(VerificationResult::VERIFICATION_SUCCESS, 200);
+
+        return response()->json([
+            'result' => VerificationResult::VERIFICATION_SUCCESS->value,
+        ], 200);
     }
 
     public function sendVerificationEmailInitializedFromUser(SendVerificationEmailInitializedFromUserRequest $request)

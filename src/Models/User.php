@@ -81,18 +81,14 @@ class User extends Authenticatable
     }
 
 
-    public function sendConfirmEmail()
+    public function sendConfirmationEmail()
     {
-        // XXXXXXXXXXXXXXXXXXXXX
-        $uuid = $this->generateUuid();
 
         $data = [
             'from_address' => env('MAIL_FROM_ADDRESS'),
             'from_name' => env('MAIL_FROM_NAME'),
-            'subject' => 'E-Mail-Verifikation',
-            'markdown' => 'spa::mails.admin.sendEmailVerification',
-            'url' => $data['url'] = config('app.url') . '/admin/email_verification?email=' . $this->email . '&uuid=' . $uuid,
-            'token-expire-time' => config('spa.token_expire_time'),
+            'subject' => 'Bestätigung des Accounts',
+            'markdown' => 'spa::mails.admin.sendConfirmation',
         ];
 
         Notification::route('mail', $this->email)->notify(new StandardEmail($data));

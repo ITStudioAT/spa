@@ -63,7 +63,7 @@
                     <!-- Show item (=one line) -->
                     <template v-slot:content="{ item }">
                         <v-col cols="12" lg="4">{{ item.last_name + ' ' + (item.first_name || '')
-                            }}</v-col>
+                        }}</v-col>
                         <v-col cols="12" lg="5">{{ item.email }}</v-col>
                         <v-col cols="12" lg="3" class="d-flex align-center justify-space-between">
                             <v-icon :icon="item.is_active ? 'mdi-lock-open-check' : 'mdi-lock'"
@@ -312,6 +312,7 @@ export default {
         async confirm(items) {
             const ids = items.map(item => item.id);
             await this.userStore.confirm(ids);
+            this.reload_table++;
         },
 
         async sendVerificationEmail(items) {

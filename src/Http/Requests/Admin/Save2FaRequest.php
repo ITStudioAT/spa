@@ -24,7 +24,7 @@ class Save2FaRequest extends FormRequest
         return [
             'id' => 'required|exists:users,id',
             'is_2fa' => 'boolean',
-            'email_2fa' => 'email|nullable|max:255',
+            'email_2fa' => 'email|required|max:255',
         ];
     }
 }
